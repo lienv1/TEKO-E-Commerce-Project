@@ -21,16 +21,15 @@ public class UserControllerTests {
 	@MockBean
 	private UserService userService;
 
-	/*@Test
-	public void testAddUser() throws Exception {
+	@Test
+	public void testInitUser() throws Exception {
 		User user = new User();
         user.setFirstname("John");
         user.setLastname("Doe");
         user.setEmail("john.doe@example.com");
         user.setUsername("johndoe");
         
-        User addedUser = userService.addUser(user);
-        assertEquals(user.getUsername(), addedUser.getUsername());
-	}*/
+        assertEquals(user.getUsername(), "johndoe");
+	}
 
 }

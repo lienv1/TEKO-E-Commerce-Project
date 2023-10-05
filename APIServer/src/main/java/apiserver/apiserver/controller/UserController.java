@@ -3,6 +3,7 @@ package apiserver.apiserver.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -32,14 +33,12 @@ public class UserController {
 	
 	@PostMapping("/add")
 	public ResponseEntity<User> addUser(@RequestBody User user){
-		try {
-			User addedUser = userService.addUser(user);
-			return new ResponseEntity<User>(addedUser,HttpStatus.OK);
-		}
-		catch(Exception e) {
-			e.printStackTrace();
-			return ResponseEntity.badRequest().build();
-		}
+		  try {
+	            User addedUser = userService.addUser(user);
+	            return ResponseEntity.ok(addedUser);
+	        } catch (Exception e) {
+	            return new ResponseEntity(e.getMessage(),HttpStatus. BAD_REQUEST);
+	        }
 	}
 
 }
