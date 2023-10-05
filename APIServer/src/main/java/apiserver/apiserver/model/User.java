@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import lombok.Data;
 
@@ -20,7 +21,12 @@ public class User {
 	private String email;
 
 	@OneToOne(cascade = CascadeType.ALL)
-	private Address address;
+	@JoinColumn(name = "delivery_address_id")
+	private Address deliveryAddress;
+
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "billing_address_id")
+	private Address billingAddress;
 
 	private String username;
 	private boolean isBusiness;
