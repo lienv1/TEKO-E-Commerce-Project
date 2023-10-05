@@ -29,5 +29,15 @@ public class UserService {
 			throw new RuntimeException("Username is already taken.");
 		}
 	}
+	
+	public User editUser(User user, Long id) {
+		User toUpdate = userRepo.getReferenceById(id);
+		toUpdate.setBillingAddress(user.getBillingAddress());
+		toUpdate.setDeliveryAddress(user.getDeliveryAddress());
+		toUpdate.setEmail(user.getEmail());
+		toUpdate.setLastname(user.getLastname());
+		toUpdate.setFirstname(user.getFirstname());
+		return userRepo.save(toUpdate);
+	}
 
 }
