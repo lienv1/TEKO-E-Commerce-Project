@@ -13,13 +13,16 @@ public class UserService {
 	
 	private UserRepo userRepo;
 	
-	@Autowired
 	public UserService(UserRepo userRepo) {
 		this.userRepo = userRepo;
 	}
 	
 	public List<User> getAllUser(){
 		return userRepo.findAll();
+	}
+	
+	public User addUser(User user) {
+		return userRepo.save(user);
 	}
 
 }
