@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import apiserver.apiserver.model.Address;
 import apiserver.apiserver.model.User;
 import apiserver.apiserver.repo.UserRepo;
 
@@ -32,8 +33,14 @@ public class UserService {
 	
 	public User editUser(User user, Long id) {
 		User toUpdate = userRepo.getReferenceById(id);
-		toUpdate.setBillingAddress(user.getBillingAddress());
-		toUpdate.setDeliveryAddress(user.getDeliveryAddress());
+		
+		Address billingAddress = user.getBillingAddress();
+		billingAddress.setId(toUpdate.getBillingAddress().getId());
+		Address deliveryAddress = user.getDeliveryAddress();
+		deliveryAddress.setId(toUpdate.getDeliveryAddress().getId());
+		
+		toUpdate.setBillingAddress(billingAddress);
+		toUpdate.setDeliveryAddress(deliveryAddress);
 		toUpdate.setEmail(user.getEmail());
 		toUpdate.setLastname(user.getLastname());
 		toUpdate.setFirstname(user.getFirstname());

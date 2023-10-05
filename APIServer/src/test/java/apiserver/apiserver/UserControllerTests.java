@@ -30,6 +30,9 @@ public class UserControllerTests {
         user.setUsername("johndoe");
         
         assertEquals(user.getUsername(), "johndoe");
+        assertEquals(user.getFirstname(), "John");
+        assertEquals(user.getLastname(), "Doe");
+        assertEquals(user.getEmail(), "john.doe@example.com");
 	}
 
 }
