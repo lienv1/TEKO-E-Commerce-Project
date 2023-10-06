@@ -5,7 +5,7 @@ RUN /opt/keycloak/bin/kc.sh build
 
 COPY themes /opt/keycloak/themes
 
-# ENV KC_DB=mysql
+ENV KC_DB=mysql
 # ENV KC_DB_URL=jdbc:mysql://localhost:3306/Keycloak
 # ENV KC_DB_USERNAME=root
 # ENV KC_DB_PASSWORD=my-secret-pw
