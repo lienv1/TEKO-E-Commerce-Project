@@ -1,15 +1,10 @@
-REM Clean and build with Maven
-call mvn clean package test
-REM Build the Docker image
-call docker build -t api-image .
-REM Run the Docker container
-@echo off
-setlocal enabledelayedexpansion
+# Clean and build with Maven
+mvn clean package test
+# Build the Docker image
+docker build -t api-image .
+# Run the Docker container
 
-for /f "tokens=2 delims=:" %%a in ('ipconfig ^| findstr "IPv4"') do (
-    set ip=%%a
-)
+# Get the local IPv4 address
+$localIP = (Get-NetIPAddress | Where-Object { $_.AddressFamily -eq 'IPv4' -and $_.PrefixOrigin -eq 'Dhcp' }).IPAddress
 
-echo !ip:~1!
-
-call docker run --name api-server-container -e SPRING_DATASOURCE_URL=jdbc:mysql://!ip:~1!:3306/apiserver -p 8080:8080 api-image
+docker run --name api-server-container -e SPRING_DATASOURCE_URL=jdbc:mysql://$localIP:3306/apiserver -p 8080:8080 api-image
