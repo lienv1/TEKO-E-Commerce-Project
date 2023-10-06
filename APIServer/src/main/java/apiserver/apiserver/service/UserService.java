@@ -6,10 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import apiserver.apiserver.exception.UserNotFoundException;
 import apiserver.apiserver.model.Address;
 import apiserver.apiserver.model.User;
 import apiserver.apiserver.repo.UserRepo;
-import exception.UserNotFoundException;
 
 @Service
 public class UserService {

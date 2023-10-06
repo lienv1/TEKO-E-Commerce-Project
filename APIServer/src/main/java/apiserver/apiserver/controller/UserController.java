@@ -15,10 +15,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import apiserver.apiserver.exception.UserNotFoundException;
 import apiserver.apiserver.model.User;
 import apiserver.apiserver.security.AuthorizationService;
 import apiserver.apiserver.service.UserService;
-import exception.UserNotFoundException;
 
 @Controller
 @RequestMapping("/user")

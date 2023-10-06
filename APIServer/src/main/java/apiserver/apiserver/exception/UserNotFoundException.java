@@ -1,4 +1,4 @@
-package exception;
+package apiserver.apiserver.exception;
 
 public class UserNotFoundException extends Exception {
 
