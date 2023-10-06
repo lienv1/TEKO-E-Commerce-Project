@@ -9,4 +9,4 @@ docker build -t api-image .
 ip=$(hostname -I | awk '{print $1}')
 
 # Run your Docker container with the obtained IP
-docker run --name api-server-container -e HOSTNAME="$localIP" -p 8080:8080 api-image
+docker run --name api-server-container -d -e HOSTNAME="$localIP" -p 8080:8080 api-image
