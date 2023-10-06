@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import apiserver.apiserver.model.Address;
 import apiserver.apiserver.model.User;
 import apiserver.apiserver.repo.UserRepo;
+import exception.UserNotFoundException;
 
 @Service
 public class UserService {
@@ -30,15 +31,39 @@ public class UserService {
 			throw new RuntimeException("Username is already taken.");
 		}
 	}
+
+	public User getUserByID(Long id) throws UserNotFoundException {
+		return userRepo.findById(id).orElseThrow(() -> new UserNotFoundException("User not found"));
+	}
+
+	public User getUserByUsername(String username) throws UserNotFoundException {
+		return userRepo.findByUsername(username).orElseThrow(() -> new UserNotFoundException("User not found"));
+	}
 	
-	public User editUser(User user, Long id) {
-		User toUpdate = userRepo.getReferenceById(id);
+	public User editUserByUsername(User user, String username) throws UserNotFoundException {
+		User toUpdate = userRepo.findByUsername(username).orElseThrow( () -> new UserNotFoundException("User not found") );
 		
 		Address billingAddress = user.getBillingAddress();
 		billingAddress.setId(toUpdate.getBillingAddress().getId());
 		Address deliveryAddress = user.getDeliveryAddress();
 		deliveryAddress.setId(toUpdate.getDeliveryAddress().getId());
 		
+		toUpdate.setBillingAddress(billingAddress);
+		toUpdate.setDeliveryAddress(deliveryAddress);
+		toUpdate.setEmail(user.getEmail());
+		toUpdate.setLastname(user.getLastname());
+		toUpdate.setFirstname(user.getFirstname());
+		return userRepo.save(toUpdate);
+	}
+
+	public User editUserById(User user, Long id) {
+		User toUpdate = userRepo.getReferenceById(id);
+
+		Address billingAddress = user.getBillingAddress();
+		billingAddress.setId(toUpdate.getBillingAddress().getId());
+		Address deliveryAddress = user.getDeliveryAddress();
+		deliveryAddress.setId(toUpdate.getDeliveryAddress().getId());
+
 		toUpdate.setBillingAddress(billingAddress);
 		toUpdate.setDeliveryAddress(deliveryAddress);
 		toUpdate.setEmail(user.getEmail());
