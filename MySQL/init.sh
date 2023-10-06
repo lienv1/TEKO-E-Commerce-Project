@@ -1,4 +1,4 @@
-docker run -d --name mysql-container -e MYSQL_ROOT_PASSWORD=my-secret-pw -v "$(pwd)/mysql-data:/var/lib/mysql" -e MYSQL_DATABASE=apiserver -p 3306:3306 mysql:latest
+docker run -d --name mysql-container -e MYSQL_ROOT_PASSWORD=my-secret-pw -v "$(pwd)/mysql-data:/var/lib/mysql" -e MYSQL_DATABASE=Apiserver -p 3306:3306 mysql:latest
 
 check_container() {
   echo "Create Keycloak database"
