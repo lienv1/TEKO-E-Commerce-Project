@@ -14,6 +14,7 @@ import apiserver.apiserver.repo.UserRepo;
 @Service
 public class UserService {
 
+	@Autowired
 	private UserRepo userRepo;
 
 	public UserService(UserRepo userRepo) {
