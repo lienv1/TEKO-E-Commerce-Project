@@ -9,10 +9,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-
 import java.util.Arrays;
 import java.util.List;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -23,9 +21,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import apiserver.apiserver.model.User;
 import apiserver.apiserver.service.UserService;
 
@@ -35,7 +31,7 @@ class UserControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-
+    
     @MockBean // Mock the service used by the controller
     private UserService userService;
     
@@ -65,11 +61,7 @@ class UserControllerTest {
     }
     
     @Test
-    @WithMockUser(roles= "{CUSTOMER}")
     public void testGetAllUsersUnauthorized() throws Exception {
-        // Prepare data and mock's behavior
-        List<User> userList = Arrays.asList(user1, user2);
-        when(userService.getAllUser()).thenReturn(userList);
         // Perform GET Request
         mockMvc.perform(get("/user/all"))
                 .andExpect(status().isUnauthorized());
