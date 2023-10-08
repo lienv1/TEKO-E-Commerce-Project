@@ -40,37 +40,36 @@ public class UserService {
 	public User getUserByUsername(String username) throws UserNotFoundException {
 		return userRepo.findByUsername(username).orElseThrow(() -> new UserNotFoundException("User not found"));
 	}
-	
+
 	public User editUserByUsername(User user, String username) throws UserNotFoundException {
-		User toUpdate = userRepo.findByUsername(username).orElseThrow( () -> new UserNotFoundException("User not found") );
-		
-		Address billingAddress = user.getBillingAddress();
-		billingAddress.setId(toUpdate.getBillingAddress().getId());
-		Address deliveryAddress = user.getDeliveryAddress();
-		deliveryAddress.setId(toUpdate.getDeliveryAddress().getId());
-		
-		toUpdate.setBillingAddress(billingAddress);
-		toUpdate.setDeliveryAddress(deliveryAddress);
-		toUpdate.setEmail(user.getEmail());
-		toUpdate.setLastname(user.getLastname());
-		toUpdate.setFirstname(user.getFirstname());
-		return userRepo.save(toUpdate);
+		User toUpdate = userRepo.findByUsername(username)
+				.orElseThrow(() -> new UserNotFoundException("User not found"));
+		User updatedUser = editUser(user, toUpdate);
+		return updatedUser;
 	}
 
 	public User editUserById(User user, Long id) {
 		User toUpdate = userRepo.getReferenceById(id);
+		User updatedUser = editUser(user, toUpdate);
+		return updatedUser;
+	}
 
-		Address billingAddress = user.getBillingAddress();
-		billingAddress.setId(toUpdate.getBillingAddress().getId());
-		Address deliveryAddress = user.getDeliveryAddress();
-		deliveryAddress.setId(toUpdate.getDeliveryAddress().getId());
+	public User editUser(User oldUser, User newUser) {
+		try {
+			Address billingAddress = oldUser.getBillingAddress();
+			billingAddress.setId(newUser.getBillingAddress().getId());
+			Address deliveryAddress = oldUser.getDeliveryAddress();
+			deliveryAddress.setId(newUser.getDeliveryAddress().getId());
+			newUser.setBillingAddress(billingAddress);
+			newUser.setDeliveryAddress(deliveryAddress);
+		} catch (NullPointerException e) {
+			System.out.println("The user has not provided an address yet");
+		}
 
-		toUpdate.setBillingAddress(billingAddress);
-		toUpdate.setDeliveryAddress(deliveryAddress);
-		toUpdate.setEmail(user.getEmail());
-		toUpdate.setLastname(user.getLastname());
-		toUpdate.setFirstname(user.getFirstname());
-		return userRepo.save(toUpdate);
+		newUser.setEmail(oldUser.getEmail());
+		newUser.setLastname(oldUser.getLastname());
+		newUser.setFirstname(oldUser.getFirstname());
+		return userRepo.save(newUser);
 	}
 
 }
