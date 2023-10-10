@@ -61,6 +61,17 @@ class UserControllerTest {
     }
     
     @Test
+    @WithMockUser(username="admin", roles= "{CUSTOMER}")
+    public void testGetAllUsers2() throws Exception {
+        // Prepare data and mock's behavior
+        List<User> userList = Arrays.asList(user1, user2);
+        when(userService.getAllUser()).thenReturn(userList);
+        // Perform GET Request
+        mockMvc.perform(get("/user/all"))
+                .andExpect(status().isForbidden());
+    }
+    
+    @Test
     public void testGetAllUsersUnauthorized() throws Exception {
         // Perform GET Request
         mockMvc.perform(get("/user/all"))

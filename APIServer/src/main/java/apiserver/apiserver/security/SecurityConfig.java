@@ -17,7 +17,7 @@ import org.springframework.core.convert.converter.Converter;
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
-public class SecurityConfig {
+public class SecurityConfig{
 
 	private final JwtAuthConverter jwtAuthConverter;
 
@@ -28,10 +28,12 @@ public class SecurityConfig {
 
 	@Bean
 	public SecurityFilterChain configure(final HttpSecurity http) throws Exception {
-		((AuthorizeHttpRequestsConfigurer.AuthorizedUrl) ((AuthorizeHttpRequestsConfigurer.AuthorizedUrl) ((HttpSecurity) http
-				.csrf().disable()).authorizeHttpRequests().requestMatchers(new String[] { "*" })).authenticated()
-						.anyRequest()).permitAll();
-		http.oauth2ResourceServer().jwt().jwtAuthenticationConverter((Converter )this.jwtAuthConverter);
+		((AuthorizeHttpRequestsConfigurer.AuthorizedUrl) ((AuthorizeHttpRequestsConfigurer.AuthorizedUrl) ((HttpSecurity) 
+				http
+				.csrf().disable())
+				.authorizeHttpRequests().requestMatchers(new String[] { "*" })).authenticated()
+				.anyRequest()).permitAll();
+		http.oauth2ResourceServer().jwt().jwtAuthenticationConverter((Converter)this.jwtAuthConverter);
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		return (SecurityFilterChain) http.build();
 	}
