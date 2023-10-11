@@ -17,19 +17,20 @@ public class Product {
 	private String productName;
 	private String description;
 	private String brand;
-	private int weight;
+	private Integer weight;
 	private String category;
 	private String group;
-	private int pack;
+	private Integer pack;
 	private String searchIndex;
 	private String gtinUnit;
 	private String gtinPack;
-	private double price;
-	private int stock;
+	private Double price;
+	private Integer stock;
 	private String origin;
-	private boolean discount;
-	private int taxCode;
+	private Boolean discount;
+	private Integer taxCode;
 	private Date lastModified;
+	private boolean deleted;
 
 	public Product() {
 	}
@@ -50,7 +51,7 @@ public class Product {
 		return brand;
 	}
 
-	public int getWeight() {
+	public Integer getWeight() {
 		return weight;
 	}
 
@@ -62,7 +63,7 @@ public class Product {
 		return group;
 	}
 
-	public int getPack() {
+	public Integer getPack() {
 		return pack;
 	}
 
@@ -78,11 +79,11 @@ public class Product {
 		return gtinPack;
 	}
 
-	public double getPrice() {
+	public Double getPrice() {
 		return price;
 	}
 
-	public int getStock() {
+	public Integer getStock() {
 		return stock;
 	}
 
@@ -90,16 +91,20 @@ public class Product {
 		return origin;
 	}
 
-	public boolean isDiscount() {
+	public Boolean getDiscount() {
 		return discount;
 	}
 
-	public int getTaxCode() {
+	public Integer getTaxCode() {
 		return taxCode;
 	}
 
 	public Date getLastModified() {
 		return lastModified;
+	}
+
+	public boolean isDeleted() {
+		return deleted;
 	}
 
 	public void setProductId(Long productId) {
@@ -118,7 +123,7 @@ public class Product {
 		this.brand = brand;
 	}
 
-	public void setWeight(int weight) {
+	public void setWeight(Integer weight) {
 		this.weight = weight;
 	}
 
@@ -130,7 +135,7 @@ public class Product {
 		this.group = group;
 	}
 
-	public void setPack(int pack) {
+	public void setPack(Integer pack) {
 		this.pack = pack;
 	}
 
@@ -146,11 +151,11 @@ public class Product {
 		this.gtinPack = gtinPack;
 	}
 
-	public void setPrice(double price) {
+	public void setPrice(Double price) {
 		this.price = price;
 	}
 
-	public void setStock(int stock) {
+	public void setStock(Integer stock) {
 		this.stock = stock;
 	}
 
@@ -158,16 +163,22 @@ public class Product {
 		this.origin = origin;
 	}
 
-	public void setDiscount(boolean discount) {
+	public void setDiscount(Boolean discount) {
 		this.discount = discount;
 	}
 
-	public void setTaxCode(int taxCode) {
+	public void setTaxCode(Integer taxCode) {
 		this.taxCode = taxCode;
 	}
 
 	public void setLastModified(Date lastModified) {
 		this.lastModified = lastModified;
-	}	
+	}
+
+	public void setDeleted(boolean deleted) {
+		this.deleted = deleted;
+	}
+
+
 	
 }
