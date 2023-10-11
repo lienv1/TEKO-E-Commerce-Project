@@ -9,12 +9,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.client.HttpClientErrorException.Unauthorized;
 
 import apiserver.apiserver.exception.UserNotFoundException;
 import apiserver.apiserver.model.User;
@@ -39,6 +41,22 @@ public class UserController {
 		List<User> list = userService.getAllUser();
 		return new ResponseEntity<List<User>>(list, HttpStatus.OK);
 	}
+	
+	@GetMapping("/userinfo/username/{username}")
+	@PreAuthorize(value = "hasAnyRole('ADMIN','CUSTOMER')")
+	public ResponseEntity<User> getUser(@PathVariable("username") String username, Principal principal) {
+		try {
+			boolean isAuthorizied = this.authorizationService.isAuthenticatedByPrincipal(principal, username);
+			if (!isAuthorizied) {
+				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+			}
+			User user = userService.getUserByUsername(username);
+			return new ResponseEntity<User>(user, HttpStatus.OK);
+		} catch (UserNotFoundException e) {
+			System.out.println("User doesn't exist");
+			return ResponseEntity.notFound().build();
+		}
+	}
 
 	@PostMapping("/add")
 	public ResponseEntity<User> addUser(@RequestBody User user) {
@@ -53,9 +71,11 @@ public class UserController {
 	@PreAuthorize(value = "hasAnyRole('ADMIN','CUSTOMER')")
 	@PutMapping("/update/username/{username}")
 	public ResponseEntity<User> editUser(@PathVariable("username") String username, Principal principal, @RequestBody User updatedUser) {
-		User editedUser;
-		try {
-			editedUser = userService.editUserByUsername(updatedUser, username);
+		try {	
+			boolean isAuthorizized = authorizationService.isAuthenticatedByPrincipal(principal, username);
+			if (!isAuthorizized)
+				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+			User editedUser = userService.editUserByUsername(updatedUser, username);
 			return new ResponseEntity<User>(editedUser, HttpStatus.OK);
 		} catch (UserNotFoundException e) {
 			System.out.println(e.getMessage());
@@ -63,18 +83,17 @@ public class UserController {
 		return ResponseEntity.notFound().build();
 	}
 
-	@GetMapping("/userinfo/username/{username}")
 	@PreAuthorize(value = "hasAnyRole('ADMIN','CUSTOMER')")
-	public ResponseEntity<User> getUser(@PathVariable("username") String username, Principal principal) {
+	@DeleteMapping("/update/username/{username}")
+	public ResponseEntity<User> deleteUser(@PathVariable("username") String username, Principal principal){
 		try {
-			boolean isAuthorizied = this.authorizationService.isAuthenticatedByPrincipal(principal, username);
-			if (!isAuthorizied) {
+			boolean isAuthorizized = authorizationService.isAuthenticatedByPrincipal(principal, username);
+			if (!isAuthorizized)
 				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-			}
-			User user = userService.getUserByUsername(username);
-			return new ResponseEntity<User>(user, HttpStatus.OK);
+			User userToDelete = userService.deleteUserByUsername(username);
+			return new ResponseEntity<User>(userToDelete, HttpStatus.OK);
 		} catch (UserNotFoundException e) {
-			System.out.println("User doesn't exist");
+			System.out.println(e.getMessage());
 			return ResponseEntity.notFound().build();
 		}
 	}

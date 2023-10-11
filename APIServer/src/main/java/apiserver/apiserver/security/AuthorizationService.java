@@ -10,11 +10,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuthorizationService
 {
-    public boolean isAuthenticatedByPrincipal(final Principal principal, final String username) {
+    public boolean isAuthenticatedByPrincipal(Principal principal, String username) {
         return principal.getName().equals(username) || this.hasRoleAdmin(principal);
     }
     
-    private boolean hasRoleAdmin(final Principal principal) {
+    private boolean hasRoleAdmin(Principal principal) {
         final Collection<? extends GrantedAuthority> authorities = (Collection<? extends GrantedAuthority>)((Authentication) principal).getAuthorities();
         return authorities.stream().anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"));
     }

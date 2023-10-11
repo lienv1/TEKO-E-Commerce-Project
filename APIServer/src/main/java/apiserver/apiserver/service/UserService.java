@@ -72,4 +72,10 @@ public class UserService {
 		return userRepo.save(newUser);
 	}
 
+	public User deleteUserByUsername(String username) throws UserNotFoundException {
+		User user = userRepo.findByUsername(username).orElseThrow( () -> new UserNotFoundException("User not found") );
+		user.setDeleted(true);
+		return userRepo.save(user);
+	}
+	
 }
