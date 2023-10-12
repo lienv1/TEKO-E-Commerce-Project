@@ -39,20 +39,12 @@ public class ProductSpecification {
 	                predicate = builder.and(predicate, builder.equal(root.get("pack"), criteria.getPack()));
 	            }
 
-	            if (criteria.getSearchIndex() != null) {
-	                predicate = builder.and(predicate, builder.like(root.get("searchIndex"), "%" + criteria.getSearchIndex() + "%"));
-	            }
-
 	            if (criteria.getGtinUnit() != null) {
 	                predicate = builder.and(predicate, builder.equal(root.get("gtinUnit"), criteria.getGtinUnit()));
 	            }
 
 	            if (criteria.getGtinPack() != null) {
 	                predicate = builder.and(predicate, builder.equal(root.get("gtinPack"), criteria.getGtinPack()));
-	            }
-
-	            if (criteria.getStock() != null) {
-	                predicate = builder.and(predicate, builder.equal(root.get("stock"), criteria.getStock()));
 	            }
 
 	            if (criteria.getOrigin() != null) {
