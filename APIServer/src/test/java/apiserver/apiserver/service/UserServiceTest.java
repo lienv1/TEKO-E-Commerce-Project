@@ -56,7 +56,6 @@ class UserServiceTest {
 	@Test
 	void testUserNotFoundException() {
 	    when(userRepo.findByUsername(anyString())).thenReturn(Optional.empty());
-	    // Use assertThrows to test for the exception
 	    UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
 	        userService.getUserByUsername("johndoe2");
 	    });

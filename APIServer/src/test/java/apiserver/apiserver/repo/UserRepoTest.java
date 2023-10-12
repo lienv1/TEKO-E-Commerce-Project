@@ -1,25 +1,17 @@
 package apiserver.apiserver.repo;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit4.SpringRunner;
-
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import apiserver.apiserver.model.User;
-import apiserver.apiserver.service.UserService;
 
-
-@SpringBootTest
-@RunWith(SpringRunner.class)
+@DataJpaTest
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class UserRepoTest {
-	
-	@MockBean
+
+	@Autowired
 	private UserRepo userRepo;
 
 	@Test
@@ -29,9 +21,15 @@ class UserRepoTest {
 		user.setLastname("Doe");
 		user.setEmail("john.doe@example.com");
 		user.setUsername("johndoe2");
-		when(userRepo.save(any(User.class))).thenReturn(user);
-		User addedUser = userRepo.save(user);
-		assertEquals(addedUser, user);
+
+		User savedUser = userRepo.save(user);
+
+		assertNotNull(savedUser.getId()); // Assuming your User entity has an ID field
+		assertEquals("John", savedUser.getFirstname());
+		assertEquals("Doe", savedUser.getLastname());
+		assertEquals("john.doe@example.com", savedUser.getEmail());
+		assertEquals("johndoe2", savedUser.getUsername());
+		assertEquals("test","test");
 	}
 
 }
