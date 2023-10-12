@@ -40,7 +40,7 @@ class UserServiceTest {
 	}
 
 	@Test
-	 void testAddUser() {
+	void testAddUser() {
 		when(userRepo.save(any(User.class))).thenReturn(user);
 		User addedUser = userService.addUser(user);
 		assertEquals(addedUser, user);
