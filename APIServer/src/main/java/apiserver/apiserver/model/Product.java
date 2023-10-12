@@ -2,6 +2,7 @@ package apiserver.apiserver.model;
 
 import java.util.Date;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -19,7 +20,7 @@ public class Product {
 	private String brand;
 	private Integer weight;
 	private String category;
-	private String group;
+	private String productGroup;
 	private Integer pack;
 	private String searchIndex;
 	private String gtinUnit;
@@ -59,8 +60,8 @@ public class Product {
 		return category;
 	}
 
-	public String getGroup() {
-		return group;
+	public String getProductGroup() {
+		return productGroup;
 	}
 
 	public Integer getPack() {
@@ -131,8 +132,8 @@ public class Product {
 		this.category = category;
 	}
 
-	public void setGroup(String group) {
-		this.group = group;
+	public void setProductGroup(String productGroup) {
+		this.productGroup = productGroup;
 	}
 
 	public void setPack(Integer pack) {
@@ -178,7 +179,6 @@ public class Product {
 	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
 	}
-
 
 	
 }
