@@ -29,7 +29,6 @@ class UserRepoTest {
 		assertEquals("Doe", savedUser.getLastname());
 		assertEquals("john.doe@example.com", savedUser.getEmail());
 		assertEquals("johndoe2", savedUser.getUsername());
-		assertEquals("test","test");
 	}
 
 }
