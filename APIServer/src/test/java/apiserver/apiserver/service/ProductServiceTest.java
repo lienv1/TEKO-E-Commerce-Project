@@ -2,6 +2,8 @@ package apiserver.apiserver.service;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,8 +48,10 @@ class ProductServiceTest {
 		product.setPrice(6.50);
 		product.setStock(120);
 		product.setOrigin("Thailand");
+		
 		productList = new ArrayList<Product>();
 		productList.add(product);
+		
 		when(productRepo.save(any(Product.class))).thenReturn(product);
 		when(productRepo.findAll()).thenReturn(productList);
 	}
@@ -72,7 +76,16 @@ class ProductServiceTest {
 	}
 	
 	@Test
-	void testProductEdit() throws ProductNotFoundException {
+	void productNotFoundExceptionTest() {
+		when(productRepo.findById(anyLong())).thenReturn(Optional.empty());
+		ProductNotFoundException ex = assertThrows(ProductNotFoundException.class, () -> {
+			productService.getProductById(14326l);
+		});
+		assertEquals("Product doesn't exist", ex.getMessage());
+	}
+	
+	@Test
+	void productEditTest() throws ProductNotFoundException {
 	    Product originalProduct = productService.addProduct(this.product);
 	    double newPrice = 6.60;
 	    originalProduct.setPrice(newPrice);

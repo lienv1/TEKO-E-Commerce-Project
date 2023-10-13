@@ -41,7 +41,7 @@ public class ProductController {
 	public ResponseEntity<Product> getProductById(@PathVariable("id") Long id){
 		try {
 			Product product;
-			product = productService.getProductBy(id);
+			product = productService.getProductById(id);
 			return new ResponseEntity<Product>(product,HttpStatus.OK);
 		} catch (ProductNotFoundException e) {
 			return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
@@ -60,7 +60,7 @@ public class ProductController {
 	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<Product> editProduct(@PathVariable("id") Long id ,Product product){
 		try {
-			Product existingProduct = productService.getProductBy(id);
+			Product existingProduct = productService.getProductById(id);
 			product.setProductId(id);
 			Product updatedProduct = productService.editProduct(product);
 			return new ResponseEntity<Product>(updatedProduct,HttpStatus.OK);

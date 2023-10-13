@@ -5,6 +5,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -29,6 +31,8 @@ class UserServiceTest {
 	private UserService userService;
 	
 	private User user;
+	private List<User> userList;
+	
 	private String username = "johndoe";
 	
 	@BeforeEach
@@ -38,8 +42,13 @@ class UserServiceTest {
 		user.setLastname("Doe");
 		user.setEmail("john.doe@example.com");
 		user.setUsername(username);
+		
+		userList = new ArrayList<User>();
+		userList.add(user);
+		
 		when(userRepo.save(any(User.class))).thenReturn(user);
-		when(userRepo.findByUsername(any(String.class))).thenReturn(Optional.of(user));
+		when(userRepo.findByUsername(username)).thenReturn(Optional.of(user));
+		when(userRepo.findAll()).thenReturn(userList);
 	}
 
 	@Test
@@ -50,9 +59,15 @@ class UserServiceTest {
 	
 	@Test
 	void testGetUserByUsername() throws UserNotFoundException {
-		when(userRepo.findByUsername(anyString())).thenReturn(Optional.of(user));
 		User john = userService.getUserByUsername(username);
 		assertEquals(john, user);
+	}
+	
+	@Test
+	void getAllUsers() {
+		List <User> allUser = userService.getAllUser();
+		assertEquals(1,allUser.size());
+		assertEquals(username, allUser.get(0).getUsername());
 	}
 	
 	@Test

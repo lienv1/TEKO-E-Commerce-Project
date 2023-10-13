@@ -25,7 +25,7 @@ public class ProductService {
 		return productRepo.findAll();
 	}
 	
-	public Product getProductBy(Long id) throws ProductNotFoundException {
+	public Product getProductById(Long id) throws ProductNotFoundException {
 		return productRepo.findById(id).orElseThrow( () -> new ProductNotFoundException("Product doesn't exist") ) ;
 	}
 	
