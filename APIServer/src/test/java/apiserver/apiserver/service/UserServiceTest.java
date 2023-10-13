@@ -10,38 +10,40 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit4.SpringRunner;
-
 import apiserver.apiserver.exception.UserNotFoundException;
 import apiserver.apiserver.model.User;
 import apiserver.apiserver.repo.UserRepo;
 
+@RunWith(MockitoJUnitRunner.class)
 @SpringBootTest
-@RunWith(SpringRunner.class)
 class UserServiceTest {
-	
-	@Autowired
-	private UserService userService;
 
-	@MockBean
+	@Mock
 	private UserRepo userRepo;
 	
-	private User user = new User();
+	@InjectMocks
+	private UserService userService;
+	
+	private User user;
+	private String username = "johndoe";
 	
 	@BeforeEach
 	void init() {
+		user = new User();
 		user.setFirstname("John");
 		user.setLastname("Doe");
 		user.setEmail("john.doe@example.com");
-		user.setUsername("johndoe2");
+		user.setUsername(username);
+		when(userRepo.save(any(User.class))).thenReturn(user);
+		when(userRepo.findByUsername(any(String.class))).thenReturn(Optional.of(user));
 	}
 
 	@Test
 	void testAddUser() {
-		when(userRepo.save(any(User.class))).thenReturn(user);
 		User addedUser = userService.addUser(user);
 		assertEquals(addedUser, user);
 	}
@@ -49,7 +51,7 @@ class UserServiceTest {
 	@Test
 	void testGetUserByUsername() throws UserNotFoundException {
 		when(userRepo.findByUsername(anyString())).thenReturn(Optional.of(user));
-		User john = userService.getUserByUsername("johndoe2");
+		User john = userService.getUserByUsername(username);
 		assertEquals(john, user);
 	}
 	
@@ -57,18 +59,17 @@ class UserServiceTest {
 	void testUserNotFoundException() {
 	    when(userRepo.findByUsername(anyString())).thenReturn(Optional.empty());
 	    UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
-	        userService.getUserByUsername("johndoe2");
+	        userService.getUserByUsername(username);
 	    });
 	    assertEquals("User not found", exception.getMessage());
 	}
 	
 	@Test
 	void testEditUserByUsername() throws UserNotFoundException {
-		String newName = "John2";
-		user.setFirstname(newName);
-		when(userRepo.save(any(User.class))).thenReturn(user);
-		when(userRepo.findByUsername(anyString())).thenReturn(Optional.of(user));
-		user = userService.editUserByUsername(user, user.getUsername());
-		assertEquals(user.getFirstname(), newName);
+		User originalUser = userService.addUser(this.user);
+		String newFirstname = "John2";
+		originalUser.setFirstname(newFirstname);
+		User editedUser = userService.editUserByUsername(originalUser, username);
+		assertEquals(newFirstname, editedUser.getFirstname());
 	}
 }

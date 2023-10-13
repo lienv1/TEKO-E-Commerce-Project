@@ -41,35 +41,35 @@ public class UserService {
 		return userRepo.findByUsername(username).orElseThrow(() -> new UserNotFoundException("User not found"));
 	}
 
-	public User editUserByUsername(User user, String username) throws UserNotFoundException {
-		User toUpdate = userRepo.findByUsername(username)
+	public User editUserByUsername(User newUser, String username) throws UserNotFoundException {
+		User oldUser = userRepo.findByUsername(username)
 				.orElseThrow(() -> new UserNotFoundException("User not found"));
-		User updatedUser = editUser(user, toUpdate);
+		User updatedUser = editUser(newUser, oldUser);
 		return updatedUser;
 	}
 
-	public User editUserById(User user, Long id) {
-		User toUpdate = userRepo.getReferenceById(id);
-		User updatedUser = editUser(user, toUpdate);
+	public User editUserById(User newUser, Long id) {
+		User oldUser = userRepo.getReferenceById(id);
+		User updatedUser = editUser(newUser, oldUser);
 		return updatedUser;
 	}
 
-	public User editUser(User oldUser, User newUser) {
+	public User editUser(User newUser, User oldUser) {
 		try {
-			Address billingAddress = oldUser.getBillingAddress();
-			billingAddress.setId(newUser.getBillingAddress().getId());
-			Address deliveryAddress = oldUser.getDeliveryAddress();
-			deliveryAddress.setId(newUser.getDeliveryAddress().getId());
-			newUser.setBillingAddress(billingAddress);
-			newUser.setDeliveryAddress(deliveryAddress);
+			Address billingAddress = newUser.getBillingAddress();
+			billingAddress.setId(oldUser.getBillingAddress().getId());
+			Address deliveryAddress = newUser.getDeliveryAddress();
+			deliveryAddress.setId(oldUser.getDeliveryAddress().getId());
+			oldUser.setBillingAddress(billingAddress);
+			oldUser.setDeliveryAddress(deliveryAddress);
 		} catch (NullPointerException e) {
 			System.out.println("The user has not provided an address yet");
 		}
 
-		newUser.setEmail(oldUser.getEmail());
-		newUser.setLastname(oldUser.getLastname());
-		newUser.setFirstname(oldUser.getFirstname());
-		return userRepo.save(newUser);
+		oldUser.setEmail(newUser.getEmail());
+		oldUser.setLastname(newUser.getLastname());
+		oldUser.setFirstname(newUser.getFirstname());
+		return userRepo.save(oldUser);
 	}
 
 	public User deleteUserByUsername(String username) throws UserNotFoundException {

@@ -3,24 +3,17 @@ package apiserver.apiserver.service;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import org.assertj.core.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit4.SpringRunner;
+import apiserver.apiserver.exception.ProductNotFoundException;
 import apiserver.apiserver.model.Product;
 import apiserver.apiserver.repo.ProductRepo;
 
@@ -55,13 +48,13 @@ class ProductServiceTest {
 		product.setOrigin("Thailand");
 		productList = new ArrayList<Product>();
 		productList.add(product);
+		when(productRepo.save(any(Product.class))).thenReturn(product);
+		when(productRepo.findAll()).thenReturn(productList);
 	}
 
 	@Test
 	void getAllProductTest() {
-		when(productRepo.save(any(Product.class))).thenReturn(product);
 		productService.addProduct(product);
-		when(productRepo.findAll()).thenReturn(productList);
 		List<Product> list = productService.getAllProducts();
 		assertEquals(1,list.size());
 		assertEquals(14326l,list.get(0).getProductId());
@@ -70,7 +63,6 @@ class ProductServiceTest {
 	
 	@Test
 	void getProductByIdTest() {
-		when(productRepo.save(any(Product.class))).thenReturn(product);
 		productService.addProduct(product);
 		when(productRepo.findById(product.getProductId())).thenReturn(Optional.of(product));
 		Optional<Product> toRetrieve = productRepo.findById((product.getProductId()));
@@ -80,11 +72,12 @@ class ProductServiceTest {
 	}
 	
 	@Test
-	void testProductEdit() {
-		when(productRepo.save(any(Product.class))).thenReturn(this.product);
-		Product product = productService.addProduct(this.product);
-		product.setPrice(6.60);
-		//TODO
+	void testProductEdit() throws ProductNotFoundException {
+	    Product originalProduct = productService.addProduct(this.product);
+	    double newPrice = 6.60;
+	    originalProduct.setPrice(newPrice);
+	    Product updatedProduct = productService.editProduct(originalProduct);
+	    assertEquals(newPrice, updatedProduct.getPrice());
 	}
 
 }
