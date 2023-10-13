@@ -12,6 +12,7 @@ import jakarta.persistence.UniqueConstraint;
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "product_id"}))
 public class Favorite {
+	
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long favouriteId;

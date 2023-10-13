@@ -39,7 +39,6 @@ class FavoriteRepoTest {
 	@BeforeEach
 	void setup() {
 		user = new User();
-		user.setUserId(1000l);
 		user.setUsername("johndoe");
 		userRepo.save(user);
 
