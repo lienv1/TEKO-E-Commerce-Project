@@ -29,7 +29,7 @@ class UserRepoTest {
 
 		User savedUser = userRepo.save(user);
 
-		assertNotNull(savedUser.getId()); // Assuming your User entity has an ID field
+		assertNotNull(savedUser.getUserId()); // Assuming your User entity has an ID field
 		assertEquals("John", savedUser.getFirstname());
 		assertEquals("Doe", savedUser.getLastname());
 		assertEquals("john.doe@example.com", savedUser.getEmail());

@@ -13,7 +13,7 @@ import jakarta.persistence.OneToOne;
 public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private Long userId;
 
 	private String firstname;
 	private String lastname;
@@ -36,12 +36,14 @@ public class User {
 		
 	}
 	
-	public Long getId() {
-		return id;
+	public Long getUserId() {
+		return userId;
 	}
-	public void setId(Long id) {
-		this.id = id;
+
+	public void setUserId(Long userId) {
+		this.userId = userId;
 	}
+
 	public String getFirstname() {
 		return firstname;
 	}

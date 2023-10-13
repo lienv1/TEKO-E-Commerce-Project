@@ -12,7 +12,7 @@ import lombok.Setter;
 public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long addressId;
     private String street;
     private String city;
     private String state;
@@ -23,12 +23,12 @@ public class Address {
 	
 	}
 
-	public Long getId() {
-		return id;
+	public Long getAddressId() {
+		return addressId;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public void setAddressId(Long id) {
+		this.addressId = id;
 	}
 
 	public String getStreet() {

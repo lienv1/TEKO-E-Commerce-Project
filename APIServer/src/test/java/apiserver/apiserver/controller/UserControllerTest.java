@@ -86,7 +86,7 @@ class UserControllerTest {
         User savedUser = new User();
         savedUser.setFirstname("John");
         savedUser.setLastname("Doe");
-        savedUser.setId(1L); // assuming the user is assigned an ID of 1 upon saving
+        savedUser.setUserId(1L); // assuming the user is assigned an ID of 1 upon saving
         
         when(userService.addUser(any(User.class))).thenReturn(savedUser);
         

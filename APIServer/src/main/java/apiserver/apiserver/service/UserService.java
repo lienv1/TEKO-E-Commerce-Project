@@ -57,9 +57,9 @@ public class UserService {
 	public User editUser(User newUser, User oldUser) {
 		try {
 			Address billingAddress = newUser.getBillingAddress();
-			billingAddress.setId(oldUser.getBillingAddress().getId());
+			billingAddress.setAddressId(oldUser.getBillingAddress().getAddressId());
 			Address deliveryAddress = newUser.getDeliveryAddress();
-			deliveryAddress.setId(oldUser.getDeliveryAddress().getId());
+			deliveryAddress.setAddressId(oldUser.getDeliveryAddress().getAddressId());
 			oldUser.setBillingAddress(billingAddress);
 			oldUser.setDeliveryAddress(deliveryAddress);
 		} catch (NullPointerException e) {
