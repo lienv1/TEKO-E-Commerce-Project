@@ -109,7 +109,7 @@ public class FavoriteServiceTest {
 		assertEquals(1, allFavorite.size());
 	}
 	
-	
+	@Test
 	void removeFavorite() {
 		when(favoriteRepo.findAll()).thenReturn(new ArrayList<Favorite>());
 		favoriteService.removeFavoriteByUsernameAndProductId(user.getUsername(), product.getProductId());
