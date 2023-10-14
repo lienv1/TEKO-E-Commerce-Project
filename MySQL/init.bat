@@ -1,3 +1,7 @@
+docker mysql-container stop
+docker rm mysql-container
+docker rmi mysql:latest
+
 @echo off
 call docker run --name mysql-container -d -e MYSQL_ROOT_PASSWORD=my-secret-pw -e MYSQL_DATABASE=Apiserver -v "%cd%/mysql-data:/var/lib/mysql" -p 3306:3306 mysql:latest
 

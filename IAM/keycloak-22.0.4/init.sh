@@ -1,3 +1,7 @@
+docker keycloak-container stop
+docker rm keycloak-container
+docker rmi keycloak-image
+
 docker build -t keycloak-image .
 
 ip=$(hostname -I | awk '{print $1}')

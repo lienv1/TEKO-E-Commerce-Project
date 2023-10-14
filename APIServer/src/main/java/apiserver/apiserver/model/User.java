@@ -1,5 +1,6 @@
 package apiserver.apiserver.model;
 
+import jakarta.annotation.Nonnull;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -27,7 +28,8 @@ public class User {
 	@JoinColumn(name = "billing_address_id")
 	private Address billingAddress;
 
-	@Column(unique = true) 
+	@Column(unique = true)
+	@Nonnull
 	private String username;
 	private boolean business;
 	private boolean deleted;

@@ -59,8 +59,9 @@ public class UserController {
 	public ResponseEntity<User> addUser(@RequestBody User user) {
 		try {
 			User addedUser = userService.addUser(user);
-			return ResponseEntity.ok(addedUser);
+			return new ResponseEntity<User>(addedUser,HttpStatus.OK);
 		} catch (Exception e) {
+			e.printStackTrace();
 			return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
 	}
@@ -94,5 +95,4 @@ public class UserController {
 			return ResponseEntity.notFound().build();
 		}
 	}
-
 }
