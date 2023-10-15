@@ -2,6 +2,8 @@ package apiserver.apiserver.repo;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -48,8 +50,22 @@ class UserRepoTest {
 		User user2 = new User();
 		user2.setUsername("johndoe");
 		assertThrows(DataIntegrityViolationException.class, () -> {
-	        userRepo.saveAndFlush(user2);  // use saveAndFlush to force JPA to write to the database immediately
+	        userRepo.save(user2);  // use saveAndFlush to force JPA to write to the database immediately
 	    });
+	}
+	
+	@Test
+	void findAllTest() {
+		userRepo.save(user);
+		List<User> list = userRepo.findAll();
+		assertTrue(list.size()>0);
+	}
+	
+	@Test
+	void findAllTest2() {
+		userRepo.deleteAll();
+		List<User> list = userRepo.findAll();
+		assertEquals(0, list.size());
 	}
 
 }

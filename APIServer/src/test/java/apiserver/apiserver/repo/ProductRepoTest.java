@@ -2,6 +2,7 @@ package apiserver.apiserver.repo;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -74,6 +75,20 @@ class ProductRepoTest {
 		JpaSystemException e = assertThrows(JpaSystemException.class, () -> {
 			productRepo.save(emptyProduct);
 		});
+	}
+
+	@Test
+	void findAllTest() {
+		productRepo.saveAndFlush(product);
+		List<Product> list = productRepo.findAll();
+		assertTrue(!list.isEmpty());
+	}
+
+	@Test
+	void findAllTestFail() {
+		productRepo.deleteAll();
+		List<Product> list = productRepo.findAll();
+		assertTrue(list.isEmpty());
 	}
 
 }

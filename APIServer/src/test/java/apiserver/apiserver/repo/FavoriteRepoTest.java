@@ -6,6 +6,8 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -50,7 +52,7 @@ class FavoriteRepoTest {
 		favorite = new Favorite();
 		favorite.setProduct(product);
 		favorite.setUser(user);
-		Favorite favorite = favoriteRepo.save(this.favorite);
+		favoriteRepo.save(this.favorite);
 	}
 
 	@Test
@@ -68,16 +70,27 @@ class FavoriteRepoTest {
 
 	@Test
 	void saveTestFail() {
-		
 		// Attempt to save a duplicate favorite (same user and product)
 		Favorite duplicateFavorite = new Favorite();
 		duplicateFavorite.setProduct(product);
 		duplicateFavorite.setUser(user);
-
 		// Assert that an exception is thrown when trying to save the duplicate
 		assertThrows(DataIntegrityViolationException.class, () -> {
 			favoriteRepo.save(duplicateFavorite);
 		});
+	}
+	
+	@Test
+	void findAllTest() {
+		List<Favorite> list = favoriteRepo.findAll();
+		assertTrue(!list.isEmpty());
+	}
+	
+	@Test
+	void findAllTest2() {
+		favoriteRepo.deleteAll();
+		List<Favorite> list = favoriteRepo.findAll();
+		assertTrue(list.isEmpty());
 	}
 
 }
