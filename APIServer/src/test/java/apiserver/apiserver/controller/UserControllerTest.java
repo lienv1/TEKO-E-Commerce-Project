@@ -88,24 +88,17 @@ class UserControllerTest {
 	
 	
 	//Annotation with Keycloak no longer works in Spring Boot 3 like @WithMockUser(username="admin", roles= "{CUSTOMER}")
-	void preAuthorizationTrue() {
+	//This is an alternate solution
+	void preAuthorization(boolean authorized) {
 	     // Mocking Authentication
         Authentication auth = mock(Authentication.class);  
-        when(auth.isAuthenticated()).thenReturn(true);
+        when(auth.isAuthenticated()).thenReturn(authorized);
         SecurityContextHolder.getContext().setAuthentication(auth);
 	}
 	
-	void preAuthorizationFalse() {
-	     // Mocking Authentication
-       Authentication auth = mock(Authentication.class);  
-       //In case this annotation returns false: @PreAuthorize(value= "hasRole('ADMIN')")
-       when(auth.isAuthenticated()).thenReturn(false);
-       SecurityContextHolder.getContext().setAuthentication(auth);
-	}
-
 	@Test
 	void getAllUsersTest() throws Exception {
-		preAuthorizationTrue();
+		preAuthorization(true);
 		// Prepare data and mock's behavior
 		List<User> userList = Arrays.asList(user1, user2);
 		when(userService.getAllUser()).thenReturn(userList);
@@ -116,7 +109,7 @@ class UserControllerTest {
 
 	@Test
     void getAllUsersTestForbidden() throws Exception {
-		preAuthorizationFalse();
+		preAuthorization(false);
         // Prepare data and mock's behavior
         List<User> userList = Arrays.asList(user1, user2);
         when(userService.getAllUser()).thenReturn(userList);
@@ -132,7 +125,7 @@ class UserControllerTest {
 
 	@Test
 	void addUserTest() throws Exception {	
-		preAuthorizationTrue();
+		preAuthorization(true);
 	    mockMvc.perform(post("/user/add")
 	            .with(csrf())
 	            .contentType(MediaType.APPLICATION_JSON)
