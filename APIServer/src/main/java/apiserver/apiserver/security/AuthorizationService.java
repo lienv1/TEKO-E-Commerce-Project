@@ -18,4 +18,12 @@ public class AuthorizationService
         final Collection<? extends GrantedAuthority> authorities = (Collection<? extends GrantedAuthority>)((Authentication) principal).getAuthorities();
         return authorities.stream().anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"));
     }
+    
+    public String getRole(Principal principal) {
+        Collection<? extends GrantedAuthority> authorities = (Collection<? extends GrantedAuthority>)((Authentication) principal).getAuthorities();
+        return authorities.stream()
+                .map(GrantedAuthority::getAuthority)
+                .findFirst()
+                .orElse(null); 
+    }
 }

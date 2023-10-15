@@ -28,8 +28,7 @@ public class User {
 	@JoinColumn(name = "billing_address_id")
 	private Address billingAddress;
 
-	@Column(unique = true)
-	@Nonnull
+	@Column(unique = true, nullable = false)
 	private String username;
 	private boolean business;
 	private boolean deleted;

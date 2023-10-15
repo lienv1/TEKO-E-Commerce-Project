@@ -25,12 +25,8 @@ public class UserService {
 		return userRepo.findAll();
 	}
 
-	public User addUser(User user) {
-		try {
+	public User addUser(User user) throws DataIntegrityViolationException {
 			return userRepo.save(user);
-		} catch (DataIntegrityViolationException ex) {
-			throw new RuntimeException("Username is already taken.");
-		}
 	}
 
 	public User getUserByID(Long id) throws UserNotFoundException {

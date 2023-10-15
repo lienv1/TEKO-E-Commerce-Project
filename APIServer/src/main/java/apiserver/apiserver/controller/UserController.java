@@ -3,7 +3,8 @@ package apiserver.apiserver.controller;
 import java.security.Principal;
 import java.util.List;
 
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,12 +25,15 @@ import apiserver.apiserver.service.UserService;
 @RequestMapping("/user")
 public class UserController {
 
+	@Autowired
 	private UserService userService;
-	private final AuthorizationService authorizationService;
+	
+	@Autowired
+	private AuthorizationService authorizationService;
 
-	public UserController(UserService userService) {
+	public UserController(UserService userService,AuthorizationService authorizationService) {
 		this.userService = userService;
-		authorizationService = new AuthorizationService();
+		this.authorizationService = authorizationService;
 	}
 
 	@GetMapping("/all")
@@ -60,8 +64,7 @@ public class UserController {
 		try {
 			User addedUser = userService.addUser(user);
 			return new ResponseEntity<User>(addedUser,HttpStatus.OK);
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (DataIntegrityViolationException e) {
 			return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
 	}
@@ -71,6 +74,7 @@ public class UserController {
 	public ResponseEntity<User> editUser(@PathVariable("username") String username, Principal principal, @RequestBody User updatedUser) {
 		try {	
 			boolean isAuthorizized = authorizationService.isAuthenticatedByPrincipal(principal, username);
+			
 			if (!isAuthorizized)
 				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 			User editedUser = userService.editUserByUsername(updatedUser, username);
@@ -86,6 +90,7 @@ public class UserController {
 	public ResponseEntity<User> deleteUser(@PathVariable("username") String username, Principal principal){
 		try {
 			boolean isAuthorizized = authorizationService.isAuthenticatedByPrincipal(principal, username);
+			
 			if (!isAuthorizized)
 				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 			User userToDelete = userService.deleteUserByUsername(username);

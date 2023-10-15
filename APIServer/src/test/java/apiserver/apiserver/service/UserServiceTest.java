@@ -16,6 +16,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.DataIntegrityViolationException;
+
 import apiserver.apiserver.exception.UserNotFoundException;
 import apiserver.apiserver.model.User;
 import apiserver.apiserver.repo.UserRepo;
@@ -50,17 +52,42 @@ class UserServiceTest {
 		when(userRepo.findByUsername(username)).thenReturn(Optional.of(user));
 		when(userRepo.findAll()).thenReturn(userList);
 	}
+	
+	void initInvalidUser() {
+		user.setUsername(null);
+		when(userRepo.save(any(User.class))).thenThrow(new DataIntegrityViolationException("Username is null"));
+	}
 
 	@Test
-	void testAddUser() {
+	void addUserTest() {
 		User addedUser = userService.addUser(user);
 		assertEquals(addedUser, user);
 	}
 	
 	@Test
-	void testGetUserByUsername() throws UserNotFoundException {
+	void addUserTestFail() {
+		initInvalidUser();
+		 // Asserting that the exception is thrown
+	    DataIntegrityViolationException ex = assertThrows(
+	            DataIntegrityViolationException.class,
+	            () -> userService.addUser(new User())  // Assuming new User() is invalid
+	    );
+	    assertEquals("Username is null", ex.getMessage());
+	}
+	
+	@Test
+	void getUserByUsernameTest() throws UserNotFoundException {
 		User john = userService.getUserByUsername(username);
 		assertEquals(john, user);
+	}
+	
+	@Test
+	void getUserByUsernameTestFail() throws UserNotFoundException {
+		UserNotFoundException ex = assertThrows(UserNotFoundException.class, 
+				() -> userService.getUserByUsername("non-existant")
+				);
+				
+		assertEquals("User not found", ex.getMessage());
 	}
 	
 	@Test
@@ -71,16 +98,7 @@ class UserServiceTest {
 	}
 	
 	@Test
-	void testUserNotFoundException() {
-	    when(userRepo.findByUsername(anyString())).thenReturn(Optional.empty());
-	    UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
-	        userService.getUserByUsername(username);
-	    });
-	    assertEquals("User not found", exception.getMessage());
-	}
-	
-	@Test
-	void testEditUserByUsername() throws UserNotFoundException {
+	void editUserByUsernameTest() throws UserNotFoundException {
 		User originalUser = userService.addUser(this.user);
 		String newFirstname = "John2";
 		originalUser.setFirstname(newFirstname);
