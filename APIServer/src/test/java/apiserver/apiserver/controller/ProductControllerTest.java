@@ -2,6 +2,7 @@ package apiserver.apiserver.controller;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
@@ -56,7 +57,6 @@ class ProductControllerTest {
 		products = new ArrayList<Product>();
 		products.add(product);
 
-		when(productService.addProduct(any(Product.class))).thenReturn(product);
 		when(productService.getAllProducts()).thenReturn(products);
 	}
 
@@ -78,7 +78,8 @@ class ProductControllerTest {
 
 	@Test
 	void testGetProductByIdFail() throws ProductNotFoundException {
-		when(productService.getProductById(this.product.getProductId())).thenThrow(new ProductNotFoundException("Product doesn't exist"));
+		when(productService.getProductById(this.product.getProductId()))
+				.thenThrow(new ProductNotFoundException("Product doesn't exist"));
 
 		ProductNotFoundException ex = assertThrows(ProductNotFoundException.class,
 				() -> productService.getProductById(14326l));
@@ -87,17 +88,38 @@ class ProductControllerTest {
 
 	@Test
 	void testAddProduct() {
-		fail("Not yet implemented");
+		when(productService.addProduct(any(Product.class))).thenReturn(this.product);
+		Product addedProduct = productService.addProduct(this.product);
+		assertNotNull(addedProduct);
+		assertNotNull(addedProduct.getProductId());
 	}
 
 	@Test
 	void testEditProduct() {
-		fail("Not yet implemented");
+		double newPrice = 6.60;
+		product.setPrice(newPrice);
+		when(productService.editProduct(any(Product.class))).thenReturn(product);
+		Product editedProduct = productService.editProduct(product);
+		assertNotNull(editedProduct);
+		assertEquals(newPrice, editedProduct.getPrice());
 	}
 
 	@Test
-	void testDeleteProduct() {
-		fail("Not yet implemented");
+	void testDeleteProduct() throws ProductNotFoundException {
+		this.product.setDeleted(true);
+		when(productService.deleteProduct(product.getProductId())).thenReturn(this.product);
+		Product deletedProduct = productService.deleteProduct(this.product.getProductId());
+		assertTrue(deletedProduct.isDeleted());
+	}
+
+	@Test
+	void testDeleteProductFail() throws ProductNotFoundException {
+		Long nonExistendId = 12345l;
+		when(productService.deleteProduct(nonExistendId))
+				.thenThrow(new ProductNotFoundException("Can not find product with the id " + nonExistendId));
+		ProductNotFoundException ex = assertThrows(ProductNotFoundException.class,
+				() -> productService.deleteProduct(nonExistendId));
+		assertEquals("Can not find product with the id " + nonExistendId, ex.getMessage());
 	}
 
 }
