@@ -48,10 +48,9 @@ public class ProductController {
 		}
 	}
 	
-	@PostMapping("/id/{id}")
+	@PostMapping("/add")
 	@PreAuthorize("hasRole('ADMIN')")
-	public ResponseEntity<Product> addProduct(@PathVariable("id") Long id, @RequestBody Product product){
-		product.setProductId(id);
+	public ResponseEntity<Product> addProduct(@RequestBody Product product){
 		Product newProduct = productService.addProduct(product);
 		return new ResponseEntity<Product>(newProduct,HttpStatus.OK);
 	}
