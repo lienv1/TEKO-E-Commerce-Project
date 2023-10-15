@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import apiserver.apiserver.exception.ProductNotFoundException;
 import apiserver.apiserver.model.Product;
 import apiserver.apiserver.repo.ProductRepo;
 import apiserver.apiserver.service.ProductService;
@@ -25,9 +26,6 @@ class ProductControllerTest {
 	
 	@MockBean
 	private ProductService productService;
-	
-	@MockBean
-	private ProductRepo productRepo;
 	
 	@Autowired
 	private MockMvc mockMvc;
@@ -58,20 +56,22 @@ class ProductControllerTest {
 		products.add(product);
 		
 		when(productService.addProduct(any(Product.class))).thenReturn(product);
-		//when(productService.getAllProducts()).thenReturn(products);
+		when(productService.getAllProducts()).thenReturn(products);
 	}
 
 	@Test
 	void testGetAllProducts() {
-		//productService.addProduct(product);
-		productRepo.saveAndFlush(product);
-		List <Product> list = productRepo.findAll();
-		assertEquals(1,list.size());
+		List<Product> list = productService.getAllProducts();
+		assertTrue(!list.isEmpty());
+		Product product = list.get(0);
+		assertNotNull(product);
+		assertNotNull(product.getProductId());
 	}
-
+	
 	@Test
-	void testGetProductById() {
-		fail("Not yet implemented");
+	void testGetProductById() throws ProductNotFoundException {
+		Product product = productService.getProductById(14326l);
+		assertNotNull(product);
 	}
 
 	@Test

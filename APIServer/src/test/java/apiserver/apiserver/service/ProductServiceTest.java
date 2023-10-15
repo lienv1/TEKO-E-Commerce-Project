@@ -86,7 +86,7 @@ class ProductServiceTest {
 	
 	@Test
 	void productEditTest() throws ProductNotFoundException {
-	    Product originalProduct = productService.addProduct(this.product);
+	    Product originalProduct = productService.addProduct(product);
 	    double newPrice = 6.60;
 	    originalProduct.setPrice(newPrice);
 	    Product updatedProduct = productService.editProduct(originalProduct);
