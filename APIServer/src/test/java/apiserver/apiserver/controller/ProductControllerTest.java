@@ -129,7 +129,7 @@ class ProductControllerTest {
 	
 	@Test
 	@WithMockUser
-	void testAddProductFail() throws JsonProcessingException, Exception {
+	void testAddProductFail() throws Exception {
 		when(authorizationService.isAuthenticatedByPrincipal(any(Principal.class), any(String.class))).thenReturn(false);
 		Product newProduct = new Product();
 		newProduct.setProductId(26527l);
@@ -138,13 +138,13 @@ class ProductControllerTest {
 				.with(csrf())
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(newProduct))
-				).
-		andExpect(status().isUnauthorized());
+				)
+		.andExpect(status().isUnauthorized());
 	}
 
-//	@Test
-//	@WithMockUser
-	void testEditProduct() throws JsonProcessingException, Exception {
+	@Test
+	@WithMockUser
+	void testEditProduct() throws Exception {
 		when(authorizationService.isAuthenticatedByPrincipal(any(Principal.class), any(String.class))).thenReturn(true);
 		product.setPrice(6.60);
 		when(productService.editProduct(any(Product.class))).thenReturn(product);
@@ -152,8 +152,41 @@ class ProductControllerTest {
 				.with(csrf())
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(product))
-				).
-		andExpect(status().isOk());
+				)
+		.andExpect(status().isOk())
+		.andExpect(jsonPath("$.productId", is(product.getProductId()),Long.class))
+		.andExpect(jsonPath("$.price", is(product.getPrice())));
+	}
+	
+	@Test
+	@WithMockUser
+	void testEditProductFail() throws Exception {
+		when(authorizationService.isAuthenticatedByPrincipal(any(Principal.class), any(String.class))).thenReturn(true);
+		Product nonExistentProduct = new Product();
+		nonExistentProduct.setProductId(98765l);
+		when(productService.editProduct(any(Product.class))).thenThrow(new ProductNotFoundException("Product doesn't exist"));
+		mockMvc.perform(put("/product/edit/id/"+nonExistentProduct.getProductId())
+				.with(csrf())
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(nonExistentProduct))
+				)
+		.andExpect(status().isNotFound());
+	}
+	
+	
+	@Test
+	@WithMockUser
+	void testEditProductFail2() throws Exception {
+		when(authorizationService.isAuthenticatedByPrincipal(any(Principal.class), any(String.class))).thenReturn(false);
+		Product nonExistentProduct = new Product();
+		nonExistentProduct.setProductId(98765l);
+		when(productService.editProduct(any(Product.class))).thenThrow(new ProductNotFoundException("Product doesn't exist"));
+		mockMvc.perform(put("/product/edit/id/"+nonExistentProduct.getProductId())
+				.with(csrf())
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(nonExistentProduct))
+				)
+		.andExpect(status().isUnauthorized());
 	}
 
 //	@Test

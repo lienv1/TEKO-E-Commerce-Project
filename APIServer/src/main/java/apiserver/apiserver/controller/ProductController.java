@@ -66,14 +66,20 @@ public class ProductController {
 	
 	@PutMapping("/edit/id/{id}")
 	@PreAuthorize("hasRole('ADMIN')")
-	public ResponseEntity<Product> editProduct(@PathVariable("id") Long id ,Product product){
+	public ResponseEntity<Product> editProduct(@PathVariable("id") Long id ,Product product, Principal principal){
+		boolean isAuthorized = authorizationService.isAuthenticatedByPrincipal(principal, principal.getName());
+		
+		if (!isAuthorized) {
+			return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+		}
+		
 		try {
 			productService.getProductById(id);
 			product.setProductId(id);
 			Product updatedProduct = productService.editProduct(product);
 			return new ResponseEntity<Product>(updatedProduct,HttpStatus.OK);
 		} catch (ProductNotFoundException e) {
-			return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
+			return new ResponseEntity("Product doesn't exist", HttpStatus.NOT_FOUND);
 		}
 	}
 	

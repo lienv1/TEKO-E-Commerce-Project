@@ -33,7 +33,10 @@ public class ProductService {
 		return productRepo.save(product);
 	}
 	
-	public Product editProduct(Product product) {
+	public Product editProduct(Product product) throws ProductNotFoundException {
+		if (!productRepo.existsById(product.getProductId())) {
+			throw new ProductNotFoundException("Product doesn't exist");
+		}
 		return productRepo.save(product);
 	}
 	
