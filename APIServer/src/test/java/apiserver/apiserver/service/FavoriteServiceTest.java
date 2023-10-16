@@ -1,12 +1,16 @@
 package apiserver.apiserver.service;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -115,6 +119,21 @@ public class FavoriteServiceTest {
 		favoriteService.removeFavoriteByUsernameAndProductId(user.getUsername(), product.getProductId());
 		List<Favorite> list = favoriteService.getAllFavorite();
 		assertEquals(0, list.size());
+	}
+	
+	@Test
+	void isFavoriteTest() {
+		doReturn(true).when(favoriteRepo).existsByUserUsernameAndProductProductId(user.getUsername(), product.getProductId());
+		boolean favoritePresent = favoriteService.isFavorite(user.getUsername(), product.getProductId());
+		assertTrue(favoritePresent);
+	}
+	
+//	@Test
+	void isFavoriteTestFail() {
+		String nonExistentUsername = "non-existent";
+		doReturn(false).when(favoriteRepo).existsByUserUsernameAndProductProductId(nonExistentUsername, product.getProductId());
+		boolean favoritePresent = favoriteService.isFavorite(user.getUsername(), product.getProductId());
+		assertFalse(favoritePresent);
 	}
 
 }

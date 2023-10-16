@@ -28,6 +28,11 @@ public class Favorite {
     public Favorite() {
     	
     }
+    
+    public Favorite(User user, Product product) {
+    	this.user = user;
+    	this.product = product;
+    }
 
 	public Long getFavouriteId() {
 		return favouriteId;

@@ -29,5 +29,9 @@ public class FavoriteService {
 	public void removeFavoriteByUsernameAndProductId(String username, Long productId) {
 		favoriteRepo.deleteByUser_UsernameAndProduct_ProductId(username, productId);
 	}
+	
+	public boolean isFavorite(String username, Long productId) {
+		return favoriteRepo.existsByUserUsernameAndProductProductId(username, productId);
+	}
 
 }

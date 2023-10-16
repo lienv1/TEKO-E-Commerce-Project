@@ -1,6 +1,8 @@
 package apiserver.apiserver.controller;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -63,8 +65,7 @@ class FavoriteControllerTest {
 	}
 	
 	@Test
-	void test() {
-		fail("Not yet implemented");
+	void getFavoriteTest() {
+		when(get("/favorite/product/id/"+product.getProductId()));
 	}
-
 }

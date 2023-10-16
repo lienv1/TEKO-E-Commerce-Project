@@ -92,5 +92,16 @@ class FavoriteRepoTest {
 		List<Favorite> list = favoriteRepo.findAll();
 		assertTrue(list.isEmpty());
 	}
+	
+	@Test
+	void isFavorite() {
+		boolean isPresent = favoriteRepo.existsByUserUsernameAndProductProductId(user.getUsername(), product.getProductId());
+		assertEquals(true, isPresent);
+	}
 
+	void isNotFavorite() {
+		String nonExistentUsername = "non-existent";
+		boolean isPresent = favoriteRepo.existsByUserUsernameAndProductProductId(nonExistentUsername, product.getProductId());
+		assertEquals(false, isPresent);
+	}
 }

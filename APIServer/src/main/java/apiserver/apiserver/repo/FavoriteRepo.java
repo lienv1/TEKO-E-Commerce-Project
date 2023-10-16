@@ -14,4 +14,6 @@ public interface FavoriteRepo extends JpaRepository<Favorite, Long>{
 	@Transactional
 	void deleteByUser_UsernameAndProduct_ProductId(String username, Long productId);
 	
+	boolean existsByUserUsernameAndProductProductId(String username, Long productId);
+	
 }
