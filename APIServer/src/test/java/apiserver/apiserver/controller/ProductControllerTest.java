@@ -3,9 +3,11 @@ package apiserver.apiserver.controller;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.hamcrest.Matchers.is;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -65,57 +67,38 @@ class ProductControllerTest {
 		.andExpect(status().isOk());
 	}
 
-//	@Test
-	void testGetProductById() throws ProductNotFoundException {
-		when(productService.getProductById(this.product.getProductId())).thenReturn(this.product);
-		Product product = productService.getProductById(14326l);
-		assertNotNull(product);
+	@Test
+	@WithMockUser
+	void testGetProductById() throws Exception {
+		when(productService.getProductById(product.getProductId())).thenReturn(product);
+		mockMvc.perform(get("/product/id/"+product.getProductId()))
+		.andExpect(status().isOk())
+		.andExpect(jsonPath("$.productId",is(product.getProductId()),Long.class))
+		.andDo(print());
 	}
 
 //	@Test
 	void testGetProductByIdFail() throws ProductNotFoundException {
-		when(productService.getProductById(this.product.getProductId()))
-				.thenThrow(new ProductNotFoundException("Product doesn't exist"));
-
-		ProductNotFoundException ex = assertThrows(ProductNotFoundException.class,
-				() -> productService.getProductById(14326l));
-		assertEquals("Product doesn't exist", ex.getMessage());
+		
 	}
 
 //	@Test
 	void testAddProduct() {
-		when(productService.addProduct(any(Product.class))).thenReturn(this.product);
-		Product addedProduct = productService.addProduct(this.product);
-		assertNotNull(addedProduct);
-		assertNotNull(addedProduct.getProductId());
+
 	}
 
 //	@Test
 	void testEditProduct() {
-		double newPrice = 6.60;
-		product.setPrice(newPrice);
-		when(productService.editProduct(any(Product.class))).thenReturn(product);
-		Product editedProduct = productService.editProduct(product);
-		assertNotNull(editedProduct);
-		assertEquals(newPrice, editedProduct.getPrice());
 	}
 
 //	@Test
 	void testDeleteProduct() throws ProductNotFoundException {
-		this.product.setDeleted(true);
-		when(productService.deleteProduct(product.getProductId())).thenReturn(this.product);
-		Product deletedProduct = productService.deleteProduct(this.product.getProductId());
-		assertTrue(deletedProduct.isDeleted());
+
 	}
 
 //	@Test
 	void testDeleteProductFail() throws ProductNotFoundException {
-		Long nonExistendId = 12345l;
-		when(productService.deleteProduct(nonExistendId))
-				.thenThrow(new ProductNotFoundException("Can not find product with the id " + nonExistendId));
-		ProductNotFoundException ex = assertThrows(ProductNotFoundException.class,
-				() -> productService.deleteProduct(nonExistendId));
-		assertEquals("Can not find product with the id " + nonExistendId, ex.getMessage());
+
 	}
 
 }
