@@ -64,14 +64,14 @@ public class ProductController {
 		return new ResponseEntity<Product>(newProduct,HttpStatus.OK);
 	}
 	
-	@PutMapping("/edit/id/{id}")
+	@PutMapping("/id/{id}")
 	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<Product> editProduct(@PathVariable("id") Long id ,Product product, Principal principal){
-		boolean isAuthorized = authorizationService.isAuthenticatedByPrincipal(principal, principal.getName());
 		
-		if (!isAuthorized) {
+		boolean isAuthorized = authorizationService.isAuthenticatedByPrincipal(principal, principal.getName());
+		if (!isAuthorized) 
 			return new ResponseEntity(HttpStatus.UNAUTHORIZED);
-		}
+		
 		
 		try {
 			productService.getProductById(id);
@@ -85,7 +85,11 @@ public class ProductController {
 	
 	@DeleteMapping("/id/{id}")
 	@PreAuthorize("hasRole('ADMIN')")
-	public ResponseEntity<Product> deleteProduct(@PathVariable("id") Long id){
+	public ResponseEntity<Product> deleteProduct(@PathVariable("id") Long id, Principal principal){
+		
+		boolean isAuthorized = authorizationService.isAuthenticatedByPrincipal(principal, principal.getName());
+		if (!isAuthorized)
+			return new ResponseEntity(HttpStatus.UNAUTHORIZED);
 		try {
 			Product toDelete = productService.deleteProduct(id);
 			return new ResponseEntity<Product>(toDelete,HttpStatus.OK);

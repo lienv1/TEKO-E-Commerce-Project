@@ -41,9 +41,10 @@ public class ProductService {
 	}
 	
 	public Product deleteProduct(Long id) throws ProductNotFoundException {
-		Product productToDelete = productRepo.findById(id).orElseThrow( () -> new ProductNotFoundException("Can not find product with the id " + id ));
-		productToDelete.setDeleted(true);
-		return productRepo.save(productToDelete);
+		boolean isPresent = productRepo.existsById(id);
+		if (!isPresent)
+			throw new ProductNotFoundException("");
+		return productRepo.updateDeletedStatus(id,true);
 	}
 	
 	public List<Product> getProductsByFilter(Product criteria) {

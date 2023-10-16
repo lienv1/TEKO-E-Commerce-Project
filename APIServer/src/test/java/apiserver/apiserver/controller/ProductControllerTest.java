@@ -95,8 +95,7 @@ class ProductControllerTest {
 		mockMvc.perform(get("/product/id/"+product.getProductId()))
 		.andExpect(status().isOk())
 		.andExpect(jsonPath("$.productId",is(product.getProductId()),Long.class))
-		.andExpect(jsonPath("$.productName",is(product.getProductName())))
-		.andDo(print());
+		.andExpect(jsonPath("$.productName",is(product.getProductName())));
 	}
 
 	@Test
@@ -105,8 +104,7 @@ class ProductControllerTest {
 		Long nonExistentProduct = 34567l;
 		when(productService.getProductById(nonExistentProduct)).thenThrow(new ProductNotFoundException("Product doesn't exist"));
 		mockMvc.perform(get("/product/id/"+nonExistentProduct))
-		.andExpect(status().isNotFound())
-		.andDo(print());
+		.andExpect(status().isNotFound());
 	}
 
 	@Test
@@ -148,7 +146,7 @@ class ProductControllerTest {
 		when(authorizationService.isAuthenticatedByPrincipal(any(Principal.class), any(String.class))).thenReturn(true);
 		product.setPrice(6.60);
 		when(productService.editProduct(any(Product.class))).thenReturn(product);
-		mockMvc.perform(put("/product/edit/id/"+product.getProductId())
+		mockMvc.perform(put("/product/id/"+product.getProductId())
 				.with(csrf())
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(product))
@@ -165,7 +163,7 @@ class ProductControllerTest {
 		Product nonExistentProduct = new Product();
 		nonExistentProduct.setProductId(98765l);
 		when(productService.editProduct(any(Product.class))).thenThrow(new ProductNotFoundException("Product doesn't exist"));
-		mockMvc.perform(put("/product/edit/id/"+nonExistentProduct.getProductId())
+		mockMvc.perform(put("/product/id/"+nonExistentProduct.getProductId())
 				.with(csrf())
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(nonExistentProduct))
@@ -181,7 +179,7 @@ class ProductControllerTest {
 		Product nonExistentProduct = new Product();
 		nonExistentProduct.setProductId(98765l);
 		when(productService.editProduct(any(Product.class))).thenThrow(new ProductNotFoundException("Product doesn't exist"));
-		mockMvc.perform(put("/product/edit/id/"+nonExistentProduct.getProductId())
+		mockMvc.perform(put("/product/id/"+nonExistentProduct.getProductId())
 				.with(csrf())
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(nonExistentProduct))
@@ -189,14 +187,29 @@ class ProductControllerTest {
 		.andExpect(status().isUnauthorized());
 	}
 
-//	@Test
-	void testDeleteProduct() throws ProductNotFoundException {
-
+	@Test
+	@WithMockUser
+	void testDeleteProduct() throws Exception {
+		when(authorizationService.isAuthenticatedByPrincipal(any(Principal.class), any(String.class))).thenReturn(true);
+		when(productService.deleteProduct(product.getProductId())).thenReturn(product);
+		product.setDeleted(true);
+		mockMvc.perform(delete("/product/id/"+product.getProductId())
+				.with(csrf())
+				)
+		.andExpect(status().isOk())
+		.andExpect(jsonPath("$.deleted", is(true)));
 	}
-
-//	@Test
-	void testDeleteProductFail() throws ProductNotFoundException {
-
+	
+	@Test
+	@WithMockUser
+	void testDeleteProductFail() throws Exception {
+		when(authorizationService.isAuthenticatedByPrincipal(any(Principal.class), any(String.class))).thenReturn(false);
+		when(productService.deleteProduct(product.getProductId())).thenReturn(product);
+		product.setDeleted(true);
+		mockMvc.perform(delete("/product/id/"+product.getProductId())
+				.with(csrf())
+				)
+		.andExpect(status().isUnauthorized());
 	}
-
+	
 }
