@@ -13,6 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -198,16 +199,33 @@ class UserControllerTest {
 	@Test
 	@WithMockUser
 	void editUserTestUnauthorized() throws Exception {
-		
 		String newFirstname = "John2";
 		user1.setFirstname(newFirstname);
-		
 		when(userService.editUserByUsername(any(User.class), any(String.class))).thenReturn(user1);
-        
 		mockMvc.perform(put("/user/update/username/"+user1.getUsername())
 				.with(csrf())
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(user1)))
+		.andDo(print())
+		.andExpect(status().isUnauthorized());
+	}
+	
+	@Test
+	@WithMockUser
+	void deleteUserTest() throws Exception {
+		when(authorizationService.isAuthenticatedByPrincipal(any(Principal.class), any(String.class))).thenReturn(true);
+		mockMvc.perform(delete("/user/delete/username/"+this.user1.getUsername())
+				.with(csrf()))
+		.andDo(print())
+		.andExpect(status().isOk());
+	}
+	
+	@Test
+	@WithMockUser
+	void deleteUserTestFail() throws Exception {
+		when(authorizationService.isAuthenticatedByPrincipal(any(Principal.class), any(String.class))).thenReturn(false);
+		mockMvc.perform(delete("/user/delete/username/"+this.user1.getUsername())
+				.with(csrf()))
 		.andDo(print())
 		.andExpect(status().isUnauthorized());
 	}

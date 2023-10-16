@@ -85,11 +85,10 @@ public class UserController {
 	}
 
 	@PreAuthorize(value = "hasAnyRole('ADMIN','CUSTOMER')")
-	@DeleteMapping("/update/username/{username}")
+	@DeleteMapping("/delete/username/{username}")
 	public ResponseEntity<User> deleteUser(@PathVariable("username") String username, Principal principal){
 		try {
 			boolean isAuthorizized = authorizationService.isAuthenticatedByPrincipal(principal, username);
-			
 			if (!isAuthorizized)
 				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 			User userToDelete = userService.deleteUserByUsername(username);
