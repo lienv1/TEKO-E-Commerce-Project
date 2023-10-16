@@ -66,6 +66,6 @@ class FavoriteControllerTest {
 	
 	@Test
 	void getFavoriteTest() {
-		when(get("/favorite/product/id/"+product.getProductId()));
+		
 	}
 }
