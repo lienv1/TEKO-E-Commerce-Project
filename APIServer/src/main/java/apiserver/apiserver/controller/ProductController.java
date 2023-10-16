@@ -1,5 +1,6 @@
 package apiserver.apiserver.controller;
 
+import java.security.Principal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import apiserver.apiserver.exception.ProductNotFoundException;
 import apiserver.apiserver.model.Product;
+import apiserver.apiserver.security.AuthorizationService;
 import apiserver.apiserver.service.ProductService;
 
 @RestController
@@ -26,9 +28,13 @@ public class ProductController {
 	@Autowired
 	private ProductService productService;
 	
+	@Autowired
+	private AuthorizationService authorizationService;
 	
-	public ProductController(ProductService productService) {
+	
+	public ProductController(ProductService productService, AuthorizationService authorizationService) {
 		this.productService = productService;
+		this.authorizationService = authorizationService;
 	}
 	
 	@GetMapping("/all")
@@ -50,7 +56,10 @@ public class ProductController {
 	
 	@PostMapping("/add")
 	@PreAuthorize("hasRole('ADMIN')")
-	public ResponseEntity<Product> addProduct(@RequestBody Product product){
+	public ResponseEntity<Product> addProduct(@RequestBody Product product, Principal principal){
+		String username = principal.getName();
+		if (!authorizationService.isAuthenticatedByPrincipal(principal,username))
+			return new ResponseEntity(HttpStatus.UNAUTHORIZED);
 		Product newProduct = productService.addProduct(product);
 		return new ResponseEntity<Product>(newProduct,HttpStatus.OK);
 	}
@@ -59,7 +68,7 @@ public class ProductController {
 	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<Product> editProduct(@PathVariable("id") Long id ,Product product){
 		try {
-			Product existingProduct = productService.getProductById(id);
+			productService.getProductById(id);
 			product.setProductId(id);
 			Product updatedProduct = productService.editProduct(product);
 			return new ResponseEntity<Product>(updatedProduct,HttpStatus.OK);
