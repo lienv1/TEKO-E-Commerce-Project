@@ -43,7 +43,7 @@ public class UserController {
 		return new ResponseEntity<List<User>>(list, HttpStatus.OK);
 	}
 	
-	@GetMapping("/userinfo/username/{username}")
+	@GetMapping("/username/{username}")
 	@PreAuthorize(value = "hasAnyRole('ADMIN','CUSTOMER')")
 	public ResponseEntity<User> getUser(@PathVariable("username") String username, Principal principal) {
 		try {
@@ -54,8 +54,7 @@ public class UserController {
 			User user = userService.getUserByUsername(username);
 			return new ResponseEntity<User>(user, HttpStatus.OK);
 		} catch (UserNotFoundException e) {
-			System.out.println("User doesn't exist");
-			return ResponseEntity.notFound().build();
+			return new ResponseEntity("User doesn't exist",HttpStatus.NOT_FOUND);
 		}
 	}
 

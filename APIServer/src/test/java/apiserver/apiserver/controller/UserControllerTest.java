@@ -2,6 +2,9 @@ package apiserver.apiserver.controller;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
@@ -73,8 +76,7 @@ class UserControllerTest {
 			User savedUser = user1;
 			savedUser.setUserId(1l);
 			return savedUser;
-		});
-		when(userService.getUserByUsername(user1.getUsername())).thenReturn(user1);
+		});	
 	}
 	
 	void initUser2() throws UserNotFoundException {
@@ -122,6 +124,44 @@ class UserControllerTest {
 	void getAllUsersTestUnauthorized() throws Exception {
 		mockMvc.perform(get("/user/all")).andExpect(status().isUnauthorized());
 	}
+    
+    @Test
+    @WithMockUser
+    void getUserTest() throws Exception{
+    	when(authorizationService.isAuthenticatedByPrincipal(any(Principal.class), any(String.class))).thenReturn(true);
+    	mockMvc.perform(get("/user/username/"+user1.getUsername())
+    			.with(csrf())
+    			.contentType(MediaType.APPLICATION_JSON))
+    	.andExpect(status().isOk())
+    	.andDo(print());
+    }
+    
+    @Test
+    @WithMockUser
+    void getUserTestFail() throws Exception {
+    	String nonExistent = "non-existent-user";
+    	when(authorizationService.isAuthenticatedByPrincipal(any(Principal.class), any(String.class))).thenReturn(true);
+    	when(userService.getUserByUsername(nonExistent)).thenThrow(new UserNotFoundException ("User not found"));
+    	String result = mockMvc.perform(get("/user/username/"+nonExistent)
+    			.with(csrf())
+    			.contentType(MediaType.APPLICATION_JSON))
+    	.andExpect(status().isNotFound())
+    	.andDo(print()).andReturn().getResponse().getContentAsString();
+    	assertEquals("User doesn't exist",result);
+    }
+    
+    @Test
+    @WithMockUser
+    void getUserTestFail2() throws Exception {
+    	when(authorizationService.isAuthenticatedByPrincipal(any(Principal.class), any(String.class))).thenReturn(false);
+    	when(userService.getUserByUsername(user1.getUsername())).thenThrow(new UserNotFoundException ("User not found"));
+    	mockMvc.perform(get("/user/username/"+user1.getUsername())
+    			.with(csrf())
+    			.contentType(MediaType.APPLICATION_JSON))
+    	.andExpect(status().isUnauthorized())
+    	.andDo(print());
+    }
+
 
 	@Test
 	void addUserTest() throws Exception {	
