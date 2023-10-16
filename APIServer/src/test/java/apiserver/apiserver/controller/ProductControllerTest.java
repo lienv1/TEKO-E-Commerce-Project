@@ -116,12 +116,15 @@ class ProductControllerTest {
 		Product newProduct = new Product();
 		newProduct.setProductId(26527l);
 		newProduct.setProductName("Tiger Bier");
+		when(productService.addProduct(any(Product.class))).thenReturn(newProduct);
 		mockMvc.perform(post("/product/add")
 				.with(csrf())
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(newProduct))
-				).
-		andExpect(status().isOk());
+				)
+		.andExpect(status().isOk())
+		.andExpect(jsonPath("$.productId", is(newProduct.getProductId()),Long.class))
+		.andExpect(jsonPath("$.productName", is(newProduct.getProductName())));
 	}
 	
 	@Test
@@ -140,7 +143,17 @@ class ProductControllerTest {
 	}
 
 //	@Test
-	void testEditProduct() {
+//	@WithMockUser
+	void testEditProduct() throws JsonProcessingException, Exception {
+		when(authorizationService.isAuthenticatedByPrincipal(any(Principal.class), any(String.class))).thenReturn(true);
+		product.setPrice(6.60);
+		when(productService.editProduct(any(Product.class))).thenReturn(product);
+		mockMvc.perform(put("/product/edit/id/"+product.getProductId())
+				.with(csrf())
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(product))
+				).
+		andExpect(status().isOk());
 	}
 
 //	@Test
