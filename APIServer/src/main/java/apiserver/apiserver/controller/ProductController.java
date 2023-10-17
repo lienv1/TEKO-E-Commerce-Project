@@ -98,5 +98,11 @@ public class ProductController {
 		}
 	}
 	
+	@GetMapping("/search")
+	public ResponseEntity<List<Product>> getProductsByFilter(@RequestBody Product filter){
+		List<Product> list = productService.getProductsByFilter(filter);
+		return new ResponseEntity<List<Product>>(list,HttpStatus.OK);
+	}
+	
 	
 }
