@@ -96,8 +96,10 @@ class UserControllerTest {
 		List<User> userList = Arrays.asList(user1, user2);
 		when(userService.getAllUser()).thenReturn(userList);
 		// Perform GET Request
-		mockMvc.perform(get("/user/all")).andExpect(status().isOk()).andExpect(jsonPath("$", hasSize(2)))
-				.andExpect(jsonPath("$[0].firstname", is("John"))).andExpect(jsonPath("$[1].firstname", is("Jane")));
+		mockMvc.perform(get("/user/all")).andExpect(status().isOk())
+		.andExpect(jsonPath("$", hasSize(2)))
+		.andExpect(jsonPath("$[0].firstname", is("John")))
+		.andExpect(jsonPath("$[1].firstname", is("Jane")));
 	}
 
 	@Test

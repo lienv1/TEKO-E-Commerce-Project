@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -210,6 +211,21 @@ class ProductControllerTest {
 				.with(csrf())
 				)
 		.andExpect(status().isUnauthorized());
+	}
+	
+	@Test
+	void testGetProductsByFilter() throws Exception {
+		preAuthorization(true);
+		Product criteria = new Product();
+		criteria.setBrand(product.getBrand());
+		when(productService.getProductsByFilter(any(Product.class))).thenReturn(products);
+		mockMvc.perform(get("/product/search")
+				.with(csrf())
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(criteria)))
+		.andExpect(status().isOk())
+		.andExpect(jsonPath("$", hasSize(1)))
+		.andExpect(jsonPath("$[0].brand",is(criteria.getBrand()))).andDo(print());
 	}
 	
 }
