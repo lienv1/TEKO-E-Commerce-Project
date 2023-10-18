@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
+import java.util.Optional;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -82,10 +84,12 @@ class OrderServiceTest {
 		assertEquals(order.getOrderId(), addedOrder.getOrderId());
 	}
 	
-//	@Test
+	@Test
 	void getOrderById() throws OrderNotFoundException {
-//		Order retrievedOrder = orderService.getOrderById(order.getOrderId());		
-		
+		when(orderRepo.findById(order.getOrderId())).thenReturn(Optional.of(order));
+		Order retrievedOrder = orderService.getOrderById(order.getOrderId());		
+		assertNotNull(retrievedOrder);
+		assertEquals(order.getOrderId(), retrievedOrder.getOrderId());
 	}
 
 }
