@@ -20,9 +20,6 @@ public class OrderDetail {
     @Column(nullable = false)
     private Integer quantity;
 
-    @Column(nullable = false)
-    private Double price;
-
 	public OrderDetail() {
 	}
 
@@ -42,10 +39,6 @@ public class OrderDetail {
 		return quantity;
 	}
 
-	public Double getPrice() {
-		return price;
-	}
-
 	public void setId(Long id) {
 		this.id = id;
 	}
@@ -62,10 +55,4 @@ public class OrderDetail {
 		this.quantity = quantity;
 	}
 
-	public void setPrice(Double price) {
-		this.price = price;
-	}
-    
-    
-    
 }
