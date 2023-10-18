@@ -9,11 +9,15 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@Table(name = "orders") // "orders" is used as the table's name, it can be any non-reserved name
 public class Order {
 
 	@Id
@@ -25,7 +29,7 @@ public class Order {
 	private User user;
 
 	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-	private Set<OrderDetail> orderDetails;
+	private Set<OrderDetail> orderDetails = new HashSet<OrderDetail>();
 	
 	private String comment;
 
