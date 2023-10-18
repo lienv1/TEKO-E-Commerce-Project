@@ -9,6 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 
 import java.sql.Timestamp;
@@ -30,14 +31,19 @@ public class Order {
 
 	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<OrderDetail> orderDetails = new HashSet<OrderDetail>();
-	
+
 	private String comment;
 
 	private Date orderDate;
-	
+
 	private Timestamp created;
 
 	private Boolean deleted;
+
+	@PrePersist
+	protected void onCreate() {
+		created = new Timestamp(System.currentTimeMillis());
+	}
 
 	public Order() {
 	}
@@ -97,15 +103,15 @@ public class Order {
 	public void setDeleted(Boolean deleted) {
 		this.deleted = deleted;
 	}
-	
-    public void addOrderDetail(OrderDetail orderDetail) {
-        orderDetails.add(orderDetail);
-        orderDetail.setOrder(this);
-    }
 
-    public void removeOrderDetail(OrderDetail orderDetail) {
-        orderDetails.remove(orderDetail);
-        orderDetail.setOrder(null);
-    }
+	public void addOrderDetail(OrderDetail orderDetail) {
+		orderDetails.add(orderDetail);
+		orderDetail.setOrder(this);
+	}
+
+	public void removeOrderDetail(OrderDetail orderDetail) {
+		orderDetails.remove(orderDetail);
+		orderDetail.setOrder(null);
+	}
 
 }

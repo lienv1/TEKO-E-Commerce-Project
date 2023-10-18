@@ -3,6 +3,9 @@ package apiserver.apiserver.repo;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -65,6 +68,12 @@ public class OrderRepoTest {
 	void saveOrderTest() {
 		Order addedOrder = orderRepo.save(order);
 		assertNotNull(addedOrder.getOrderId());
+		assertNotNull(addedOrder.getUser().getUserId());
+		assertNotNull(addedOrder.getCreated());
+		List<OrderDetail> details = new ArrayList<OrderDetail>(addedOrder.getOrderDetails());
+		assertEquals(product.getProductId(), details.get(0).getProduct().getProductId());
+		assertEquals(user.getUserId(), addedOrder.getUser().getUserId());
+		assertEquals(orderDetail.getQuantity() ,details.get(0).getQuantity());
 	}
 	
 	
