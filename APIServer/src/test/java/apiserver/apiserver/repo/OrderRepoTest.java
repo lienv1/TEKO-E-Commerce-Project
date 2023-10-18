@@ -1,10 +1,13 @@
 package apiserver.apiserver.repo;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -76,5 +79,25 @@ public class OrderRepoTest {
 		assertEquals(orderDetail.getQuantity() ,details.get(0).getQuantity());
 	}
 	
+	@Test
+	void findOrderByIdTest() {
+		Long orderId = orderRepo.save(order).getOrderId();
+		Optional<Order> retrievedOrder = orderRepo.findById(orderId);
+		assertTrue(retrievedOrder.isPresent());
+	}
+	
+	@Test 
+	void findOrderByIdTestFail(){
+		Long nonExistent = 12345678l;
+		Optional<Order> retrievedOrder = orderRepo.findById(nonExistent);
+		assertFalse(retrievedOrder.isPresent());
+	}
+	
+	@Test
+	void getOrdersByUsername() {
+		orderRepo.save(order);
+		List<Order> orders = orderRepo.findByUserUsername(user.getUsername());
+		assertEquals(1, orders.size());
+	}
 	
 }
