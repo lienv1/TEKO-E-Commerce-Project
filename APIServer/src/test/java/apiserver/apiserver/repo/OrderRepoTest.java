@@ -1,5 +1,6 @@
 package apiserver.apiserver.repo;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -42,20 +43,18 @@ public class OrderRepoTest {
 		user = new User();
 		user.setUsername("johndoe");
 		user.setUserId(1000l);
-		userRepo.save(user);
+		userRepo.saveAndFlush(user);
 		
 		product = new Product();
 		product.setProductId(14326l);
 		product.setProductName("Sriracha Hot Chili Sauce");
-		productRepo.save(product);
+		productRepo.saveAndFlush(product);
 		
 		orderDetail = new OrderDetail();
-		orderDetail.setId(100000l);
 		orderDetail.setProduct(product);
 		orderDetail.setQuantity(2);
 		
 		order = new Order();
-		order.setOrderId(100000l);
 		
 		order.addOrderDetail(orderDetail);
 		order.setUser(user);
@@ -65,7 +64,7 @@ public class OrderRepoTest {
 	@Test
 	void saveOrderTest() {
 		Order addedOrder = orderRepo.save(order);
-		assertEquals(order.getOrderId(), addedOrder.getOrderId());
+		assertNotNull(addedOrder.getOrderId());
 	}
 	
 	
