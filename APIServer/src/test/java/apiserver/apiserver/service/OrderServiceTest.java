@@ -75,11 +75,11 @@ class OrderServiceTest {
 	}
 	
 	@Test
-	void addOrder(Order order) {
-		when(orderRepo.save(any(Order.class))).thenReturn(order);
+	void addOrder() {
+		when(orderRepo.save(order)).thenReturn(order);
 		Order addedOrder = orderService.addOrder(order);
 		assertNotNull(addedOrder.getOrderId());
-//		assertEquals(order.getOrderId(), addedOrder.getOrderId());
+		assertEquals(order.getOrderId(), addedOrder.getOrderId());
 	}
 	
 //	@Test
