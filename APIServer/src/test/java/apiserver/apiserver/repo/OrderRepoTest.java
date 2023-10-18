@@ -98,6 +98,14 @@ public class OrderRepoTest {
 		orderRepo.save(order);
 		List<Order> orders = orderRepo.findByUserUsername(user.getUsername());
 		assertEquals(1, orders.size());
+		assertEquals(user.getUsername(), orders.get(0).getUser().getUsername());
+	}
+	
+	@Test
+	void getOrdersByUsernameFail() {
+		String nonExistent = "non-existent";
+		List<Order> orders = orderRepo.findByUserUsername(nonExistent);
+		assertTrue(orders.isEmpty());
 	}
 	
 }
