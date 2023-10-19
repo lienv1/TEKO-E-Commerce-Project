@@ -121,6 +121,9 @@ class FavoriteControllerTest {
 	void addFavoriteTest() throws Exception {
 		isAuthenticatedByPrincipal(true);
 		when(favoriteService.addFavoriteByUsernameAndProductId(user.getUsername(),product.getProductId())).thenReturn(favorite);
-		mockMvc.perform(post("/favorite/add"));
+		mockMvc.perform(post("/favorite/product/"+product.getProductId()+"/username/"+user.getUsername())
+				.with(csrf())
+				.contentType(MediaType.APPLICATION_JSON))
+		.andExpect(status().isOk());
 	}
 }

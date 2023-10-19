@@ -93,11 +93,7 @@ class OrderServiceTest {
 	    User nonExistentUser = new User();
 	    nonExistentUser.setUsername("non-existent");
 	    order.setUser(nonExistentUser);
-
-	    // You should mock the behavior for any instance of Order, not a specific instance
 	    when(orderService.addOrder(order)).thenThrow(new DataIntegrityViolationException("User doesn't exist"));
-
-	    // This is the actual call you're testing
 	    DataIntegrityViolationException e = assertThrows(DataIntegrityViolationException.class , () -> {
 	        orderService.addOrder(order);
 	    });
