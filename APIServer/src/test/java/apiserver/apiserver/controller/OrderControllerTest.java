@@ -95,8 +95,28 @@ class OrderControllerTest {
 		mockMvc.perform(get("/order/id/"+order.getOrderId())
 				.with(csrf()))
 		.andExpect(status().isOk())
-		.andExpect(jsonPath("$.orderId", is(order.getOrderId()),Long.class))
-		.andDo(print());
+		.andExpect(jsonPath("$.orderId", is(order.getOrderId()),Long.class));
+	}
+	
+	@Test
+	@WithMockUser
+	void getOrderByIdTestFail() throws Exception {
+		isAuthenticatedByPrincipal(false);	
+		when(orderService.getOrderById(order.getOrderId())).thenReturn(order);
+		mockMvc.perform(get("/order/id/"+order.getOrderId())
+				.with(csrf()))
+		.andExpect(status().isUnauthorized()).andDo(print());
+	}
+	
+	@Test
+	@WithMockUser
+	void getOrderByIdTestFail2() throws Exception {
+		isAuthenticatedByPrincipal(true);	
+		Long nonExistent = 123456l;
+		when(orderService.getOrderById(nonExistent)).thenThrow(new OrderNotFoundException("Order doesn't exist"));
+		mockMvc.perform(get("/order/id/"+nonExistent)
+				.with(csrf()))
+		.andExpect(status().isNotFound());
 	}
 	
 	
