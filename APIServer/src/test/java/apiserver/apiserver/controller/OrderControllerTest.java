@@ -153,28 +153,38 @@ class OrderControllerTest {
 	@WithMockUser
 	void addOrder() throws Exception {
 		isAuthenticatedByPrincipal(true);
-		when(orderService.addOrder(order)).thenReturn(order);
+		when(orderService.addOrder(any(Order.class))).thenReturn(order);
 		mockMvc.perform(post("/order/username/"+user.getUsername())
 				.with(csrf())
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(objectMapper.writeValueAsString(order)))
-		.andExpect(status().isOk());
-//		.andExpect(jsonPath("$.orderId", is(order.getOrderId()), Long.class));
+		.andExpect(status().isOk())
+		.andExpect(jsonPath("$.orderId", is(order.getOrderId()), Long.class));
 	}
 	
-//	@Test
-//	@WithMockUser
-//	void addOrderFail() throws Exception {
-//		isAuthenticatedByPrincipal(true);
-//		String nonExistent = "non-existent";
-//		List <Order> orders = new ArrayList<Order>();
-//		orders.add(order);
-//		when(orderService.getAllOrdersByUsername(nonExistent)).thenThrow(new DataIntegrityViolationException("User doesn't exist"));
-//		mockMvc.perform(post("/order/username/"+nonExistent)
-//				.with(csrf())
-//				.contentType(MediaType.APPLICATION_JSON)
-//				.content(objectMapper.writeValueAsString(orders)))
-//		.andExpect(status().isNotFound());
-//	}
+	@Test
+	@WithMockUser
+	void addOrderFail() throws Exception {
+		isAuthenticatedByPrincipal(true);
+		String nonExistent = "non-existent";
+		when(orderService.addOrder(any(Order.class))).thenThrow(new DataIntegrityViolationException("User doesn't exist"));
+		mockMvc.perform(post("/order/username/"+nonExistent)
+				.with(csrf())
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(order)))
+		.andExpect(status().isNotFound());
+	}
+	
+	@Test
+	@WithMockUser
+	void addOrderFail2() throws Exception {
+		isAuthenticatedByPrincipal(false);
+		String nonExistent = "non-existent";
+		mockMvc.perform(post("/order/username/"+nonExistent)
+				.with(csrf())
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(order)))
+		.andExpect(status().isUnauthorized());
+	}
 
 }

@@ -82,7 +82,6 @@ public class OrderController {
 		} catch (DataIntegrityViolationException e) {
 			return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
 		}
-
 	}
 
 }
