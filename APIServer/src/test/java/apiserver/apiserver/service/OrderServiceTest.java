@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -91,5 +93,17 @@ class OrderServiceTest {
 		assertNotNull(retrievedOrder);
 		assertEquals(order.getOrderId(), retrievedOrder.getOrderId());
 	}
+	
+	@Test
+	void getAllOrdersByUsername() {
+		List<Order> addedOrders = new ArrayList<Order>();
+		addedOrders.add(order);
+		when(orderRepo.findByUserUsername(user.getUsername())).thenReturn(addedOrders);
+		List<Order> orderList = orderService.getAllOrdersByUsername(user.getUsername());
+		assertEquals(1, orderList.size());
+		assertEquals(product.getProductId(), orderList.get(0).getOrderDetails().iterator().next().getProduct().getProductId());
+	}
+	
+	
 
 }
