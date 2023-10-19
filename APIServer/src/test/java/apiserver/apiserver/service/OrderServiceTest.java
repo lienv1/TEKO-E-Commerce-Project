@@ -104,6 +104,14 @@ class OrderServiceTest {
 		assertEquals(product.getProductId(), orderList.get(0).getOrderDetails().iterator().next().getProduct().getProductId());
 	}
 	
+	@Test 
+	void getAllOrdersByUsernameFail(){
+		String nonExistent = "non-existent";
+		when(orderRepo.findByUserUsername(nonExistent)).thenReturn(new ArrayList<Order>());
+		List<Order> orderList = orderService.getAllOrdersByUsername(user.getUsername());
+		assertTrue(orderList.isEmpty());
+	}
+	
 	
 
 }
