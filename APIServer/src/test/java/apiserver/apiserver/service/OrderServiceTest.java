@@ -15,8 +15,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import apiserver.apiserver.exception.OrderNotFoundException;
+import apiserver.apiserver.exception.UserNotFoundException;
 import apiserver.apiserver.model.Order;
 import apiserver.apiserver.model.OrderDetail;
 import apiserver.apiserver.model.Product;
@@ -79,11 +81,28 @@ class OrderServiceTest {
 	}
 	
 	@Test
-	void addOrder() {
+	void addOrder() throws Exception {
 		when(orderRepo.save(order)).thenReturn(order);
 		Order addedOrder = orderService.addOrder(order);
 		assertNotNull(addedOrder.getOrderId());
 		assertEquals(order.getOrderId(), addedOrder.getOrderId());
+	}
+	
+	@Test
+	void addOrderFail() throws Exception{
+	    User nonExistentUser = new User();
+	    nonExistentUser.setUsername("non-existent");
+	    order.setUser(nonExistentUser);
+
+	    // You should mock the behavior for any instance of Order, not a specific instance
+	    when(orderService.addOrder(any(Order.class))).thenThrow(new Exception("User doesn't exist"));
+
+	    // This is the actual call you're testing
+	    DataIntegrityViolationException e = assertThrows(DataIntegrityViolationException.class , () -> {
+	        orderService.addOrder(order);
+	    });
+
+	    assertEquals("User doesn't exist", e.getMessage());
 	}
 	
 	@Test
@@ -108,7 +127,7 @@ class OrderServiceTest {
 	void getAllOrdersByUsernameFail(){
 		String nonExistent = "non-existent";
 		when(orderRepo.findByUserUsername(nonExistent)).thenReturn(new ArrayList<Order>());
-		List<Order> orderList = orderService.getAllOrdersByUsername(user.getUsername());
+		List<Order> orderList = orderService.getAllOrdersByUsername(nonExistent);
 		assertTrue(orderList.isEmpty());
 	}
 	
