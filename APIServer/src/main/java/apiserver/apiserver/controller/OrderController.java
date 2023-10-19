@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import apiserver.apiserver.exception.OrderNotFoundException;
-import apiserver.apiserver.exception.UserNotFoundException;
 import apiserver.apiserver.model.Order;
 import apiserver.apiserver.security.AuthorizationService;
 import apiserver.apiserver.service.OrderService;

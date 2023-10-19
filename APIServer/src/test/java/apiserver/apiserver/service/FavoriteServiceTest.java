@@ -105,6 +105,13 @@ public class FavoriteServiceTest {
 	}
 	
 	@Test
+	void addFavoriteByUsernameAndProductIdTest() {
+		when(favoriteRepo.addFavoriteByUsernameAndProductId(user.getUsername(),product.getProductId())).thenReturn(favorite);
+		Favorite addedFavorite = favoriteService.addFavoriteByUsernameAndProductId(user.getUsername(), product.getProductId());
+		assertNotNull(addedFavorite);
+	}
+	
+	@Test
 	void getAllFavoriteTest() {
 		favoriteList = new ArrayList<Favorite>();
 		favoriteList.add(favorite);
@@ -114,7 +121,7 @@ public class FavoriteServiceTest {
 	}
 	
 	@Test
-	void removeFavorite() {
+	void removeFavoriteTest() {
 		when(favoriteRepo.findAll()).thenReturn(new ArrayList<Favorite>());
 		favoriteService.removeFavoriteByUsernameAndProductId(user.getUsername(), product.getProductId());
 		List<Favorite> list = favoriteService.getAllFavorite();
@@ -128,7 +135,7 @@ public class FavoriteServiceTest {
 		assertTrue(favoritePresent);
 	}
 	
-//	@Test
+	@Test
 	void isFavoriteTestFail() {
 		String nonExistentUsername = "non-existent";
 		doReturn(false).when(favoriteRepo).existsByUserUsernameAndProductProductId(nonExistentUsername, product.getProductId());

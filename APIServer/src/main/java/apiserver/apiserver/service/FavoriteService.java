@@ -22,6 +22,10 @@ public class FavoriteService {
 		return favoriteRepo.save(favorite);
 	}
 	
+	public Favorite addFavoriteByUsernameAndProductId(String username, Long id) {
+		return favoriteRepo.addFavoriteByUsernameAndProductId(username, id);
+	}
+	
 	public List<Favorite> getAllFavorite(){
 		return favoriteRepo.findAll();
 	}
