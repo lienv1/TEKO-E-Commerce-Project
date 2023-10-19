@@ -126,4 +126,13 @@ class FavoriteControllerTest {
 				.contentType(MediaType.APPLICATION_JSON))
 		.andExpect(status().isOk());
 	}
+	
+	@Test
+	@WithMockUser
+	void removeFavorite() throws Exception{
+		isAuthenticatedByPrincipal(true);
+		mockMvc.perform(delete("/favorite/product/"+product.getProductId()+"/username/"+user.getUsername())
+				.with(csrf()))
+		.andExpect(status().isOk());
+	}
 }

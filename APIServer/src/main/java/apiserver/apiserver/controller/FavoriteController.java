@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -52,6 +53,22 @@ public class FavoriteController {
 		}
 		Favorite addedFavorite = favoriteService.addFavoriteByUsernameAndProductId(username, id);
 		return new ResponseEntity<Favorite>(addedFavorite,HttpStatus.OK);
+	}
+	
+	@PreAuthorize("hasAnyRole('ADMIN','CUSTOMER')")
+	@DeleteMapping("/product/{productId}/username/{username}")
+	public ResponseEntity removeFavorite(@PathVariable("productId") Long id, @PathVariable("username") String username, Principal principal) {
+		boolean isAuthenticated = authorizationService.isAuthenticatedByPrincipal(principal, username);
+		if (!isAuthenticated) {
+			return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+		}
+		try {
+			favoriteService.removeFavoriteByUsernameAndProductId(username, id);
+			return new ResponseEntity(HttpStatus.OK);
+		}
+		catch (Exception e) {
+			return new ResponseEntity(e.getMessage(),HttpStatus.BAD_REQUEST);
+		}
 	}
 	
 }
