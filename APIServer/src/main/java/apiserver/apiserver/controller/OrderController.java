@@ -31,8 +31,8 @@ public class OrderController {
 		this.authorizationService = authorizationService;
 	}
 	
-	@PreAuthorize("hasAnyRole('ADMIN','CUSTOMER')")
 	@GetMapping("/id/{id}")
+	@PreAuthorize(value = "hasAnyRole('ADMIN','CUSTOMER')")
 	public ResponseEntity<Order> getOrderById(@PathVariable("id") Long id, Principal principal) {
 		
 		boolean isAuthenticated = authorizationService.isAuthenticatedByPrincipal(principal, principal.getName());

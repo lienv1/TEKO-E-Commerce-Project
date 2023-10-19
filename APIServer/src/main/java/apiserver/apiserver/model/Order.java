@@ -17,6 +17,8 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "orders") // "orders" is used as the table's name, it can be any non-reserved name
 public class Order {
@@ -38,6 +40,7 @@ public class Order {
 
 	private Timestamp created;
 
+	@JsonIgnore
 	private Boolean deleted;
 
 	@PrePersist

@@ -21,7 +21,10 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import apiserver.apiserver.exception.OrderNotFoundException;
 import apiserver.apiserver.model.Order;
@@ -42,6 +45,9 @@ class OrderControllerTest {
 	
 	@Autowired
 	private MockMvc mockMvc;
+	
+	@Autowired
+	private ObjectMapper objectMapper;
 	
 	private User user;
 	private Product product;
@@ -82,12 +88,17 @@ class OrderControllerTest {
 	}
 	
 	@Test
+	@WithMockUser
 	void getOrderByIdTest() throws Exception {
-		isAuthenticatedByPrincipal(true);
-		
+		isAuthenticatedByPrincipal(true);	
 		when(orderService.getOrderById(order.getOrderId())).thenReturn(order);
-		mockMvc.perform(get("/order/id/"+order.getOrderId()).with(csrf()))
-		.andExpect(status().isOk());
+		mockMvc.perform(get("/order/id/"+order.getOrderId())
+				.with(csrf()))
+		.andExpect(status().isOk())
+		.andExpect(jsonPath("$.orderId", is(order.getOrderId()),Long.class))
+		.andDo(print());
 	}
+	
+	
 
 }
