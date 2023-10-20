@@ -1,8 +1,8 @@
 docker mysql-container stop
 docker rm mysql-container
-docker rmi mysql:latest
+docker rmi mysql:8.1.0
 
-docker run -d --name mysql-container -e MYSQL_ROOT_PASSWORD=my-secret-pw -v "$(pwd)/mysql-data:/var/lib/mysql" -e MYSQL_DATABASE=Apiserver -p 3306:3306 mysql:latest
+docker run -d --name mysql-container -e MYSQL_ROOT_PASSWORD=my-secret-pw -v "$(pwd)/mysql-data:/var/lib/mysql" -e MYSQL_DATABASE=Apiserver -p 3306:3306 mysql:8.1.0
 
 check_container() {
   echo "Create Keycloak database"
