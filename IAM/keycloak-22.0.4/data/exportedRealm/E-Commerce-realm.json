@@ -1,6 +1,8 @@
 {
   "id" : "5cdc489e-adc9-4f34-bb36-820570da53db",
   "realm" : "E-Commerce",
+  "displayName" : "",
+  "displayNameHtml" : "",
   "notBefore" : 0,
   "defaultSignatureAlgorithm" : "RS256",
   "revokeRefreshToken" : false,
@@ -368,7 +370,7 @@
   "otpPolicyLookAheadWindow" : 1,
   "otpPolicyPeriod" : 30,
   "otpPolicyCodeReusable" : false,
-  "otpSupportedApplications" : [ "totpAppFreeOTPName", "totpAppGoogleName", "totpAppMicrosoftAuthenticatorName" ],
+  "otpSupportedApplications" : [ "totpAppMicrosoftAuthenticatorName", "totpAppGoogleName", "totpAppFreeOTPName" ],
   "webAuthnPolicyRpEntityName" : "keycloak",
   "webAuthnPolicySignatureAlgorithms" : [ "ES256" ],
   "webAuthnPolicyRpId" : "",
@@ -1180,6 +1182,12 @@
       "subComponents" : { },
       "config" : { }
     } ],
+    "org.keycloak.userprofile.UserProfileProvider" : [ {
+      "id" : "465516ad-70c8-44af-ab9d-145d86167b7d",
+      "providerId" : "declarative-user-profile",
+      "subComponents" : { },
+      "config" : { }
+    } ],
     "org.keycloak.keys.KeyProvider" : [ {
       "id" : "21a600e0-247a-435c-a459-2aa031952874",
       "name" : "aes-generated",
@@ -1779,10 +1787,12 @@
     "actionTokenGeneratedByUserLifespan-idp-verify-account-via-email" : "",
     "parRequestUriLifespan" : "60",
     "clientSessionMaxLifespan" : "0",
+    "frontendUrl" : "",
+    "acr.loa.map" : "{}",
     "shortVerificationUri" : ""
   },
   "keycloakVersion" : "22.0.4",
-  "userManagedAccessAllowed" : false,
+  "userManagedAccessAllowed" : true,
   "clientProfiles" : {
     "profiles" : [ ]
   },
