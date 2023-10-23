@@ -7,17 +7,26 @@ const path = require('path');
 const app = express();
 const PORT = 3000;
 
-// Configure storage
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    // check the url of the incoming request
-    const uploadPath = req.baseUrl.includes('/products') ? 'Files/Images/Products' : 'Files/Images';
-    cb(null, uploadPath);
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.originalname);
-  }
-});
+// Create storage with a dynamic path
+function createStorage(path) {
+    return multer.diskStorage({
+        destination: function (req, file, cb) {
+            cb(null, path);
+        },
+        filename: function (req, file, cb) {
+            cb(null, file.originalname); // or use Date.now() + '-' + file.originalname for unique filenames
+        }
+    });
+}
+
+// Configure upload for each path
+const uploadImages = multer({ storage: createStorage('Files/Images') });
+const uploadProducts = multer({ storage: createStorage('Files/Images/Products') });
+
+
+// Middleware for serving files from both directories
+app.use('/images/products', express.static('Files/Images/Products'));
+app.use('/images', express.static('Files/Images'));
 
 //Security configuration
 const keycloakUrl = process.env.KEYCLOAK_URL || 'http://localhost:8180'; // Use environment variable or default to http://localhost:8180
@@ -44,12 +53,6 @@ async function isAuthorized(token) {
   }
 }
 
-const upload = multer({ storage: storage });
-
-// Middleware for serving files from both directories
-app.use('/images/products', express.static('Files/Images/Products'));
-app.use('/images', express.static('Files/Images'));
-
 // GET requests to fetch images from directories
 app.get('/images/products/:name', (req, res) => {
   res.sendFile(path.join(__dirname, 'Files/Images/Products', req.params.name));
@@ -60,7 +63,7 @@ app.get('/images/:name', (req, res) => {
 });
 
 // POST requests for uploading images to directories
-app.post('/images/products', upload.single('image'), async (req, res) => {
+app.post('/images/products', uploadProducts.single('image'), async (req, res) => {
   const token = req.headers.authorization?.split(' ')[1];
 
   if (!token) {
@@ -84,8 +87,38 @@ app.post('/images/products', upload.single('image'), async (req, res) => {
   }
 });
 
-app.post('/images', upload.single('image'), (req, res) => {
-  res.json({ file: req.file });
+app.post('/images', uploadImages.single('image'), async (req, res) => {
+	
+	
+	
+	 const token = req.headers.authorization?.split(' ')[1];
+
+  if (!token) {
+    return res.status(401).json({ error: 'Unauthorized - Access Token missing' });
+  }
+
+  try {
+    const isAuthorizedResult = await isAuthorized(token);
+
+    if (isAuthorizedResult) {
+      // The user is authorized; proceed with the file upload or other operations.
+      res.json({ file: req.file });
+    } else {
+      // The user is not authorized.
+      res.status(401).json({ error: 'Unauthorized - Invalid Access Token' });
+    }
+  } catch (error) {
+    // Handle any errors that occur during authorization check.
+    console.error('Authorization check failed:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+	
+	
+	
+	
+	
+
+ // res.json({ file: req.file });
 });
 
 // DELETE requests to delete images from directories
