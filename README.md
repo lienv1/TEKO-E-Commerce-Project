@@ -7,10 +7,11 @@ Frontend
 - nginx
 
 Backend
-- Spring Boot 3 (JAVA)
+- Spring Boot 3 (Java)
 - Keycloak 22
 - MySQL
 - Swagger
+- Express.js (Node.js)
 
 DevOps
 - Docker
