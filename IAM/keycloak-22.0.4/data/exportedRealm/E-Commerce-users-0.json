@@ -1,0 +1,29 @@
+{
+  "realm" : "E-Commerce",
+  "users" : [ {
+    "id" : "480adad4-9dfe-41ee-94fd-7d2e6b5c0c9a",
+    "createdTimestamp" : 1698171560334,
+    "username" : "admin",
+    "enabled" : true,
+    "totp" : false,
+    "emailVerified" : false,
+    "firstName" : "admin",
+    "lastName" : "admin",
+    "credentials" : [ {
+      "id" : "40176340-f44a-4eb0-9926-92b5a03863ac",
+      "type" : "password",
+      "userLabel" : "My password",
+      "createdDate" : 1698171570759,
+      "secretData" : "{\"value\":\"vJDuaVVNd0zCcF8dn6sjwFAEOkEl8lhigW3/f4ekylE=\",\"salt\":\"sz8HaGVFirno2MWSMCgCrg==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":27500,\"algorithm\":\"pbkdf2-sha256\",\"additionalParameters\":{}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-e-commerce" ],
+    "clientRoles" : {
+      "E-Commerce-Client" : [ "ADMIN" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  } ]
+}

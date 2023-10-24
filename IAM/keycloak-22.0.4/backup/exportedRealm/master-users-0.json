@@ -1,25 +1,22 @@
 {
   "realm" : "master",
   "users" : [ {
-    "id" : "9f5b4a87-8b90-40ea-a030-ea515d306d5c",
-    "createdTimestamp" : 1697826012273,
+    "id" : "bebf121e-744d-40f7-a82d-3f521ab3647a",
+    "createdTimestamp" : 1698006702891,
     "username" : "admin",
     "enabled" : true,
     "totp" : false,
     "emailVerified" : false,
     "credentials" : [ {
-      "id" : "0184a3a5-8531-4e83-98b3-d786a740d841",
+      "id" : "cee5d304-39a6-43b2-9396-7daf38b8de02",
       "type" : "password",
-      "createdDate" : 1697826012539,
-      "secretData" : "{\"value\":\"bJoaWjIyJyFuqbytkOtLq/S8oO9KT6gUAQQJ/wfoKTw=\",\"salt\":\"nBBl58hV7lEc8iVZZOh/6A==\",\"additionalParameters\":{}}",
+      "createdDate" : 1698006703102,
+      "secretData" : "{\"value\":\"ojcGRHUTWs5gS1shOwHt/51oNm5jZgK9TMVIn/G42Q4=\",\"salt\":\"DpmY3R+DkQv9ux900qEAUw==\",\"additionalParameters\":{}}",
       "credentialData" : "{\"hashIterations\":27500,\"algorithm\":\"pbkdf2-sha256\",\"additionalParameters\":{}}"
     } ],
     "disableableCredentialTypes" : [ ],
     "requiredActions" : [ ],
     "realmRoles" : [ "admin", "default-roles-master" ],
-    "clientRoles" : {
-      "E-Commerce-realm" : [ "view-authorization", "view-identity-providers", "manage-realm", "view-clients", "query-realms", "manage-users", "create-client", "view-realm", "manage-identity-providers", "manage-clients", "query-groups", "manage-events", "manage-authorization", "query-clients", "view-events", "view-users", "query-users" ]
-    },
     "notBefore" : 0,
     "groups" : [ ]
   } ]
