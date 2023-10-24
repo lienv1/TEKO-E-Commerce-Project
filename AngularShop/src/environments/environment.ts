@@ -3,7 +3,10 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  backendAPI: "http://localhost:8080",
+  fileServerAPI:"http://localhost:3000",
+  keycloakAPI:"http://localhost:8180",
 };
 
 /*
