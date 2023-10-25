@@ -1,1 +1,51 @@
-<p>login works!</p>
+<div class="container">
+
+    <br>
+  
+    <div class="row justify-content-center">
+  
+      <!--Login section-->
+      <div *ngIf="!isLogged">
+  
+        <nav>
+          <div class="nav nav-tabs" id="nav-tab" role="tablist">
+            <button class="nav-link active" id="nav-login-tab" data-bs-toggle="tab" data-bs-target="#nav-login"
+              type="button" role="tab" aria-controls="nav-login" aria-selected="true">{{"LOGIN"| translate}}</button>
+            <button class="nav-link" id="nav-register-tab" data-bs-toggle="tab" data-bs-target="#nav-register"
+              type="button" role="tab" aria-controls="nav-register" aria-selected="false">{{"REGISTER"| translate}}</button>
+          </div>
+          <div class="tab-content" id="nav-tabContent">
+  
+            <!--Login section-->
+            <div class="tab-pane fade show active" id="nav-login" role="tabpanel" aria-labelledby="nav-login-tab">
+              <br>
+                <button type="submit" class="btn btn-secondary"
+                  (click)="login()"> {{"LOGIN WITH A-CHAU-ID"|translate}}</button>
+        
+            </div>
+            <!--Register section-->
+            <div class="tab-pane fade" id="nav-register" role="tabpanel" aria-labelledby="nav-register-tab">
+              <br>
+              <button type="submit" class="btn btn-secondary"
+                (click)="register()">{{"REGISTER TO A-CHAU-ID"|translate}}</button>
+      
+            </div>
+          </div>
+        </nav>
+  
+      </div>
+  
+      <!--Logout section-->
+      <div *ngIf="isLogged" style="width: 10em;" class="my-4">
+  
+        <div class="my-4">{{"CURRENT USER" | translate}} {{username}}!</div>
+  
+       <!-- <div>is logged in: {{isLogged}}</div>-->
+  
+        <button class="btn btn-danger" (click)="logout()">{{"LOGOUT" | translate}}</button>
+      </div>
+    </div>
+  
+    <br>
+  
+  </div>

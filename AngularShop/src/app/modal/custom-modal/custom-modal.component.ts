@@ -1,10 +1,23 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { FunctionModel } from 'src/app/model/functionModel';
 
 @Component({
   selector: 'app-custom-modal',
   templateUrl: './custom-modal.component.html',
   styleUrls: ['./custom-modal.component.scss']
 })
-export class CustomModalComponent {
+export class CustomModalComponent implements OnInit {
+  
+  public functionModels : FunctionModel[] = [];
+  public title !: string;
+  public message !: string;
+  public colorTitle :string = "black";
+
+  constructor() { }
+
+  @ViewChild('myModal') myModal: any;
+
+  ngOnInit(): void {
+  }
 
 }

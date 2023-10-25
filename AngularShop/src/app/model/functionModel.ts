@@ -1,4 +1,4 @@
-export interface CustomPopupModal{
+export interface FunctionModel{
     message: string;
     foo: () => void;
 }

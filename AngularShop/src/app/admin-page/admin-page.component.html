@@ -1,1 +1,68 @@
-<p>admin-page works!</p>
+<br>
+<!--Popup section-->
+<app-custom-modal #CustomModalComponent> </app-custom-modal>
+<!--Popup section ends-->
+<div class="container">
+  <!-- Left-side menu bar -->
+  <div class="row mt-4">
+    <div class="col-md-3">
+      <label for="search">{{'SEARCH CUSTOMER' | translate}}:</label>
+      <div class="input-group mb-3">
+        <input type="text" class="form-control" #searchUser id="searchUser" (keyup.enter)="searchUsername(searchUser.value)" [placeholder]="getTranslation('SEARCH BY USERNAME')">
+        <button class="btn btn-secondary" id="searchBtn" (click)="searchUsername(searchUser.value)">{{'SEARCH' | translate}}:</button>
+      </div>
+      <label for="selectUser">Select:</label>
+      <select class="form-select mb-3" id="selectUser" #selectUser (change)="onOptionSelected()">
+        <option *ngFor="let user of users" value="{{user.username}}">{{user.username}} - {{user.company}}</option>
+      </select>
+    </div>
+    <!-- Center section with title and table -->
+    <div class="col-md-9">
+      <h2 class="mb-4" #title>{{"ORDER HISTORY" | translate}}</h2>
+      <div class="accordion" id="orderHistoryAccordion">
+
+
+        <div *ngFor="let order of orders | paginate: { itemsPerPage: 12, currentPage: page }" class="accordion-item">
+          <h2 class="accordion-header" id="headingOne">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+              [attr.data-bs-target]="'#'+order.orderId" aria-expanded="false" [attr.aria-controls]="'#'+order.orderId">
+              {{"ORDER NUMBER" | translate}} {{order.orderId}} | {{"CREATION DATE" | translate}}
+              {{convertTimestampToDate(order.created)}} | {{"DELIVERY DATE" | translate}}
+              {{convertTimestampToDate(order.orderDate)}}
+            </button>
+          </h2>
+
+          <div [id]="order.orderId" class="accordion-collapse collapse" aria-labelledby="headingOne"
+            data-bs-parent="#orderHistoryAccordion">
+            <button class="btn btn-secondary my-3 mx-2" (click)="loadItemsToCart(order)">{{"RELOAD ITEMS" |
+              translate}}</button>
+            <div class="accordion-body">
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th scope="col">{{"PRODUCT ID" | translate}}</th>
+                    <th scope="col">{{"PRODUCT NAME" | translate}}</th>
+                    <th scope="col">{{"QUANTITY" | translate}}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of order.orderDetails">
+                    <th scope="row"><a [routerLink]="['/product/']+'item.product!.productId'"> {{item.product.productId}} </a>
+                    </th>
+                    <td> <a [routerLink]="['/product/']+'item.product!.productId'">{{item.product?.productName}}</a></td>
+                    <td> <a>{{item.quantity}}</a></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <pagination-controls (pageChange)="page = $event" (click)="scroll(title)" [nextLabel]="getTranslation('NEXT')"
+          [previousLabel]="getTranslation('PREVIOUS')"></pagination-controls>
+
+      </div>
+    </div>
+  </div>
+</div>
+<br>

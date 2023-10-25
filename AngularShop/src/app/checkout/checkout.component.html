@@ -1,1 +1,105 @@
-<p>checkout works!</p>
+<!--Popup section-->
+<app-custom-modal #CustomModalComponent> </app-custom-modal>
+<!--Popup section ends-->
+
+<div class="container" #container>
+    <h1 class="text-center mt-4">{{'CHECKOUT' | translate}}</h1>
+
+    <!--ADMIN SECTION-->
+    <div *ngIf="isAdmin" class="row mt-5">
+        <div class="col-md-8">
+            <div class="mb-3">
+                <h2>{{"ADMIN MENU" | translate}} </h2>
+                <label for="customerInput" class="form-label">{{ "SEARCH CUSTOMER" | translate}}</label> <br>
+                <div class="input-group mb-3">
+                    <input id="customerInput" #customerInput type="text" (keyup.enter)="getUsers(customerInput.value)" class="form-control" [placeholder]="getTranslation('SEARCH BY USERNAME')">
+                    <button class="btn btn-secondary" type="button" (click)="getUsers(customerInput.value)">{{"SEARCH" | translate}}</button>
+                  </div>                  
+                <select #customerSelect id="customerSelect" class="form-select" aria-label="Default select example" (change)="onOptionSelected()">
+                    <option *ngFor="let user of users" value="{{user.username}}">{{user.username}} - {{user.attributes.company.toString()}}</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <!--ADMIN SECTION END-->
+
+    <div class="row mt-5">
+        <div class="col-md-8">
+            <form [formGroup]="addressForm" (ngSubmit)="onSubmit()" ngNoForm>
+                <h4>{{'DELIVERY ADDRESS'| translate}}</h4>
+                <div class="mb-3">
+                    <label for="company" class="form-label">{{'COMPANY'| translate}}</label>
+                    <input id="company" type="text" class="form-control" formControlName="company" required>
+                </div>
+                <div class="mb-3">
+                    <label for="firstName" class="form-label">{{'FIRSTNAME'| translate}}</label>
+                    <input id="firstName" type="text" class="form-control" formControlName="firstName" required>
+                </div>
+                <div class="mb-3">
+                    <label for="lastName" class="form-label">{{'LASTNAME'| translate}}</label>
+                    <input id="lastName" type="text" class="form-control" formControlName="lastName" required>
+                </div>
+                <div class="mb-3">
+                    <label for="phone" class="form-label">{{'PHONE'| translate}}</label>
+                    <input id="phone" type="text" class="form-control" formControlName="phone" required>
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">{{'EMAIL ADDRESS'| translate}}</label>
+                    <input id="email" type="email" class="form-control" formControlName="email">
+                </div>
+                <div class="mb-3">
+                    <label for="street" class="form-label">{{'STREET'| translate}}</label>
+                    <input id="street" type="text" class="form-control" formControlName="street" required>
+                </div>
+                <div class="mb-3">
+                    <label for="postalCode" class="form-label">{{'ZIP CODE'| translate}}</label>
+                    <input id="postalCode" type="text" class="form-control" formControlName="postalCode" required>
+                </div>
+                <div class="mb-3">
+                    <label for="city" class="form-label">{{'CITY'| translate}}</label>
+                    <input id="city" type="text" class="form-control" formControlName="city" required>
+                </div>
+                <div class="mb-3">
+                    <label for="delivery" class="form-label">{{"DELIVERY DATE" | translate}}</label>
+                    <input id="delivery" type="date" class="form-control" formControlName="delivery" min={{minDate}}
+                        required>
+                </div>
+                <div class="mb-3">
+                    <label for="comment" class="form-label">{{"COMMENT" | translate}} ({{"MAXIMUM CHARACTERS" |
+                        translate}}) </label>
+                    <textarea id="comment" type="text" class="form-control" rows="3" formControlName="comment"
+                        maxlength="1000"></textarea>
+                </div>
+
+                <h4>{{"PAYMENT INFORMATION" | translate}}</h4>
+
+                <div class="mb-3">
+                    {{"PAYMENT OPTIONS" | translate}}*
+                </div>
+
+                <select class="form-select my-4" aria-label="Default select example">
+                    <option selected value="1"> {{"INVOICE" | translate}}</option>
+                </select>
+
+                <button #submitBT [disabled]="submitButtonDisabled" type="submit" class="btn btn-secondary">{{'SUBMIT'|
+                    translate}}</button>
+            </form>
+
+            <div>*{{"ONLY INVOICING MESSAGE" | translate}}</div>
+
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{"CART TOTALS" | translate}}</h5>
+                    <!--<p>{{"SUBTOTAL" | translate}}: $XX.XX</p>
+                    <p>{{"TAX" | translate}}: $X.XX</p>-->
+                    <p>{{"TOTAL" | translate}}: {{formatPrice(getTotal())}}*</p>
+                    <p>*{{"PRICE VARIATION MESSAGE" | translate}} {{"MINIMUM ORDER MESSAGE" | translate}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+    <br>
+</div>
