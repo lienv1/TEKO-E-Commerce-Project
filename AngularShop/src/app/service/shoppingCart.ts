@@ -50,7 +50,7 @@ export class ShoppingCart {
       return !!existingItem; // Return true if an existing item is found, false otherwise
     }
 
-    public removeItemById(id:string) {
+    public removeItemById(id:number) {
       const index = this.items.findIndex(item => item.product.artikelNrLAG === id)
       if (index > -1) {
         this.items.splice(index, 1);
@@ -58,7 +58,7 @@ export class ShoppingCart {
       }
     }
 
-    public increaseQuantityById(itemId: string, quantity : number): void {
+    public increaseQuantityById(itemId: number, quantity : number): void {
       const item = this.items.find(item => item.product.artikelNrLAG === itemId);
         this.removeItem(item);
         item.quantity += quantity;
@@ -67,7 +67,7 @@ export class ShoppingCart {
       
     }
     
-    public replaceQuantityById(itemId: string, quantity : number): void {
+    public replaceQuantityById(itemId: number, quantity : number): void {
       this.loadCartItemsFromStorage();
       const item = this.items.find(item => item.product.artikelNrLAG === itemId);
       this.removeItem(item);

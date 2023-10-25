@@ -1,1 +1,105 @@
-<p>shop works!</p>
+<br>
+
+<!--Popup section-->
+<app-custom-modal #CustomModalComponent> </app-custom-modal>
+<!--Popup section ends-->
+
+<!-- shop-page.component.html -->
+<div class="container">
+    <div class="row">
+        <div class="col-lg-3">
+
+
+            <!-- Favourite section -->
+            <div class="card my-2" *ngIf="logged">
+                <div class="card-body" (click)="getFavouriteBt()">
+                    <h5 class="card-title">{{"FAVOURITES" |translate}}</h5>
+                </div>
+            </div>
+
+            <!-- Filter options -->
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{"CATEGORIES" |translate}}</h5>
+                    <!-- Category filter options -->
+                    <div *ngFor="let productCategory of productCategories">
+                        <hr>
+                        <h6 class="toggle-heading" data-bs-toggle="collapse"
+                            [attr.data-bs-target]="'#categoryContent' + productCategory.class"
+                            style="cursor: pointer;">
+                            <span class="arrow"></span>
+                            {{productCategory.class}}
+                        </h6>
+                        <div id="categoryContent{{productCategory.class}}" class="overflow-auto collapse"
+                            style="height: 100px;">
+                            <a *ngFor="let group of productCategory.group | keyvalue"
+                                style="text-decoration: none; cursor:pointer;" [ngClass]="{'darkModeText' : isDarkMode(), 'lightModeText' : !isDarkMode() }"
+                                    (click)="functionForCategoryGroupBt(productCategory.class,group.key);scroll(productList);">{{group.value}}
+                                    <br></a> <br>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+        <div class="col-lg-9">
+            <!-- Search bar -->
+            <div class="input-group mb-3">
+                <input #inputID type="text" (keyup.enter)="searchItBt(inputID.value); scroll(productList)"
+                    class="form-control" placeholder="{{'SEARCH FOR PRODUCTS' | translate}}"
+                    aria-label="Search products">
+                <button class="btn btn-secondary" (click)="scroll(productList);searchItBt(inputID.value)"
+                    type="button">{{"SEARCH" | translate}}</button>
+            </div>
+
+            <!-- Product list -->
+            <div class="row" #productList>
+                <!-- Add your product cards here -->
+                <!-- For example: -->
+                <div class="col-md-4 mb-4"
+                    *ngFor="let product of currentProducts | paginate: { itemsPerPage: 12, currentPage: page }">
+                    <div class="card">
+
+                        <a class="d-flex justify-content-center align-items-center"
+                            [routerLink]="['/product/']+'product.productId'"> <img class="card-img-top"
+                                style="max-height: 15em; width: auto; max-width: 17em;"
+                                src="https://achau.ch/api/images/products/thumbnails/tn_{{product.productId}}.jpg"
+                                onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/330px-No-Image-Placeholder.svg.png'" /></a>
+
+                        <div class="card-body" style="overflow-y: auto;">
+                            <h5 class="card-title"> {{product.productName}}</h5>
+                            <p class="card-text">{{product.weight}}</p>
+                            <div class="row">
+
+                                <div class="col-sm mb-3">
+                                    <input id="quantity-{{product.productId}}" type="number" class="form-control"
+                                        id="quantity" min="1" value="1">
+                                </div>
+
+                                <div class="col-sm mb-3">
+                                    <select class="form-select" id="quantityType-{{product.productId}}"
+                                        aria-label="Quantity Type">
+                                        <option value="piece">{{"UNIT" | translate}}</option>
+                                        <option *ngIf="hasCarton(product)" selected value="carton">{{"CARTON" | translate}}</option>
+                                    </select>
+                                </div>
+
+                                <button class="btn btn-secondary" (click)="addItemToCart(product)"><i
+                                        class="bi bi-cart-plus"></i> {{"ADD TO CART" | translate}}</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <pagination-controls (pageChange)="page = $event" (click)="setPageParam()"
+                    [nextLabel]="getTranslation('NEXT')"
+                    [previousLabel]="getTranslation('PREVIOUS')"></pagination-controls>
+
+                <button class="btn btn-secondary my-4" [routerLink]="['/cart']">{{"PROCEED TO CART" | translate}}</button>
+
+            </div>
+        </div>
+
+
+        <br>
