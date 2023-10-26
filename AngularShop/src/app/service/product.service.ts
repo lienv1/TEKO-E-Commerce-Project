@@ -17,16 +17,12 @@ export class ProductService {
 
   constructor(private http: HttpClient, private keycloakService: KeycloakService) { }
 
-  public getCategories(): Observable<ProductCategory[]> {
-    return this.http.get<ProductCategory[]>(`${this.backendAPI}/product/categories`);
-  }
-
   public getProducts(): Observable<Product[]> {
-    return this.http.get<Product[]>(`${this.backendAPI}/product/products`)
+    return this.http.get<Product[]>(`${this.backendAPI}/product/all`)
   }
 
   public getProduct(id: string): Observable<Product> {
-    return this.http.get<Product>(`${this.backendAPI}/product/product/${id}`);
+    return this.http.get<Product>(`${this.backendAPI}/product/id/${id}`);
   }
 
   public sendOrder(user:User,order:Order):Observable<HttpStatusCode>{
