@@ -22,19 +22,17 @@
                 <div class="card-body">
                     <h5 class="card-title">{{"CATEGORIES" |translate}}</h5>
                     <!-- Category filter options -->
-                    <div *ngFor="let productCategory of productCategories">
+                    <div>
                         <hr>
                         <h6 class="toggle-heading" data-bs-toggle="collapse"
-                            [attr.data-bs-target]="'#categoryContent' + productCategory.class"
                             style="cursor: pointer;">
                             <span class="arrow"></span>
-                            {{productCategory.class}}
+                            h6 text
                         </h6>
-                        <div id="categoryContent{{productCategory.class}}" class="overflow-auto collapse"
+                        <div class="overflow-auto collapse"
                             style="height: 100px;">
-                            <a *ngFor="let group of productCategory.group | keyvalue"
-                                style="text-decoration: none; cursor:pointer;" [ngClass]="{'darkModeText' : isDarkMode(), 'lightModeText' : !isDarkMode() }"
-                                    (click)="functionForCategoryGroupBt(productCategory.class,group.key);scroll(productList);">{{group.value}}
+                            <a >
+                                anchor text
                                     <br></a> <br>
                         </div>
                     </div>
