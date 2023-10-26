@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import apiserver.apiserver.dto.CategoryListDTO;
 import apiserver.apiserver.exception.ProductNotFoundException;
 import apiserver.apiserver.model.Product;
 import apiserver.apiserver.security.AuthorizationService;
@@ -102,6 +103,12 @@ public class ProductController {
 	public ResponseEntity<List<Product>> getProductsByFilter(@RequestBody Product filter){
 		List<Product> list = productService.getProductsByFilter(filter);
 		return new ResponseEntity<List<Product>>(list,HttpStatus.OK);
+	}
+	
+	@GetMapping("/category")
+	public ResponseEntity <CategoryListDTO> getCategoryList(){
+		CategoryListDTO categoryList = productService.getCategoryList();
+		return new ResponseEntity<CategoryListDTO>(categoryList,HttpStatus.OK);
 	}
 	
 	
