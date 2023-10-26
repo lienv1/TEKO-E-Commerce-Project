@@ -9,35 +9,22 @@
     <div class="row">
         <div class="col-lg-3">
 
-
-            <!-- Favourite section -->
-            <div class="card my-2" *ngIf="logged">
-                <div class="card-body" (click)="getFavouriteBt()">
-                    <h5 class="card-title">{{"FAVOURITES" |translate}}</h5>
-                </div>
-            </div>
-
             <!-- Filter options -->
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">{{"CATEGORIES" |translate}}</h5>
-                    <!-- Category filter options -->
-                    <div>
-                        <hr>
-                        <h6 class="toggle-heading" data-bs-toggle="collapse"
-                            style="cursor: pointer;">
-                            <span class="arrow"></span>
-                            h6 text
-                        </h6>
-                        <div class="overflow-auto collapse"
-                            style="height: 100px;">
-                            <a >
-                                anchor text
-                                    <br></a> <br>
-                        </div>
+            <div class="container mt-5">
+                <div class="filter-section border p-3 rounded">
+                    <h4>Brand</h4>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" placeholder="Search">
+                        <button class="btn btn-outline-secondary" type="button" >Search</button>
+                    </div>
+                    <div class="result-section" style="max-height: 200px; overflow-y: scroll;">
+                        <ul class="list-group">
+                            <li class="list-group-item" >result</li>
+                        </ul>
                     </div>
                 </div>
             </div>
+            
 
 
         </div>

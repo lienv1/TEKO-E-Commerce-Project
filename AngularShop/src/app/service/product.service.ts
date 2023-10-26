@@ -25,6 +25,12 @@ export class ProductService {
     return this.http.get<Product>(`${this.backendAPI}/product/id/${id}`);
   }
 
+  //CATEGORY
+  public getCategories(): Observable<ProductCategory>{
+    return this.http.get<ProductCategory>(`${this.backendAPI}/product/category`);
+  }
+
+  //ORDER
   public sendOrder(user:User,order:Order):Observable<HttpStatusCode>{
     return from(this.keycloakService.getToken()).pipe(
       switchMap((token: string) => {

@@ -29,16 +29,7 @@ export class ShopComponent implements OnInit {
 
   //Filter
   //Category
-  category: string = "";
-  group: string = "";
-  keywords: string = "";
-  favourite: string = "";
-
-  public productCategories: ProductCategory[] = []
-  selectedBrands: string[] = [];
-
-  //Brand variables
-  brands: string[] = [];
+  public productCategories !: ProductCategory
 
   //Favourite
   logged = false;
@@ -80,26 +71,13 @@ export class ShopComponent implements OnInit {
 
   //INIT
   public initProducts() {
-    this.productService.getProducts().subscribe(
-      (response: Product[]) => {
-        this.allProducts = response
-        this.currentProducts = this.allProducts
-        this.handleParam();
-        this.getBrands();
-      },
-      (error: HttpErrorResponse) => {
-        alert(error.message)
-      }
-    )
+    
   }
 
   public initCategories() {
-    this.productService.getCategories().subscribe(
-      (response: ProductCategory[]) => {
-        this.productCategories = response
-      },
-      (error: HttpErrorResponse) => {
-        alert(error.message)
+    this.productService.getCategories().subscribe (
+      (response:ProductCategory) => {
+        this.productCategories = response;
       }
     )
   }
@@ -119,87 +97,17 @@ export class ShopComponent implements OnInit {
   }
 
   //INIT SECTION END
-  collectAllParams() {
-    this.route.queryParams.subscribe(params => {
-      const categoryParam = params['category'];
-      this.category = categoryParam || '';
 
-      const groupParam = params['group'];
-      this.group = groupParam || '';
+  handleParam(){
 
-      const keywordsParam = params['keywords'];
-      this.keywords = keywordsParam || '';
-
-      const favouriteParam = params['favourite'];
-      this.favourite = favouriteParam || '';
-
-      const brands: string = params['brands'];
-      if (brands != null) {
-        this.selectedBrands = brands.split("¿") || [];
-      }
-    });
-  }
-
-  handleParam() {
-    this.scroll(this.productListElement.nativeElement);
-    this.setPageParam();
-    this.collectAllParams();
-    if (!this.isNullOrEmpty(this.category) && !this.isNullOrEmpty(this.group)) {
-      this.functionForCategoryGroup(this.category, this.group)
-      this.applyBrandFilterAccordingToCurrentList();
-      return;
-    }
-    else if (!this.isNullOrEmpty(this.keywords)) {
-      this.searchIt(this.keywords.replace("¿", " "))
-      this.applyBrandFilterAccordingToCurrentList();
-      return;
-    }
-    else if (!this.isNullOrEmpty(this.favourite)){
-      if (this.username != null)
-        this.getFavourite(this.username)
-      return;
-    }
-    if (this.selectedBrands.length > 0 && this.selectedBrands[0] != null) {
-      this.applyBrandFilter();
-      return;
-    }
-    else {
-      this.currentProducts = this.allProducts
-      return
-    }
   }
 
   //CATEGORY SECTION
-  functionForCategoryGroupBt(category: string, group: string) {
-    this.uncheckAllCheckboxes();
-    this.removeAllParams().then(
-      () => {
-        this.page = 1
-        const navigationExtras: NavigationExtras = {
-          queryParams: { category: category, group: group },
-          queryParamsHandling: 'merge'
-        };
-        this.router.navigate([], navigationExtras);
-        this.functionForCategoryGroup(category, group)
-      }
-    )
-  }
-  functionForCategoryGroup(category: string, group: string) {
-    let products: Product[] = []
-    for (let i = 0; i < this.allProducts.length; i++) {
-      let currentProduct = this.allProducts[i]
-      if (currentProduct.category == category && currentProduct.productGroup == group) {
-        products.push(currentProduct)
-      }
-    }
-    this.currentProducts = products
-    this.getBrandsAccordingToCurrentProducts()
-  }
+
   //CATEGORY SECTION END
 
   //SEARCH SECTION
   public searchItBt(keyword: string) {
-    this.uncheckAllCheckboxes();
     this.removeAllParams().then(
       () => {
         this.page = 1
@@ -223,41 +131,10 @@ export class ShopComponent implements OnInit {
       }
     }
     this.currentProducts = products
-    this.getBrandsAccordingToCurrentProducts()
   }
 
   //FAVOURITE SECTION
-  public getFavouriteBt(){
-    this.uncheckAllCheckboxes();
-    this.removeAllParams().then (
-      () => {
-        this.page = 1;
-        const navigationExtras: NavigationExtras = {
-          queryParams: { favourite: this.username},
-          queryParamsHandling: 'merge'
-        };
-        this.router.navigate([], navigationExtras);
-        if (this.username != null)
-          this.getFavourite(this.username);
-      }
-    )
-  }
 
-  public getFavourite(username:string){
-    this.productService.getFavourites(username).subscribe(
-      (response: Product[]) => {
-        this.currentProducts = response;
-      },
-      (error:HttpErrorResponse) => {
-        let modal = this.customModalComponent;
-        modal.title = "WARNING";
-        modal.message = error.message;
-        modal.colorTitle = "red";
-        modal.functionModels = [];
-        this.openModal(modal,false);
-      }
-    )
-  }
   //FAVOURITE SECTION END
 
   //turn inputs to string array and handle quotation mark
@@ -310,91 +187,6 @@ export class ShopComponent implements OnInit {
   //SEARCH SECTION ENDS
 
   //BRAND SECTION
-  getBrands() {
-    let stringSet: Set<string> = new Set();
-    for (let i = 0; i < this.allProducts.length; i++) {
-      let product: Product = this.allProducts[i]
-      stringSet.add(product.brand!)
-    }
-    this.brands = Array.from(stringSet);
-  }
-
-  getBrandsAccordingToCurrentProducts() {
-    let stringSet: Set<string> = new Set();
-    for (let i = 0; i < this.currentProducts.length; i++) {
-      let product: Product = this.currentProducts[i]
-      stringSet.add(product.brand!)
-    }
-    this.brands = Array.from(stringSet);
-  }
-
-  onCheckboxChange(brand: string, event: Event) {
-    const target = event.target as HTMLInputElement;
-    const isChecked = target.checked;
-
-    if (isChecked) {
-      this.selectedBrands.push(brand);
-    } else {
-      const index = this.selectedBrands.indexOf(brand);
-      if (index > -1) {
-        this.selectedBrands.splice(index, 1);
-      }
-    }
-    this.updateUrlWithSelectedBrands();
-  }
-
-  updateUrlWithSelectedBrands() {
-    if (this.selectedBrands.length > 0 || !this.isNullOrEmpty(this.selectedBrands[0])) {
-      this.router.navigate([], {
-        queryParams: { brands: this.selectedBrands.join('¿') },
-        queryParamsHandling: 'merge',
-      })
-      return;
-    }
-    else {
-      this.router.navigate([], {
-        queryParams: { brands: null },
-        queryParamsHandling: 'merge'
-      })
-    }
-  }
-
-  public applyBrandFilter() {
-    let products: Product[] = [];
-    for (let i = 0; i < this.allProducts.length; i++) {
-      let product = this.allProducts[i]
-      if (this.stringContainArray(product.brand!, this.selectedBrands)) {
-        products.push(product)
-      }
-    }
-    this.currentProducts = products
-  }
-
-  public applyBrandFilterAccordingToCurrentList() {
-    if (this.selectedBrands.length < 1) {
-      return;
-    }
-    let products: Product[] = [];
-    for (let i = 0; i < this.currentProducts.length; i++) {
-      let product = this.currentProducts[i]
-      if (this.stringContainArray(product.brand!, this.selectedBrands)) {
-        products.push(product)
-      }
-    }
-    this.currentProducts = products
-  }
-
-  public uncheckAllCheckboxes() {
-    const checkboxes: HTMLInputElement[] = Array.from(document.querySelectorAll('.form-check-input'));
-    checkboxes.forEach((checkbox: HTMLInputElement) => {
-      checkbox.checked = false;
-    });
-    this.router.navigate([], {
-      queryParams: { brands: null },
-      queryParamsHandling: 'merge'
-    })
-    this.selectedBrands = [];
-  }
 
   //BRAND SECTION END
 
@@ -463,6 +255,8 @@ export class ShopComponent implements OnInit {
     }
     return false
   }
+
+  //CART SECTION
 
   public addItemToCart(product: Product) {
     const quantityInput = <HTMLInputElement>document.getElementById(`quantity-${product.productId}`)
@@ -543,7 +337,9 @@ export class ShopComponent implements OnInit {
     }
   }
 
-  //Popup section
+  //CART SECTION END
+
+  //POPUP SECTION
   public openModal(modal: any, autoclose: boolean) {
     let modalRef = this.modalService.open(modal.myModal);
     if (autoclose) {
@@ -552,7 +348,7 @@ export class ShopComponent implements OnInit {
       }, 3000);
     }
   }
-  //Popup section end
+  //POPUP SECTION END
 
   //THEME SECTION
   public isDarkMode(){
