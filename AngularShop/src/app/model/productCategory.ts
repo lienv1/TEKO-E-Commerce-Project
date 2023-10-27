@@ -1,6 +1,6 @@
 export interface ProductCategory{
-    brands: string[],
     categories : string[],
     productGroups : string [],
+    brands: string[],
     origins : string []
 }
