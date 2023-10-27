@@ -18,7 +18,7 @@ public class Product {
 	private String brand;
 	private Integer weight;
 	private String category;
-	private String productGroup;
+	private String subCategory;
 	private Integer pack;
 	private String searchIndex;
 	private String gtinUnit;
@@ -58,8 +58,8 @@ public class Product {
 		return category;
 	}
 
-	public String getProductGroup() {
-		return productGroup;
+	public String getSubCategory() {
+		return subCategory;
 	}
 
 	public Integer getPack() {
@@ -130,8 +130,8 @@ public class Product {
 		this.category = category;
 	}
 
-	public void setProductGroup(String productGroup) {
-		this.productGroup = productGroup;
+	public void setSubCategory(String subCategory) {
+		this.subCategory = subCategory;
 	}
 
 	public void setPack(Integer pack) {
@@ -177,6 +177,7 @@ public class Product {
 	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
 	}
+
 
 	
 }

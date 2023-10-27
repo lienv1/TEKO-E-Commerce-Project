@@ -53,13 +53,8 @@ public class ProductService {
 		return productRepo.findAll(specification);
 	}
 
-	public CategoryListDTO getCategoryList() {
-		CategoryListDTO dto = new CategoryListDTO();
-		dto.setBrands(productRepo.findDistinctBrands());
-		dto.setCategories(productRepo.findDistinctCategories());
-		dto.setProductGroups(productRepo.findDistinctProductGroups());
-		dto.setOrigins(productRepo.findDistinctOrigins());
-		return dto;
+	public List<CategoryListDTO> getCategoryList() {
+		return productRepo.getCategoryList();
 	}
 
 }

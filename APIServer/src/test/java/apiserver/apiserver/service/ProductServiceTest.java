@@ -41,7 +41,7 @@ class ProductServiceTest {
 		product.setBrand("Huy Fong Foods");
 		product.setWeight(481);
 		product.setCategory("Dry Goods");
-		product.setProductGroup("Sauce");
+		product.setSubCategory("Sauce");
 		product.setPack(12);
 		product.setGtinUnit("024463061095");
 		product.setGtinPack("024463101098");

@@ -35,7 +35,7 @@ class ProductRepoTest {
 		product.setBrand("Huy Fong Foods");
 		product.setWeight(481);
 		product.setCategory("Dry Goods");
-		product.setProductGroup("Sauce");
+		product.setSubCategory("Sauce");
 		product.setPack(12);
 		product.setGtinUnit("024463061095");
 		product.setGtinPack("024463101098");
@@ -60,7 +60,7 @@ class ProductRepoTest {
 		assertEquals("Huy Fong Foods", retrievedProduct.getBrand());
 		assertEquals(481, retrievedProduct.getWeight());
 		assertEquals("Dry Goods", retrievedProduct.getCategory());
-		assertEquals("Sauce", retrievedProduct.getProductGroup());
+		assertEquals("Sauce", retrievedProduct.getSubCategory());
 		assertEquals(12, retrievedProduct.getPack());
 		assertEquals("024463061095", retrievedProduct.getGtinUnit());
 		assertEquals("024463101098", retrievedProduct.getGtinPack());

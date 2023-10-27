@@ -106,9 +106,9 @@ public class ProductController {
 	}
 	
 	@GetMapping("/category")
-	public ResponseEntity <CategoryListDTO> getCategoryList(){
-		CategoryListDTO categoryList = productService.getCategoryList();
-		return new ResponseEntity<CategoryListDTO>(categoryList,HttpStatus.OK);
+	public ResponseEntity <List<CategoryListDTO>> getCategoryList(){
+		List<CategoryListDTO>categoryList = productService.getCategoryList();
+		return new ResponseEntity<List<CategoryListDTO>>(categoryList,HttpStatus.OK);
 	}
 	
 	

@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import apiserver.apiserver.dto.CategoryListDTO;
 import apiserver.apiserver.model.Product;
 import jakarta.transaction.Transactional;
 
@@ -28,11 +29,19 @@ public interface ProductRepo extends JpaRepository<Product, Long>, JpaSpecificat
     List<String> findDistinctCategories();
 
     // Retrieve a list of distinct product groups
-    @Query("SELECT DISTINCT p.productGroup FROM Product p")
-    List<String> findDistinctProductGroups();
+    @Query("SELECT DISTINCT p.subCategory FROM Product p")
+    List<String> findDistinctSubCategory();
 
     // Retrieve a list of distinct origins
     @Query("SELECT DISTINCT p.origin FROM Product p")
     List<String> findDistinctOrigins();
+    
+    @Query(value = "SELECT p.category AS category, " +
+            "GROUP_CONCAT(p.subCategory) AS subCategory, " +
+            "GROUP_CONCAT(p.brand) AS brands, " +
+            "GROUP_CONCAT(p.origin) AS origins " +
+            "FROM Product p " +
+            "GROUP BY p.category")
+     List<CategoryListDTO> getCategoryList();
 	
 }

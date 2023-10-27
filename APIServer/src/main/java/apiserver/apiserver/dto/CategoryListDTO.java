@@ -4,45 +4,46 @@ import java.util.List;
 
 public class CategoryListDTO {
 
+	private String category;
+	
 	private List<String> brands;
-	private List<String> categories;
-	private List<String> productGroups;
+	private List<String> subCategory;
 	private List<String> origins;
 
 	public CategoryListDTO() {
-		super();
+	}
+
+	public String getCategory() {
+		return category;
 	}
 
 	public List<String> getBrands() {
 		return brands;
 	}
 
-	public List<String> getCategories() {
-		return categories;
-	}
-
-	public List<String> getProductGroups() {
-		return productGroups;
+	public List<String> getSubCategory() {
+		return subCategory;
 	}
 
 	public List<String> getOrigins() {
 		return origins;
 	}
 
+	public void setCategory(String category) {
+		this.category = category;
+	}
+
 	public void setBrands(List<String> brands) {
 		this.brands = brands;
 	}
 
-	public void setCategories(List<String> categories) {
-		this.categories = categories;
-	}
-
-	public void setProductGroups(List<String> productGroups) {
-		this.productGroups = productGroups;
+	public void setSubCategory(List<String> subCategory) {
+		this.subCategory = subCategory;
 	}
 
 	public void setOrigins(List<String> origins) {
 		this.origins = origins;
 	}
+
 
 }

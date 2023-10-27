@@ -31,8 +31,8 @@ public class ProductSpecification {
 	                predicate = builder.and(predicate, builder.equal(root.get("weight"), criteria.getWeight()));
 	            }
 
-	            if (criteria.getProductGroup() != null) {
-	                predicate = builder.and(predicate, builder.equal(root.get("group"), criteria.getProductGroup()));
+	            if (criteria.getSubCategory() != null) {
+	                predicate = builder.and(predicate, builder.equal(root.get("group"), criteria.getSubCategory()));
 	            }
 
 	            if (criteria.getPack() != null) {
