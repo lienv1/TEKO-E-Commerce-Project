@@ -4,9 +4,9 @@
 
 export const environment = {
   production: false,
-  backendAPI: "http://localhost:8080",
-  fileServerAPI:"http://localhost:3000",
-  keycloakAPI:"http://localhost:8180",
+  backendAPI: "http://192.168.1.129/api",
+  fileServerAPI:"http://192.168.1.129/files",
+  keycloakAPI:"http://192.168.1.129/auth",
   keycloakRealm : "E-Commerce",
   keycloakClient : "E-Commerce-Client"
 };

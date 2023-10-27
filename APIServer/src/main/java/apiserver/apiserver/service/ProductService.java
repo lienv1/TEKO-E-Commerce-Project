@@ -1,6 +1,8 @@
 package apiserver.apiserver.service;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
@@ -11,6 +13,7 @@ import apiserver.apiserver.exception.ProductNotFoundException;
 import apiserver.apiserver.model.Product;
 import apiserver.apiserver.repo.ProductRepo;
 import apiserver.apiserver.specification.ProductSpecification;
+import jakarta.persistence.Tuple;
 
 @Service
 public class ProductService {
@@ -53,8 +56,18 @@ public class ProductService {
 		return productRepo.findAll(specification);
 	}
 
-	public List<CategoryListDTO> getCategoryList() {
-		return productRepo.getCategoryList();
-	}
+    public List<CategoryListDTO> getCategoryList() {
+        List<Tuple> results = productRepo.getCategoryList();
+        return results.stream().map(this::convertToDTO).collect(Collectors.toList());
+    }
+
+    private CategoryListDTO convertToDTO(Tuple tuple) {
+        CategoryListDTO dto = new CategoryListDTO();
+        dto.setCategory(tuple.get("category", String.class));
+        dto.setSubCategory(Arrays.asList(tuple.get("subCategory", String.class).split(",")));
+        dto.setBrands(Arrays.asList(tuple.get("brands", String.class).split(",")));
+        dto.setOrigins(Arrays.asList(tuple.get("origins", String.class).split(",")));
+        return dto;
+    }
 
 }

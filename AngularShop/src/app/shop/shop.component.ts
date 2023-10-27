@@ -29,7 +29,7 @@ export class ShopComponent implements OnInit {
 
   //Filter
   //Category
-  public productCategories !: ProductCategory
+  public categories : ProductCategory[] = [];
 
   //Favourite
   logged = false;
@@ -76,8 +76,11 @@ export class ShopComponent implements OnInit {
 
   public initCategories() {
     this.productService.getCategories().subscribe (
-      (response:ProductCategory) => {
-        this.productCategories = response;
+      (response:ProductCategory[]) => {
+        this.categories = response;
+      },
+      (error:HttpErrorResponse) => {
+        alert(error.message);
       }
     )
   }

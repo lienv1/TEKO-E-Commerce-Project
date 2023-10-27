@@ -27,7 +27,7 @@ public class Product {
 	private Integer stock;
 	private String origin;
 	private Boolean discount;
-	private Integer taxCode;
+	private Double tax;
 	private Date lastModified;
 	private boolean deleted;
 
@@ -94,8 +94,8 @@ public class Product {
 		return discount;
 	}
 
-	public Integer getTaxCode() {
-		return taxCode;
+	public Double getTax() {
+		return tax;
 	}
 
 	public Date getLastModified() {
@@ -166,8 +166,8 @@ public class Product {
 		this.discount = discount;
 	}
 
-	public void setTaxCode(Integer taxCode) {
-		this.taxCode = taxCode;
+	public void setTax(Double tax) {
+		this.tax = tax;
 	}
 
 	public void setLastModified(Date lastModified) {

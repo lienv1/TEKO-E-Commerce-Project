@@ -12,58 +12,28 @@
             <!-- Filter options -->
             <div class="container mt-5">
                 <div class="filter-section border p-3 rounded">
+
                     <!-- Categories -->
-                    <h4>Categories</h4>
-                    <div class="input-group mb-3">
-                        <input type="text" class="form-control" placeholder="Search">
-                        <button class="btn btn-outline-secondary" type="button" >Search</button>
+                    <div *ngFor="let category of categories">
+                        <h4>Categories</h4>
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" placeholder="Search">
+                            <button class="btn btn-outline-secondary" type="button">Search</button>
+                        </div>
+                        <div class="result-section" style="max-height: 200px; overflow-y: scroll;">
+                            <ul class="list-group">
+                                <li class="list-group-item">result</li>
+                            </ul>
+                        </div>
+                        <br>
                     </div>
-                    <div class="result-section" style="max-height: 200px; overflow-y: scroll;">
-                        <ul class="list-group">
-                            <li class="list-group-item" >result</li>
-                        </ul>
-                    </div>
-                    <br>
-                    <!-- Group -->
-                    <h4>Group</h4>
-                    <div class="input-group mb-3">
-                        <input type="text" class="form-control" placeholder="Search">
-                        <button class="btn btn-outline-secondary" type="button" >Search</button>
-                    </div>
-                    <div class="result-section" style="max-height: 200px; overflow-y: scroll;">
-                        <ul class="list-group">
-                            <li class="list-group-item" >result</li>
-                        </ul>
-                    </div>
-                    <br>
-                    <!-- Brand -->
-                    <h4>Brand</h4>
-                    <div class="input-group mb-3">
-                        <input type="text" class="form-control" placeholder="Search">
-                        <button class="btn btn-outline-secondary" type="button" >Search</button>
-                    </div>
-                    <div class="result-section" style="max-height: 200px; overflow-y: scroll;">
-                        <ul class="list-group">
-                            <li class="list-group-item" >result</li>
-                        </ul>
-                    </div>
-                    <br>
-                    <!-- Country -->
-                    <h4>Country</h4>
-                    <div class="input-group mb-3">
-                        <input type="text" class="form-control" placeholder="Search">
-                        <button class="btn btn-outline-secondary" type="button" >Search</button>
-                    </div>
-                    <div class="result-section" style="max-height: 200px; overflow-y: scroll;">
-                        <ul class="list-group">
-                            <li class="list-group-item" >result</li>
-                        </ul>
-                    </div>
-                    <br>
+
+
                 </div>
+
             </div>
 
-         
+
 
 
         </div>
@@ -105,7 +75,8 @@
                                     <select class="form-select" id="quantityType-{{product.productId}}"
                                         aria-label="Quantity Type">
                                         <option value="piece">{{"UNIT" | translate}}</option>
-                                        <option *ngIf="hasCarton(product)" selected value="carton">{{"CARTON" | translate}}</option>
+                                        <option *ngIf="hasCarton(product)" selected value="carton">{{"CARTON" |
+                                            translate}}</option>
                                     </select>
                                 </div>
 
@@ -120,7 +91,8 @@
                     [nextLabel]="getTranslation('NEXT')"
                     [previousLabel]="getTranslation('PREVIOUS')"></pagination-controls>
 
-                <button class="btn btn-secondary my-4" [routerLink]="['/cart']">{{"PROCEED TO CART" | translate}}</button>
+                <button class="btn btn-secondary my-4" [routerLink]="['/cart']">{{"PROCEED TO CART" |
+                    translate}}</button>
 
             </div>
         </div>

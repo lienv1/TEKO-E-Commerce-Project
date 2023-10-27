@@ -26,8 +26,8 @@ export class ProductService {
   }
 
   //CATEGORY
-  public getCategories(): Observable<ProductCategory>{
-    return this.http.get<ProductCategory>(`${this.backendAPI}/product/category`);
+  public getCategories(): Observable<ProductCategory[]>{
+    return this.http.get<ProductCategory[]>(`${this.backendAPI}/product/category`);
   }
 
   //ORDER
