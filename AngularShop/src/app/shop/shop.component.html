@@ -14,26 +14,25 @@
                 <div class="filter-section border p-3 rounded">
 
                     <!-- Categories -->
-                    <div *ngFor="let category of categories">
-                        <h4>Categories</h4>
-                        <div class="input-group mb-3">
-                            <input type="text" class="form-control" placeholder="Search">
-                            <button class="btn btn-outline-secondary" type="button">Search</button>
+                    <div *ngFor="let productCategory of categories">
+                        <hr>
+                        <h6 class="toggle-heading" data-bs-toggle="collapse"
+                            [attr.data-bs-target]="'#categoryContent' + productCategory.category"
+                            style="cursor: pointer;">
+                            <span class="arrow"></span>
+                            {{productCategory.category}}
+                        </h6>
+                        <div id="categoryContent{{productCategory.category}}" class="overflow-auto collapse"
+                            style="height: 100px;">
+                            <a *ngFor="let group of productCategory.subCategory | keyvalue"
+                                style="color:#11698e;text-decoration: none; cursor:pointer;"
+                                (click)="scroll(productList);">{{group.value}}
+                                <br></a> <br>
                         </div>
-                        <div class="result-section" style="max-height: 200px; overflow-y: scroll;">
-                            <ul class="list-group">
-                                <li class="list-group-item">result</li>
-                            </ul>
-                        </div>
-                        <br>
                     </div>
 
-
                 </div>
-
             </div>
-
-
 
 
         </div>
