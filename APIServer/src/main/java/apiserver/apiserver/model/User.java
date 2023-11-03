@@ -15,8 +15,10 @@ public class User {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long userId;
 
+	private String company;
 	private String firstname;
 	private String lastname;
+	private String phone;
 	private String email;
 
 	@OneToOne(cascade = CascadeType.ALL)
@@ -43,6 +45,14 @@ public class User {
 	public void setUserId(Long userId) {
 		this.userId = userId;
 	}
+	
+	public String getCompany() {
+		return company;
+	}
+
+	public void setCompany(String company) {
+		this.company = company;
+	}
 
 	public String getFirstname() {
 		return firstname;
@@ -62,6 +72,13 @@ public class User {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+	public String getPhone() {
+		return phone;
+	}
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
+
 	public Address getDeliveryAddress() {
 		return deliveryAddress;
 	}

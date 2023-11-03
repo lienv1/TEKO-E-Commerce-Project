@@ -51,7 +51,7 @@ export class AdminPageComponent implements OnInit {
   ngOnInit(): void {
 
   }
-
+/*
   public searchUsername(keyword:string){
     this.users = [];
     this.orders = [];
@@ -176,5 +176,5 @@ export class AdminPageComponent implements OnInit {
 
   public getTranslation(str:string){
     return this.translateService.instant(str)
-  }
+  }*/
 }

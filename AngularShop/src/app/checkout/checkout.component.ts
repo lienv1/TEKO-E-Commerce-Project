@@ -53,7 +53,7 @@ export class CheckoutComponent {
     private formBuilder: UntypedFormBuilder
   ) {
   }
-
+/*
   ngOnInit(): void {
     this.initForm();
     //Check if it's logged in, then load profile
@@ -365,5 +365,5 @@ export class CheckoutComponent {
   public getTotal() {
     return this.cart.getSubtotal();
   }
-
+*/
 }

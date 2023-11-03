@@ -1,11 +1,14 @@
-export interface User{
-    username ?: string
-    company ?: string;
-    phone ?: string;
-    email ?: string;   
-    firstname ?: string;
-    lastname ?: string;
-    street ?: string;
-    postalCode ?: string;
-    city ? :string;
-}
+import { Address } from "./address";
+
+export interface User {
+    firstname: string;
+    lastname: string;
+    company: string;
+    email: string;
+    phone: string;
+    deliveryAddress: Address;
+    billingAddress: Address;
+    username: string;
+    business: boolean;
+    deleted: boolean;
+  }
