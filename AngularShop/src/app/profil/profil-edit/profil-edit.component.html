@@ -1,3 +1,7 @@
+<!--Popup section-->
+<app-custom-modal #CustomModalComponent> </app-custom-modal>
+<!--Popup section ends-->
+
 <div class="container mt-5">
     <div class="row justify-content-center">
       <div class="col-md-12">
@@ -45,8 +49,8 @@
               <h4>Billing Address</h4>
               <div formGroupName="billingAddress">
                 <div class="mb-3">
-                  <label for="billingAddressInput" class="form-label">Address Line</label>
-                  <input type="text" class="form-control" id="billingAddressInput" placeholder="1234 Main St" formControlName="billingAddressInput" required>
+                  <label for="billingStreetInput" class="form-label">Address Line</label>
+                  <input type="text" class="form-control" id="billingStreetInput" placeholder="1234 Main St" formControlName="billingStreetInput" required>
                 </div>
                 <div class="mb-3">
                   <label for="billingCityInput" class="form-label">City</label>
@@ -79,8 +83,8 @@
 
               <div formGroupName="deliveryAddress">
                 <div class="mb-3">
-                  <label for="deliveryAddressInput" class="form-label">Address Line</label>
-                  <input type="text" class="form-control" id="deliveryAddressInput" placeholder="1234 Main St" formControlName="deliveryAddressInput">
+                  <label for="deliveryStreetInput" class="form-label">Address Line</label>
+                  <input type="text" class="form-control" id="deliveryStreetInput" placeholder="1234 Main St" formControlName="deliveryStreetInput">
                 </div>
                 <div class="mb-3">
                   <label for="deliveryCityInput" class="form-label">City</label>
