@@ -9,6 +9,4 @@ export interface User {
     deliveryAddress: Address;
     billingAddress: Address;
     username: string;
-    business: boolean;
-    deleted: boolean;
   }
