@@ -1,0 +1,25 @@
+<div class="container pt-3 pb-3">
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Menu Sidebar -->
+            <div class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+                <div class="list-group">
+                    <a class="list-group-item list-group-item-action"
+                        (click)="selectComponent('subcomponent1')">PROFIL EDIT</a>
+                    <a class="list-group-item list-group-item-action"
+                        (click)="selectComponent('subcomponent2')">ORDER HISTORY</a>
+                </div>
+            </div>
+
+            <!-- Content Area -->
+            <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <ng-container *ngIf="selectedComponent === 'subcomponent1'">
+                    <app-profil-edit></app-profil-edit>
+                </ng-container>
+                <ng-container *ngIf="selectedComponent === 'subcomponent2'">
+                    <app-order-history></app-order-history>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+</div>

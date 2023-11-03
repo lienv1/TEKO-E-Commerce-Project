@@ -8,7 +8,7 @@ import { CheckoutComponent } from './checkout/checkout.component';
 import { ShopComponent } from './shop/shop.component';
 import { ThankYouPageComponent } from './thank-you-page/thank-you-page.component';
 import { ProductPageComponent } from './product-page/product-page.component';
-import { ProfilComponent } from './profil/profil.component';
+import { MainProfilComponent } from './profil/main-profil/main-profil.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -19,7 +19,7 @@ const routes: Routes = [
   { path: 'shop/favourite', component: ShopComponent },
   { path: 'cart', component: CartComponent },
   { path: 'login', component: LoginComponent },
-  { path: 'profil', component: ProfilComponent },
+  { path: 'profil', component: MainProfilComponent },
   { path: 'checkout', component: CheckoutComponent},
   { path: 'product/:id',component:ProductPageComponent},
   { path: 'confirmation', component:ThankYouPageComponent},

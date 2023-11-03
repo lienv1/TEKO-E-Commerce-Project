@@ -20,11 +20,13 @@ import { LoginComponent } from './login/login.component';
 import { CartComponent } from './cart/cart.component';
 import { CheckoutComponent } from './checkout/checkout.component';
 import { ProductPageComponent } from './product-page/product-page.component';
-import { ProfilComponent } from './profil/profil.component';
 import { ThankYouPageComponent } from './thank-you-page/thank-you-page.component';
 import { ShopComponent } from './shop/shop.component';
 import { AdminPageComponent } from './admin-page/admin-page.component';
 import { CustomModalComponent } from './modal/custom-modal/custom-modal.component';
+import { MainProfilComponent } from './profil/main-profil/main-profil.component';
+import { ProfilEditComponent } from './profil/profil-edit/profil-edit.component';
+import { OrderHistoryComponent } from './profil/order-history/order-history.component';
 
 // Factory function required during AOT compilation
 export function httpTranslateLoaderFactory(http: HttpClient) {
@@ -58,11 +60,13 @@ function initializeKeycloak(keycloak: KeycloakService) {
     CartComponent,
     CheckoutComponent,
     ProductPageComponent,
-    ProfilComponent,
     ThankYouPageComponent,
     ShopComponent,
     AdminPageComponent,
-    CustomModalComponent
+    CustomModalComponent,
+    MainProfilComponent,
+    ProfilEditComponent,
+    OrderHistoryComponent
   ],
   imports: [
     KeycloakAngularModule,
