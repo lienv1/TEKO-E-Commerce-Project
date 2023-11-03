@@ -4,6 +4,7 @@ import { KeycloakService } from 'keycloak-angular';
 import { Observable, from, switchMap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Order } from '../model/order';
+import { User } from '../model/user';
 
 @Injectable({
   providedIn: 'root'
@@ -16,8 +17,8 @@ export class UserService {
 
   constructor(private http: HttpClient, private keycloakService: KeycloakService) { }
 
-  public getUserdata(): Observable<string> {
-    return this.http.get<string>(`${this.backendAPI}/api/user`, { withCredentials: true });
+  public getUserdata(username:string): Observable<User> {
+    return this.http.get<User>(`${this.backendAPI}/api/user/username/${username}`, { withCredentials: true });
   }
 
   public getOrdersByUsername(username:string):Observable<Order[]>{
@@ -32,7 +33,7 @@ export class UserService {
   }
 
   //ADMIN SECTION
-  public getUsersByUsername(username:string):Observable<any[]>{
+  public getUserByUsername(username:string):Observable<any[]>{
     return from(this.keycloakService.getToken()).pipe(
       switchMap((token: string) => {
         const headers = new HttpHeaders({

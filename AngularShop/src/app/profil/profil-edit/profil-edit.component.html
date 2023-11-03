@@ -6,62 +6,68 @@
             <h3>Edit Profile Information</h3>
           </div>
           <div class="card-body">
-            <form>
-  
+            <form [formGroup]="addressForm" (ngSubmit)="updateProfil()">
+
               <!-- Personal Information -->
               <h4>Personal Information</h4>
-
+            
               <div class="mb-3">
                 <label for="companyInput" class="form-label">Company</label>
-                <input type="text" class="form-control" id="companyInput" placeholder="Company" required>
+                <input type="text" class="form-control" id="companyInput" placeholder="Company" formControlName="companyInput">
               </div>
-  
+            
               <!-- Name -->
               <div class="mb-3">
                 <label for="firstnameInput" class="form-label">{{'FIRSTNAME' | translate}}</label>
-                <input type="text" class="form-control" id="firstnameInput" placeholder="John Doe" required>
+                <input type="text" class="form-control" id="firstnameInput" placeholder="John Doe" formControlName="firstnameInput">
               </div>
-
+            
               <div class="mb-3">
                 <label for="lastnameInput" class="form-label">{{'LASTNAME' | translate}}</label>
-                <input type="text" class="form-control" id="lastnameInput" placeholder="John Doe" required>
+                <input type="text" class="form-control" id="lastnameInput" placeholder="John Doe" formControlName="lastnameInput">
               </div>
-  
+            
               <!-- Email -->
               <div class="mb-3">
                 <label for="emailInput" class="form-label">Email Address</label>
-                <input type="email" class="form-control" id="emailInput" placeholder="name@example.com" required>
+                <input type="email" class="form-control" id="emailInput" placeholder="name@example.com" formControlName="emailInput" required>
               </div>
-  
+            
               <!-- Phone -->
               <div class="mb-3">
                 <label for="phoneInput" class="form-label">Phone Number</label>
-                <input type="tel" class="form-control" id="phoneInput" placeholder="+1234567890" required>
+                <input type="tel" class="form-control" id="phoneInput" placeholder="+1234567890" formControlName="phoneInput">
               </div>
-  
+            
               <hr class="my-4">
-  
+        
               <!-- Billing Address -->
               <h4>Billing Address</h4>
-              <div class="mb-3">
-                <label for="billingAddressInput" class="form-label">Address Line</label>
-                <input type="text" class="form-control" id="billingAddressInput1" placeholder="1234 Main St" required>
+              <div formGroupName="billingAddress">
+                <div class="mb-3">
+                  <label for="billingAddressInput" class="form-label">Address Line</label>
+                  <input type="text" class="form-control" id="billingAddressInput" placeholder="1234 Main St" formControlName="billingAddressInput" required>
+                </div>
+                <div class="mb-3">
+                  <label for="billingCityInput" class="form-label">City</label>
+                  <input type="text" class="form-control" id="billingCityInput" formControlName="billingCityInput" required>
+                </div>
+                <div class="mb-3">
+                  <label for="billingStateInput" class="form-label">State</label>
+                  <input type="text" class="form-control" id="billingStateInput" formControlName="billingStateInput" required>
+                </div>
+                <div class="mb-3">
+                  <label for="billingZipInput" class="form-label">Zip Code</label>
+                  <input type="text" class="form-control" id="billingZipInput" formControlName="billingZipInput" required>
+                </div>
+                <div class="mb-3">
+                  <label for="billingCountryInput" class="form-label">Country</label>
+                  <input type="text" class="form-control" id="billingCountryInput" formControlName="billingCountryInput" required>
+                </div>
               </div>
-              <div class="mb-3">
-                <label for="billingCityInput" class="form-label">City</label>
-                <input type="text" class="form-control" id="billingCityInput" required>
-              </div>
-              <div class="mb-3">
-                <label for="billingStateInput" class="form-label">State</label>
-                <input type="text" class="form-control" id="billingStateInput" required>
-              </div>
-              <div class="mb-3">
-                <label for="billingZipInput" class="form-label">Zip Code</label>
-                <input type="text" class="form-control" id="billingZipInput" required>
-              </div>
-  
+            
               <hr class="my-4">
-  
+            
               <!-- Delivery Address -->
               <h4>Delivery Address</h4>
               <div class="form-check">
@@ -70,29 +76,35 @@
                   Same as billing address
                 </label>
               </div>
-              <div id="deliveryAddress">
+
+              <div formGroupName="deliveryAddress">
                 <div class="mb-3">
                   <label for="deliveryAddressInput" class="form-label">Address Line</label>
-                  <input type="text" class="form-control" id="deliveryAddressInput1" placeholder="1234 Main St" [disabled]="isSameAddress">
+                  <input type="text" class="form-control" id="deliveryAddressInput" placeholder="1234 Main St" formControlName="deliveryAddressInput">
                 </div>
                 <div class="mb-3">
                   <label for="deliveryCityInput" class="form-label">City</label>
-                  <input type="text" class="form-control" id="deliveryCityInput" [disabled]="isSameAddress">
+                  <input type="text" class="form-control" id="deliveryCityInput" formControlName="deliveryCityInput">
                 </div>
                 <div class="mb-3">
                   <label for="deliveryStateInput" class="form-label">State</label>
-                  <input type="text" class="form-control" id="deliveryStateInput" [disabled]="isSameAddress">
+                  <input type="text" class="form-control" id="deliveryStateInput" formControlName="deliveryStateInput">
                 </div>
                 <div class="mb-3">
                   <label for="deliveryZipInput" class="form-label">Zip Code</label>
-                  <input type="text" class="form-control" id="deliveryZipInput" [disabled]="isSameAddress">
+                  <input type="text" class="form-control" id="deliveryZipInput" formControlName="deliveryZipInput">
+                </div>
+                <div class="mb-3">
+                  <label for="deliveryCountryInput" class="form-label">Country</label>
+                  <input type="text" class="form-control" id="deliveryCountryInput" formControlName="deliveryCountryInput">
                 </div>
               </div>
-  
+          
               <!-- Submit Button -->
-              <button type="submit" class="btn btn-dark">Update Profile</button>
-  
+              <button type="submit" class="btn btn-dark border border-light">Update Profile</button>
+            
             </form>
+
           </div>
         </div>
       </div>
