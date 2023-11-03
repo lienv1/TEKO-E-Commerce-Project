@@ -18,8 +18,13 @@
   
               <!-- Name -->
               <div class="mb-3">
-                <label for="nameInput" class="form-label">Full Name</label>
-                <input type="text" class="form-control" id="nameInput" placeholder="John Doe" required>
+                <label for="firstnameInput" class="form-label">{{'FIRSTNAME' | translate}}</label>
+                <input type="text" class="form-control" id="firstnameInput" placeholder="John Doe" required>
+              </div>
+
+              <div class="mb-3">
+                <label for="lastnameInput" class="form-label">{{'LASTNAME' | translate}}</label>
+                <input type="text" class="form-control" id="lastnameInput" placeholder="John Doe" required>
               </div>
   
               <!-- Email -->
@@ -39,12 +44,8 @@
               <!-- Billing Address -->
               <h4>Billing Address</h4>
               <div class="mb-3">
-                <label for="billingAddressInput1" class="form-label">Address Line 1</label>
+                <label for="billingAddressInput" class="form-label">Address Line</label>
                 <input type="text" class="form-control" id="billingAddressInput1" placeholder="1234 Main St" required>
-              </div>
-              <div class="mb-3">
-                <label for="billingAddressInput2" class="form-label">Address Line 2</label>
-                <input type="text" class="form-control" id="billingAddressInput2" placeholder="Apartment, studio, or floor">
               </div>
               <div class="mb-3">
                 <label for="billingCityInput" class="form-label">City</label>
@@ -64,31 +65,27 @@
               <!-- Delivery Address -->
               <h4>Delivery Address</h4>
               <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="sameAddressCheck">
+                <input class="form-check-input" type="checkbox" id="sameAddressCheck" (change)="toggleInput($event)">
                 <label class="form-check-label" for="sameAddressCheck">
                   Same as billing address
                 </label>
               </div>
               <div id="deliveryAddress">
                 <div class="mb-3">
-                  <label for="deliveryAddressInput1" class="form-label">Address Line 1</label>
-                  <input type="text" class="form-control" id="deliveryAddressInput1" placeholder="1234 Main St" required>
-                </div>
-                <div class="mb-3">
-                  <label for="deliveryAddressInput2" class="form-label">Address Line 2</label>
-                  <input type="text" class="form-control" id="deliveryAddressInput2" placeholder="Apartment, studio, or floor">
+                  <label for="deliveryAddressInput" class="form-label">Address Line</label>
+                  <input type="text" class="form-control" id="deliveryAddressInput1" placeholder="1234 Main St" [disabled]="isSameAddress">
                 </div>
                 <div class="mb-3">
                   <label for="deliveryCityInput" class="form-label">City</label>
-                  <input type="text" class="form-control" id="deliveryCityInput" required>
+                  <input type="text" class="form-control" id="deliveryCityInput" [disabled]="isSameAddress">
                 </div>
                 <div class="mb-3">
                   <label for="deliveryStateInput" class="form-label">State</label>
-                  <input type="text" class="form-control" id="deliveryStateInput" required>
+                  <input type="text" class="form-control" id="deliveryStateInput" [disabled]="isSameAddress">
                 </div>
                 <div class="mb-3">
                   <label for="deliveryZipInput" class="form-label">Zip Code</label>
-                  <input type="text" class="form-control" id="deliveryZipInput" required>
+                  <input type="text" class="form-control" id="deliveryZipInput" [disabled]="isSameAddress">
                 </div>
               </div>
   
