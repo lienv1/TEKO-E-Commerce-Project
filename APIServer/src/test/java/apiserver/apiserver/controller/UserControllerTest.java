@@ -157,8 +157,9 @@ class UserControllerTest {
 
 
 	@Test
-	void addUserTest() throws Exception {	
-		preAuthorization(true);
+	@WithMockUser
+	void addUserTest() throws Exception {
+		when(authorizationService.isAuthenticatedByPrincipal(any(Principal.class), any(String.class))).thenReturn(true);
 	    mockMvc.perform(post("/user/add")
 	            .with(csrf())
 	            .contentType(MediaType.APPLICATION_JSON)
