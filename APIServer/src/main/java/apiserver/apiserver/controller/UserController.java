@@ -59,8 +59,14 @@ public class UserController {
 	}
 
 	@PostMapping("/add")
-	public ResponseEntity<User> addUser(@RequestBody User user) {
+	@PreAuthorize(value = "hasAnyRole('ADMIN','CUSTOMER')")
+	public ResponseEntity<User> addUser(@RequestBody User user, Principal principal) {
 		try {
+			String username = user.getUsername();
+			boolean isAuthorizied = this.authorizationService.isAuthenticatedByPrincipal(principal, username);
+			if (!isAuthorizied) {
+				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+			}
 			User addedUser = userService.addUser(user);
 			return new ResponseEntity<User>(addedUser,HttpStatus.OK);
 		} catch (DataIntegrityViolationException e) {
