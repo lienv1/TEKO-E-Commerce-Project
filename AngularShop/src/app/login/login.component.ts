@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { KeycloakService } from 'keycloak-angular';
+import { KeycloakLoginOptions } from 'keycloak-js';
 
 @Component({
   selector: 'app-login',
@@ -38,11 +39,11 @@ export class LoginComponent {
 
 
   login() {
-    this.keycloakService.login();
+    this.keycloakService.login(this.keycloakRedirectOption());
   }
 
   register() {
-    this.keycloakService.register();
+    this.keycloakService.register(this.keycloakRedirectOption());
   }
 
   logout() {
@@ -60,4 +61,12 @@ export class LoginComponent {
       (user) => { this.username = user.username!; }
     );
   }
+
+  keycloakRedirectOption(){
+    const keycloakLoginOptions: KeycloakLoginOptions = {
+      redirectUri:  window.location.origin + '/profil'
+    }
+    return keycloakLoginOptions;
+  }
+
 }
