@@ -109,6 +109,13 @@ public class User {
 	public void setDeleted(boolean deleted) {
 		this.deleted = deleted;
 	}
+
+	@Override
+	public String toString() {
+		return "User [userId=" + userId + ", company=" + company + ", firstname=" + firstname + ", lastname=" + lastname
+				+ ", phone=" + phone + ", email=" + email + ", deliveryAddress=" + deliveryAddress + ", billingAddress="
+				+ billingAddress + ", username=" + username + ", business=" + business + ", deleted=" + deleted + "]";
+	}
 	
 	
 }

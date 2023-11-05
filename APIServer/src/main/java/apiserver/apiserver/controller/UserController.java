@@ -20,6 +20,7 @@ import apiserver.apiserver.exception.UserNotFoundException;
 import apiserver.apiserver.model.User;
 import apiserver.apiserver.security.AuthorizationService;
 import apiserver.apiserver.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/user")
@@ -62,9 +63,11 @@ public class UserController {
 	@PreAuthorize(value = "hasAnyRole('ADMIN','CUSTOMER')")
 	public ResponseEntity<User> addUser(@RequestBody User user, Principal principal) {
 		try {
+			System.out.println(user.toString());
 			String username = user.getUsername();
 			boolean isAuthorizied = this.authorizationService.isAuthenticatedByPrincipal(principal, username);
 			if (!isAuthorizied) {
+				System.out.println("Denied by authorization service");
 				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 			}
 			User addedUser = userService.addUser(user);
@@ -104,4 +107,5 @@ public class UserController {
 			return ResponseEntity.notFound().build();
 		}
 	}
+	
 }
