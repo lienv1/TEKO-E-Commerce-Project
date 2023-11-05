@@ -90,11 +90,11 @@ function initializeKeycloak(keycloak: KeycloakService) {
     useFactory: initializeKeycloak,
     multi: true,
     deps: [KeycloakService]
-  }, {
+  }, /*{
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptorService,
       multi: true
-    }],
+    }*/],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

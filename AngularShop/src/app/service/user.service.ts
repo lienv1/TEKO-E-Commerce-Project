@@ -18,7 +18,7 @@ export class UserService {
   constructor(private http: HttpClient, private keycloakService: KeycloakService) { }
 
   public getUserdata(username:string): Observable<User> {
-    return this.http.get<User>(`${this.backendAPI}/api/user/username/${username}`, { withCredentials: true });
+    return this.http.get<User>(`${this.backendAPI}/user/username/${username}`, { withCredentials: true });
   }
 
   public getOrdersByUsername(username:string):Observable<Order[]>{
@@ -30,6 +30,10 @@ export class UserService {
         return this.http.get<Order[]>(`${this.backendAPI}/order/user/${username}`,{ headers});
       })
     );
+  }
+
+  public registerUser(user:User):Observable<User>{
+    return this.http.post<User>(`${this.backendAPI}/user/add`, user);
   }
 
   //ADMIN SECTION
@@ -54,5 +58,18 @@ export class UserService {
     );
   }
   //ADMIN SECTION END
+
+  getAuthenticatedHeader(){
+    const keycloakInstance = this.keycloakService.getKeycloakInstance();
+    const accessToken = keycloakInstance.token;
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`
+      })
+    };
+    console.log("accesstoken is   "+accessToken);
+    return httpOptions;
+  }
 
 }

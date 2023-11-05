@@ -68,7 +68,7 @@ public class UserController {
 			boolean isAuthorizied = this.authorizationService.isAuthenticatedByPrincipal(principal, username);
 			if (!isAuthorizied) {
 				System.out.println("Denied by authorization service");
-				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+				return new ResponseEntity("Denied by authorization service",HttpStatus.UNAUTHORIZED);
 			}
 			User addedUser = userService.addUser(user);
 			return new ResponseEntity<User>(addedUser,HttpStatus.OK);
@@ -107,5 +107,4 @@ public class UserController {
 			return ResponseEntity.notFound().build();
 		}
 	}
-	
 }

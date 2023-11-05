@@ -20,7 +20,7 @@ import { UserService } from 'src/app/service/user.service';
 export class ProfilEditComponent implements OnInit {
 
   @ViewChild("CustomModalComponent") customModalComponent !: CustomModalComponent
-  
+
   isSameAddress: boolean = false;
   user !: User
   public addressForm !: FormGroup;
@@ -28,7 +28,7 @@ export class ProfilEditComponent implements OnInit {
   public deliveryAddress !: FormGroup;
   username !: string
 
-  constructor(private keycloakService: KeycloakService, private userService: UserService, private modalService:NgbModal, private router:Router) {
+  constructor(private keycloakService: KeycloakService, private userService: UserService, private modalService: NgbModal, private router: Router) {
   }
 
   ngOnInit(): void {
@@ -107,10 +107,10 @@ export class ProfilEditComponent implements OnInit {
   }
 
   //KEYCLOAK API
-  getLoginStatus(){
+  getLoginStatus() {
     this.keycloakService.isLoggedIn().then(
       (response) => {
-        if (response === false){
+        if (response === false) {
           this.modalRedirectToLogin();
           return;
         }
@@ -143,71 +143,80 @@ export class ProfilEditComponent implements OnInit {
   }
 
   updateProfil() {
+    
     if (!this.addressForm.valid) {
       alert("INVALID Addressform")
       return;
     }
-      const company = this.addressForm.value.companyInput;
-      const firstname = this.addressForm.value.firstnameInput;
-      const lastname = this.addressForm.value.lastnameInput;
-      const email = this.addressForm.value.emailInput;
-      const phone = this.addressForm.value.phoneInput;
+    const company = this.addressForm.value.companyInput;
+    const firstname = this.addressForm.value.firstnameInput;
+    const lastname = this.addressForm.value.lastnameInput;
+    const email = this.addressForm.value.emailInput;
+    const phone = this.addressForm.value.phoneInput;
 
-      const billingStreet = this.addressForm.value.billingAddress.billingStreetInput;
-      const billingCity = this.addressForm.value.billingAddress.billingCityInput;
-      const billingState = this.addressForm.value.billingAddress.billingStateInput;
-      const billingZip = this.addressForm.value.billingAddress.billingZipInput;
-      const billingCountry = this.addressForm.value.billingAddress.billingCountryInput;
+    const billingStreet = this.addressForm.value.billingAddress.billingStreetInput;
+    const billingCity = this.addressForm.value.billingAddress.billingCityInput;
+    const billingState = this.addressForm.value.billingAddress.billingStateInput;
+    const billingZip = this.addressForm.value.billingAddress.billingZipInput;
+    const billingCountry = this.addressForm.value.billingAddress.billingCountryInput;
 
-      const billingAddress : Address = {
-        street : billingStreet,
-        city : billingCity,
-        state : billingState,
-        postalCode : billingZip,
-        country : billingCountry
+    const billingAddress: Address = {
+      street: billingStreet,
+      city: billingCity,
+      state: billingState,
+      postalCode: billingZip,
+      country: billingCountry
+    };
+
+    let deliveryAddress: Address
+
+    if (!this.isSameAddress) {
+      const deliveryStreet = this.addressForm.value.deliveryAddress.deliveryStreetInput;
+      const deliveryCity = this.addressForm.value.deliveryAddress.deliveryCityInput;
+      const deliveryState = this.addressForm.value.deliveryAddress.deliveryStateInput;
+      const deliveryZip = this.addressForm.value.deliveryAddress.deliveryZipInput;
+      const deliveryCountry = this.addressForm.value.deliveryAddress.deliveryCountryInput;
+      deliveryAddress = {
+        street: deliveryStreet,
+        city: deliveryCity,
+        state: deliveryState,
+        postalCode: deliveryZip,
+        country: deliveryCountry
       };
+    }
+    else
+      deliveryAddress = billingAddress
 
-      let deliveryAddress : Address
-
-      if (!this.isSameAddress) {
-        const deliveryStreet = this.addressForm.value.deliveryAddress.deliveryStreetInput;
-        const deliveryCity = this.addressForm.value.deliveryAddress.deliveryCityInput;
-        const deliveryState = this.addressForm.value.deliveryAddress.deliveryStateInput;
-        const deliveryZip = this.addressForm.value.deliveryAddress.deliveryZipInput;
-        const deliveryCountry = this.addressForm.value.deliveryAddress.deliveryCountryInput;
-        deliveryAddress = {
-          street : deliveryStreet,
-          city : deliveryCity,
-          state : deliveryState,
-          postalCode : deliveryZip,
-          country : deliveryCountry
-        };
-      }
-      else
-        deliveryAddress = billingAddress
-
-      const user : User = {
-        firstname: firstname,
-        lastname: lastname,
-        company: company,
-        email: email,
-        phone: phone,
-        deliveryAddress: deliveryAddress,
-        billingAddress: billingAddress,
-        username: this.username
-      }
+    const user: User = {
+      firstname: firstname,
+      lastname: lastname,
+      company: company,
+      email: email,
+      phone: phone,
+      deliveryAddress: deliveryAddress,
+      billingAddress: billingAddress,
+      username: this.username
+    }
     console.log(user);
+    this.userService.registerUser(user).subscribe({
+      next: (response) => {
+        alert(response)
+      },
+      error: (error: HttpErrorResponse) => {
+        alert(error.message);
+      }
+    })
   }
   //BACKEND API END
 
   //MODAL SECTION
   modalRedirectToLogin() {
-    
-    const redirectModal : FunctionModel = {
-      message:"Login",
-      foo : () => this.redirectToLogin()
+
+    const redirectModal: FunctionModel = {
+      message: "Login",
+      foo: () => this.redirectToLogin()
     }
-    
+
     let modal = this.customModalComponent;
     modal.message = "You are not logged in. Please login to continue";
     modal.title = "Please login";
@@ -215,7 +224,7 @@ export class ProfilEditComponent implements OnInit {
     modal.functionModels = [redirectModal];
     this.modalService.open(modal.myModal);
   }
-  redirectToLogin(){
+  redirectToLogin() {
     this.router.navigateByUrl("/login");
   }
   //MODAL SECTION END
