@@ -65,6 +65,7 @@ public class UserService {
 		oldUser.setEmail(newUser.getEmail());
 		oldUser.setLastname(newUser.getLastname());
 		oldUser.setFirstname(newUser.getFirstname());
+		oldUser.setPhone(newUser.getPhone());
 		return userRepo.save(oldUser);
 	}
 

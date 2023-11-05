@@ -63,7 +63,6 @@ public class UserController {
 	@PreAuthorize(value = "hasAnyRole('ADMIN','CUSTOMER')")
 	public ResponseEntity<User> addUser(@RequestBody User user, Principal principal) {
 		try {
-			System.out.println(user.toString());
 			String username = user.getUsername();
 			boolean isAuthorizied = this.authorizationService.isAuthenticatedByPrincipal(principal, username);
 			if (!isAuthorizied) {
