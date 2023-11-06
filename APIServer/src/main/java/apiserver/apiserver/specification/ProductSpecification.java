@@ -5,8 +5,10 @@ import org.springframework.data.jpa.domain.Specification;
 import apiserver.apiserver.model.Product;
 import jakarta.persistence.criteria.Predicate;
 
+@Deprecated
 public class ProductSpecification {
 	
+	@Deprecated
 	public Specification<Product> searchByCriteria(Product criteria){
 		 return (root, query, builder) -> {
 	            Predicate predicate = builder.conjunction();
