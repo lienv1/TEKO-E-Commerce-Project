@@ -27,6 +27,7 @@ export class ProfilEditComponent implements OnInit {
   public billingAddress !: FormGroup;
   public deliveryAddress !: FormGroup;
   username !: string
+  newlyRegistered: boolean = false;
 
   constructor(private keycloakService: KeycloakService, private userService: UserService, private modalService: NgbModal, private router: Router) {
   }
@@ -132,18 +133,20 @@ export class ProfilEditComponent implements OnInit {
 
   //BACKEND API
   getBackendUser(fillFormKeycloak: () => void) {
-    this.userService.getUserdata(this.username).subscribe(
-      (response: User) => {
+    this.userService.getUserdata(this.username).subscribe({
+      next: (response: User) => {
         this.fillFormBackend(response);
+        this.newlyRegistered = false;
       },
-      (error: HttpErrorResponse) => {
+      error: (error: HttpErrorResponse) => {
         fillFormKeycloak();
+        this.newlyRegistered = true;
       }
-    )
+    })
   }
 
   updateProfil() {
-    
+
     if (!this.addressForm.valid) {
       alert("INVALID Addressform")
       return;
@@ -153,7 +156,6 @@ export class ProfilEditComponent implements OnInit {
     const lastname = this.addressForm.value.lastnameInput;
     const email = this.addressForm.value.emailInput;
     const phone = this.addressForm.value.phoneInput;
-
     const billingStreet = this.addressForm.value.billingAddress.billingStreetInput;
     const billingCity = this.addressForm.value.billingAddress.billingCityInput;
     const billingState = this.addressForm.value.billingAddress.billingStateInput;
@@ -197,26 +199,59 @@ export class ProfilEditComponent implements OnInit {
       billingAddress: billingAddress,
       username: this.username
     }
-    console.log(user);
-    this.userService.registerUser(user).subscribe({
-      next: (response) => {
-        alert(response)
-      },
-      error: (error: HttpErrorResponse) => {
-        alert(error.message);
-      }
-    })
+    this.updateUser(user);
+  }
+
+  updateUser(user: User) {
+    if (this.newlyRegistered) {
+      this.userService.registerUser(user).subscribe({
+        next: (response) => {
+          this.modalSuccess();
+          this.newlyRegistered = false;
+        },
+        error: (error: HttpErrorResponse) => {
+          this.modalFail(error.message)
+        }
+      });
+    }
+    else
+      this.userService.updateUser(user, this.username).subscribe({
+        next: (response) => {this.modalSuccess(); this.newlyRegistered = false; },
+        error: (error: HttpErrorResponse) => { this.modalFail(error.message) }
+      });
+
   }
   //BACKEND API END
 
   //MODAL SECTION
-  modalRedirectToLogin() {
+  modalSuccess() {
+    let modal = this.customModalComponent
+    modal.message = "Your account has been successfully updated!";
+    modal.title = "Notification";
+    this.openModal(modal, true);
+  }
+  modalFail(message: string) {
+    let modal = this.customModalComponent
+    modal.message = `Account could not be updated. Please try again later. \n ${message}`;
+    modal.title = "Error!";
+    modal.title = "Red"
+    this.openModal(modal, true);
+  }
 
+  public openModal(modal: any, autoclose: boolean) {
+    let modalRef = this.modalService.open(modal.myModal);
+    if (autoclose) {
+      setTimeout(() => {
+        modalRef.dismiss();
+      }, 3000);
+    }
+  }
+
+  modalRedirectToLogin() {
     const redirectModal: FunctionModel = {
-      message: "Login",
+      buttonText: "Login",
       foo: () => this.redirectToLogin()
     }
-
     let modal = this.customModalComponent;
     modal.message = "You are not logged in. Please login to continue";
     modal.title = "Please login";

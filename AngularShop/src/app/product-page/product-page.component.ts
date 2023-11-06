@@ -192,14 +192,14 @@ export class ProductPageComponent {
       let increaseFunction: () => void = () => this.increaseQuantity(cartItem.product, quantity)
       const increaseName = this.translateService.instant("INCREASE");
       const increaseModel: FunctionModel = {
-        message: increaseName,
+        buttonText: increaseName,
         foo: increaseFunction,
       }
       //Replace function
       let replaceFunction: () => void = () => this.replaceQuantity(cartItem.product, quantity);
       const replaceName: string = this.translateService.instant("REPLACE")
       const replaceModel: FunctionModel = {
-        message: replaceName,
+        buttonText: replaceName,
         foo: replaceFunction
       }
       //Modal setting

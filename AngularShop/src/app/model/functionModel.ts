@@ -1,4 +1,4 @@
 export interface FunctionModel{
-    message: string;
+    buttonText: string;
     foo: () => void;
 }

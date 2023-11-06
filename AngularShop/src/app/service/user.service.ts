@@ -36,6 +36,10 @@ export class UserService {
     return this.http.post<User>(`${this.backendAPI}/user/add`, user);
   }
 
+  public updateUser(user:User, username:string):Observable<User>{
+    return this.http.put<User>(`${this.backendAPI}/user/update/username/${username}`, user)
+  }
+
   //ADMIN SECTION
   public getUserByUsername(username:string):Observable<any[]>{
     return from(this.keycloakService.getToken()).pipe(

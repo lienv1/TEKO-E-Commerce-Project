@@ -7,7 +7,7 @@
         <p>{{message}}</p>
     </div>
     <div class="modal-footer">
-        <button *ngFor="let functionModel of functionModels" type="button" class="btn btn-secondary" (click)="functionModel.foo(); modal.dismiss()" >{{functionModel.message}}</button>
+        <button *ngFor="let functionModel of functionModels" type="button" class="btn btn-secondary" (click)="functionModel.foo(); modal.dismiss()" >{{functionModel.buttonText}}</button>
         <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">{{"CLOSE" | translate}}</button>
     </div>
   </ng-template>

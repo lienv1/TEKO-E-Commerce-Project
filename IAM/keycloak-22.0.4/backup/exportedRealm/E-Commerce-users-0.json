@@ -25,5 +25,27 @@
     },
     "notBefore" : 0,
     "groups" : [ ]
+  }, {
+    "id" : "2a02f1af-867f-4234-ae88-571fe747887b",
+    "createdTimestamp" : 1699002949253,
+    "username" : "bobby",
+    "enabled" : true,
+    "totp" : false,
+    "emailVerified" : false,
+    "firstName" : "Bobby",
+    "lastName" : "Lien",
+    "email" : "bobby.lien@achau.ch",
+    "credentials" : [ {
+      "id" : "42290d48-b8a8-4998-8d6e-1c28c7f6607c",
+      "type" : "password",
+      "createdDate" : 1699002949482,
+      "secretData" : "{\"value\":\"aK6yMfqc2+5SdURZbbQlbGcKrrf7bRCbwwzoVuCOUYc=\",\"salt\":\"+VD/UMG4bXaG8W55JryJTw==\",\"additionalParameters\":{}}",
+      "credentialData" : "{\"hashIterations\":27500,\"algorithm\":\"pbkdf2-sha256\",\"additionalParameters\":{}}"
+    } ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "default-roles-e-commerce" ],
+    "notBefore" : 0,
+    "groups" : [ ]
   } ]
 }

@@ -117,7 +117,7 @@ export class CartComponent {
     const message : string = this.translate.instant("REMOVE ITEM MESSAGE");
     const title : string = this.translate.instant("WARNING");
     const deleteModel : FunctionModel = {
-      message:deleteText,
+      buttonText:deleteText,
       foo:deleteFunction
     }
     let modal = this.customModalComponent;
