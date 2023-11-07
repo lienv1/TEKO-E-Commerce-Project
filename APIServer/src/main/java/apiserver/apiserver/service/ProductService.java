@@ -70,19 +70,21 @@ public class ProductService {
 			specification = specification.and(ProductSpecifications.hasCategory(category));
 		}
 		if (subCategory != null && !subCategory.isEmpty()) {
-			specification = specification.and(ProductSpecifications.hasCategory(subCategory));
+			specification = specification.and(ProductSpecifications.hasSubCategory(subCategory));
 		}
 		if (origins != null && !origins.isEmpty()) {
-			specification = specification.and(ProductSpecifications.hasBrand(origins));
+			specification = specification.and(ProductSpecifications.hasOrigin(origins));
 		}
 
 		return productRepo.findAll(specification, page);
 	}
 
-	@Deprecated
-	public List<Product> getProductsByFilter(Product criteria) {
-		Specification<Product> specification = new ProductSpecification().searchByCriteria(criteria);
-		return productRepo.findAll(specification);
+	public Page<Product> getProductsBySearch(List<String> keywords, Pageable page) {
+		Specification<Product> specification = Specification.where(null);
+		if (keywords != null && !keywords.isEmpty()) {
+			specification = specification.and(ProductSpecifications.hasSearchIndex(keywords));
+		}
+		return productRepo.findAll(specification, page);
 	}
 
 	public List<CategoryListDTO> getCategoryList() {

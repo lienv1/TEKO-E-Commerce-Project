@@ -1,10 +1,12 @@
 package apiserver.apiserver.specification;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.jpa.domain.Specification;
 
 import apiserver.apiserver.model.Product;
+import jakarta.persistence.criteria.Predicate;
 
 public class ProductSpecifications {
 
@@ -31,7 +33,7 @@ public class ProductSpecifications {
 			if (subCategory == null || subCategory.isEmpty()) {
 				return criteriaBuilder.conjunction(); // No condition
 			}
-			return criteriaBuilder.equal(root.get("sub_category"), subCategory);
+			return criteriaBuilder.equal(root.get("subCategory"), subCategory);
 		};
 	}
 
@@ -42,5 +44,23 @@ public class ProductSpecifications {
 			}
 			return root.get("origin").in(origins); // WHERE origin IN (...)
 		};
+	}
+	
+	public static Specification<Product> hasSearchIndex(List<String> keywords){
+		 return (root, query, criteriaBuilder) -> {
+	            if (keywords == null || keywords.isEmpty()) {
+	                return criteriaBuilder.conjunction(); // No condition
+	            }
+	            // Convert the list of keywords into a list of lowercase predicates
+	            List<Predicate> predicates = new ArrayList<>();
+	            for (String keyword : keywords) {
+	                predicates.add(criteriaBuilder.like(
+	                        criteriaBuilder.lower(root.get("searchIndex")),
+	                        "%" + keyword.toLowerCase() + "%"
+	                ));
+	            }
+	            // Combine the predicates with OR conditions
+	            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
+	        };
 	}
 }

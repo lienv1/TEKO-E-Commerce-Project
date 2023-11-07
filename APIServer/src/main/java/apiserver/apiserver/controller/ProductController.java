@@ -98,8 +98,8 @@ public class ProductController {
 		}
 	}
 
-	@GetMapping("/search")
-	public ResponseEntity<Page<Product>> getProductsByFilter2(
+	@GetMapping("/filter")
+	public ResponseEntity<Page<Product>> getProductsByFilter(
 			@PageableDefault(size = 20, sort = "lastModified") Pageable pageable,
 			@RequestParam(value = "brand", required = false) List<String> brands,
 			@RequestParam(value = "origin", required = false) List<String> origins,
@@ -110,13 +110,15 @@ public class ProductController {
 		return new ResponseEntity<Page<Product>>(list, HttpStatus.OK);
 	}
 	
-	
-	@Deprecated
-	public ResponseEntity<List<Product>> getProductsByFilter(@RequestBody Product filter) {
-		List<Product> list = productService.getProductsByFilter(filter);
-		return new ResponseEntity<List<Product>>(list, HttpStatus.OK);
+	@GetMapping("/search")
+	public ResponseEntity<Page<Product>> getProductsBySearch(
+			@PageableDefault(size = 20, sort = "lastModified") Pageable pageable,
+			@RequestParam(value = "keywords", required = false) List<String> keywords
+			) {
+		Page<Product> list = productService.getProductsBySearch(keywords,pageable);
+		return new ResponseEntity<Page<Product>>(list, HttpStatus.OK);
 	}
-
+	
 	@GetMapping("/category")
 	public ResponseEntity<List<CategoryListDTO>> getCategoryList() {
 		List<CategoryListDTO> categoryList = productService.getCategoryList();
