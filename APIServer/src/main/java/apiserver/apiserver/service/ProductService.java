@@ -2,6 +2,7 @@ package apiserver.apiserver.service;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,9 +88,9 @@ public class ProductService {
 		return productRepo.findAll(specification, page);
 	}
 
-	public List<CategoryListDTO> getCategoryList() {
-		List<Tuple> results = productRepo.getCategoryList();
-		return results.stream().map(this::convertToDTO).collect(Collectors.toList());
+	public Set<CategoryListDTO> getCategoryList() {
+		Set<Tuple> results = productRepo.getCategoryList();
+		return results.stream().map(this::convertToDTO).collect(Collectors.toSet());
 	}
 
 	private CategoryListDTO convertToDTO(Tuple tuple) {

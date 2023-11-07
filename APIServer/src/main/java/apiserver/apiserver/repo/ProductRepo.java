@@ -1,6 +1,7 @@
 package apiserver.apiserver.repo;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -27,6 +28,6 @@ public interface ProductRepo extends JpaRepository<Product, Long>, JpaSpecificat
             "GROUP_CONCAT(p.origin) AS origins " +
             "FROM Product p " +
             "GROUP BY p.category")
-     List<Tuple> getCategoryList();
+     Set<Tuple> getCategoryList();
 	
 }

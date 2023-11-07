@@ -2,6 +2,8 @@ package apiserver.apiserver.controller;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -122,9 +124,9 @@ public class ProductController {
 	}
 	
 	@GetMapping("/category")
-	public ResponseEntity<List<CategoryListDTO>> getCategoryList() {
-		List<CategoryListDTO> categoryList = productService.getCategoryList();
-		return new ResponseEntity<List<CategoryListDTO>>(categoryList, HttpStatus.OK);
+	public ResponseEntity<Set<CategoryListDTO>> getCategoryList() {
+		Set<CategoryListDTO> categoryList = productService.getCategoryList();
+		return new ResponseEntity<Set<CategoryListDTO>>(categoryList, HttpStatus.OK);
 	}
 
 }
