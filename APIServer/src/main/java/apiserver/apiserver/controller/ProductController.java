@@ -19,6 +19,8 @@ import apiserver.apiserver.service.ProductService;
 @RestController
 @RequestMapping("/product")
 public class ProductController {
+	
+	private final int MAXITEM= 12;
 
 	@Autowired
 	private ProductService productService;
@@ -38,7 +40,7 @@ public class ProductController {
 	}
 
 	@GetMapping("/products")
-	public ResponseEntity<Page<Product>> getProducts(@PageableDefault(size = 20, sort = "lastModified") Pageable pageable) {
+	public ResponseEntity<Page<Product>> getProducts(@PageableDefault(size = MAXITEM, sort = "lastModified") Pageable pageable) {
 		Page<Product> productPage = productService.getProducts(pageable);
 		return ResponseEntity.ok(productPage);
 	}
@@ -100,7 +102,7 @@ public class ProductController {
 
 	@GetMapping("/filter")
 	public ResponseEntity<Page<Product>> getProductsByFilter(
-			@PageableDefault(size = 20, sort = "lastModified") Pageable pageable,
+			@PageableDefault(size = MAXITEM, sort = "lastModified") Pageable pageable,
 			@RequestParam(value = "brand", required = false) List<String> brands,
 			@RequestParam(value = "origin", required = false) List<String> origins,
 			@RequestParam(value = "category", required = false) String category,
@@ -112,7 +114,7 @@ public class ProductController {
 	
 	@GetMapping("/search")
 	public ResponseEntity<Page<Product>> getProductsBySearch(
-			@PageableDefault(size = 20, sort = "lastModified") Pageable pageable,
+			@PageableDefault(size = MAXITEM, sort = "lastModified") Pageable pageable,
 			@RequestParam(value = "keywords", required = false) List<String> keywords
 			) {
 		Page<Product> list = productService.getProductsBySearch(keywords,pageable);

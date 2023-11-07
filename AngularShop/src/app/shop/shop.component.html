@@ -51,7 +51,7 @@
                 <!-- Add your product cards here -->
                 <!-- For example: -->
                 <div class="col-md-4 mb-4"
-                    *ngFor="let product of currentProducts | paginate: { itemsPerPage: 12, currentPage: page }">
+                    *ngFor="let product of currentProducts | paginate: { itemsPerPage: 12, currentPage: page, totalItems:maxItems }">
                     <div class="card">
 
                         <a class="d-flex justify-content-center align-items-center"
@@ -86,6 +86,7 @@
 
                     </div>
                 </div>
+
                 <pagination-controls (pageChange)="page = $event" (click)="setPageParam()"
                     [nextLabel]="getTranslation('NEXT')"
                     [previousLabel]="getTranslation('PREVIOUS')"></pagination-controls>

@@ -1,4 +1,4 @@
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
@@ -26,8 +26,19 @@ export class ShopComponent implements OnInit {
 
   //page variables
   page: number = 1;
+  maxItems : number = 1;
+
+  //Param
+  searchParam !: string;
+  categoryParam !: string;
+  subcategoryParam !: string;
+  brandParam !: string;
+  originParam !: string;
 
   //Filter
+  searchKeywords : string [] = [];
+  brands : string[] = [];
+
   //Category
   public categories : ProductCategory[] = [];
 
@@ -47,13 +58,12 @@ export class ShopComponent implements OnInit {
     private productService: ProductService, 
     private shoppingCart: ShoppingCart,
     private keycloakService: KeycloakService,
-    private modalService: NgbModal) { }
+    private modalService: NgbModal) { this.title.setTitle("Shop")}
 
   ngOnInit(): void {
     this.initCategories();
     this.initProducts();
     this.getPageParam();
-    this.title.setTitle("Shop")
     this.isLogged();
   }
 
@@ -70,7 +80,46 @@ export class ShopComponent implements OnInit {
   }
 
   //INIT
+  public initParam(){
+    this.route.queryParamMap.subscribe(queryParams => {
+      const searchParam = queryParams.get('search');
+      const categoryParam = queryParams.get('category');
+      const subcategoryParam = queryParams.get('subcategory');
+      const brandParam = queryParams.get('brand');
+      const originParam = queryParams.get('origin');
+
+      if (searchParam)
+        this.searchParam = searchParam
+      if (categoryParam )
+        this.categoryParam = categoryParam
+      if (subcategoryParam)
+        this.subcategoryParam = subcategoryParam
+      if(brandParam)
+        this.brandParam = brandParam
+      if (originParam)
+        this.originParam = originParam
+      
+    });
+  }
+
+
   public initProducts() {
+    this.productService.getProducts().subscribe({
+      next: (response) => {
+        this.currentProducts =  response.content;
+        this.maxItems = response.totalElements;
+      },
+      error: (error:HttpErrorResponse) => {
+        this.popup("ERROR", error.message,"red");
+      }
+    });
+  }
+  public initSearch(){
+    const keywords = this.searchParam.split('¿');
+    //
+  }
+  public initFilter(){
+    let params = new HttpParams()
     
   }
 
@@ -105,10 +154,6 @@ export class ShopComponent implements OnInit {
 
   }
 
-  //CATEGORY SECTION
-
-  //CATEGORY SECTION END
-
   //SEARCH SECTION
   public searchItBt(keyword: string) {
     this.removeAllParams().then(
@@ -125,15 +170,7 @@ export class ShopComponent implements OnInit {
   }
 
   public searchIt(keywords: string) {
-    const keywordsArray = this.getKeywords(keywords)
-    let products: Product[] = []
-    for (let i = 0; i < this.allProducts.length; i++) {
-      let product = this.allProducts[i]
-      if (this.productContainAllOfStringArray(product, keywordsArray)) {
-        products.push(product)
-      }
-    }
-    this.currentProducts = products
+    
   }
 
   //FAVOURITE SECTION
@@ -178,20 +215,8 @@ export class ShopComponent implements OnInit {
     return keywords;
   }
 
-  public productContainAllOfStringArray(product: Product, keywords: string[]): boolean {
-    for (let i = 0; i < keywords.length; i++) {
-      let keyword = keywords[i]
-      if (!product.searchIndex?.toLowerCase().includes(keyword.toLowerCase())) {
-        return false
-      }
-    }
-    return true
-  }
   //SEARCH SECTION ENDS
 
-  //BRAND SECTION
-
-  //BRAND SECTION END
 
   //PAGE SECTION
   public getPageParam() {
@@ -343,6 +368,14 @@ export class ShopComponent implements OnInit {
   //CART SECTION END
 
   //POPUP SECTION
+  public popup(title:string, message:string, color:string){
+    let modal = this.customModalComponent;
+    modal.message = message;
+    modal.title = title;
+    modal.colorTitle = color;
+    this.openModal(modal,false);
+  }
+
   public openModal(modal: any, autoclose: boolean) {
     let modalRef = this.modalService.open(modal.myModal);
     if (autoclose) {

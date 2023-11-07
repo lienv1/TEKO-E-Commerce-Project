@@ -17,30 +17,20 @@ export class ProductService {
 
   constructor(private http: HttpClient, private keycloakService: KeycloakService) { }
 
-  public getProducts(): Observable<Product[]> {
-    return this.http.get<Product[]>(`${this.backendAPI}/product/all`)
+  public getProducts(): Observable<any> {
+    return this.http.get<any>(`${this.backendAPI}/product/products`)
   }
 
   public getProduct(id: string): Observable<Product> {
     return this.http.get<Product>(`${this.backendAPI}/product/id/${id}`);
   }
 
+
   //CATEGORY
   public getCategories(): Observable<ProductCategory[]>{
     return this.http.get<ProductCategory[]>(`${this.backendAPI}/product/category`);
   }
 
-  //ORDER
-  public sendOrder(user:User,order:Order):Observable<HttpStatusCode>{
-    return from(this.keycloakService.getToken()).pipe(
-      switchMap((token: string) => {
-        const headers = new HttpHeaders({
-          Authorization: `Bearer ${token}`,
-        });
-        return this.http.post<any>(`${this.backendAPI}/order/add/${user.username}`, {user,order},{ headers});
-      })
-    );
-  }
 
   //Favourite functions
   public isFavourite(username:string, id:string): Observable<boolean> {
