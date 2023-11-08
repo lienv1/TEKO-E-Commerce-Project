@@ -88,20 +88,35 @@ export class ShopComponent implements OnInit {
       const brandParam = queryParams.get('brand');
       const originParam = queryParams.get('origin');
 
-      if (searchParam)
+      let hasParam = false;
+
+      if (searchParam){
         this.searchParam = searchParam
-      if (categoryParam )
+        this.initSearch();
+        return;
+      }
+      if (categoryParam ){
         this.categoryParam = categoryParam
-      if (subcategoryParam)
+        hasParam = true;
+      }
+      if (subcategoryParam){
         this.subcategoryParam = subcategoryParam
-      if(brandParam)
+        hasParam = true;
+      }
+      if(brandParam){
         this.brandParam = brandParam
-      if (originParam)
+        hasParam = true;
+      }
+      if (originParam){
         this.originParam = originParam
-      
+        hasParam = true;
+      }
+      if (hasParam)
+        this.initFilter()
+      else
+        this.initProducts();
     });
   }
-
 
   public initProducts() {
     this.productService.getProducts().subscribe({
@@ -115,12 +130,20 @@ export class ShopComponent implements OnInit {
     });
   }
   public initSearch(){
-    const keywords = this.searchParam.split('¿');
-    //
+    let params = new HttpParams();
+    params.set("search", this.searchParam);
   }
   public initFilter(){
-    let params = new HttpParams()
-    
+    let params = new HttpParams();
+    if (this.categoryParam)
+      params.set("categories", this.categoryParam);
+    if (this.subcategoryParam)
+      params.set("subcategory", this.subcategoryParam);
+    if (this.categories)
+      params.set("brand", this.brandParam);
+    if (this.originParam)
+      params.set("categories", this.originParam);
+    this.productService
   }
 
   public initCategories() {

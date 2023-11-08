@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders, HttpStatusCode } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams, HttpStatusCode } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { KeycloakService } from 'keycloak-angular';
 import { Observable, from, switchMap } from 'rxjs';
@@ -23,6 +23,14 @@ export class ProductService {
 
   public getProduct(id: string): Observable<Product> {
     return this.http.get<Product>(`${this.backendAPI}/product/id/${id}`);
+  }
+
+  public getProductByFilter(params:HttpParams):Observable<any>{
+    return this.http.get<any>(`${this.backendAPI}/product/filter`, {params:params})
+  }
+
+  public getProductBySearch(params:HttpParams):Observable<any>{
+    return this.http.get<any>(`${this.backendAPI}/product/search`, {params:params})
   }
 
 
