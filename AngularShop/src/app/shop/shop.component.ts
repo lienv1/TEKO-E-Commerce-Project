@@ -62,7 +62,7 @@ export class ShopComponent implements OnInit {
 
   ngOnInit(): void {
     this.initCategories();
-    this.initProducts();
+    this.initParam();
     this.getPageParam();
     this.isLogged();
   }
@@ -112,7 +112,7 @@ export class ShopComponent implements OnInit {
         hasParam = true;
       }
       if (hasParam)
-        this.initFilter()
+        this.initFilter();
       else
         this.initProducts();
     });
@@ -136,7 +136,7 @@ export class ShopComponent implements OnInit {
   public initFilter(){
     let params = new HttpParams();
     if (this.categoryParam)
-      params.set("categories", this.categoryParam);
+      params.set("category", this.categoryParam);
     if (this.subcategoryParam)
       params.set("subcategory", this.subcategoryParam);
     if (this.categories)
