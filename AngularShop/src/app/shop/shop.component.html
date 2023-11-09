@@ -66,10 +66,10 @@
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="navbarBrandDropdown">
                               <!-- Wrap checkboxes in div and stop propagation to keep the dropdown open when clicking inside -->
-                              <div onclick="event.stopPropagation();">
+                              <div *ngFor="let brand of filters?.brands" onclick="event.stopPropagation();">
                                 <label class="dropdown-item">
-                                  <input class="form-check-input me-1" type="checkbox" value="Brand1" id="brand1">
-                                  Brand 1
+                                  <input class="form-check-input me-1" type="checkbox" value="Brand1" id="brand_"{{handleEmptySpaces(brand)}}>
+                                  {{brand}}
                                 </label>
                               </div>
                               <div onclick="event.stopPropagation();">

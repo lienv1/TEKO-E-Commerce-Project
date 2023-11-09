@@ -7,6 +7,7 @@ import { Order } from '../model/order';
 import { Product } from '../model/product';
 import { ProductCategory } from '../model/productCategory';
 import { User } from '../model/user';
+import { Filters } from '../model/filters';
 
 @Injectable({
   providedIn: 'root'
@@ -34,10 +35,13 @@ export class ProductService {
     return this.http.get<any>(`${this.backendAPI}/product/search`, {params:params})
   }
 
-
-  //CATEGORY
+  //CATEGORY AND FILTER
   public getCategories(): Observable<ProductCategory[]>{
     return this.http.get<ProductCategory[]>(`${this.backendAPI}/product/category`);
+  }
+
+  public getFilters(params:HttpParams):Observable<Filters>{
+    return this.http.get<Filters>(`${this.backendAPI}/product/filters`, {params:params});
   }
 
 

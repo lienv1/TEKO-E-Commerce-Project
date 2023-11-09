@@ -13,6 +13,7 @@ import { ProductService } from '../service/product.service';
 import { ShoppingCart } from '../service/shoppingCart';
 import { CustomModalComponent } from '../modal/custom-modal/custom-modal.component';
 import { environment } from 'src/environments/environment';
+import { Filters } from '../model/filters';
 
 @Component({
   selector: 'app-shop',
@@ -41,9 +42,8 @@ export class ShopComponent implements OnInit {
 
   //Filter
   searchKeywords : string [] = [];
-  brands : string[] = [];
-  origins : string[] = [];
   sortBy : string = "created"
+  filters ?: Filters
 
   //Category
   public categories : ProductCategory[] = [];
@@ -72,12 +72,12 @@ export class ShopComponent implements OnInit {
   ngOnInit(): void {
     this.initCategories();
     this.initParam();
+    this.initFilters();
     this.isLogged();
   }
 
   //For loading API services
   ngAfterViewInit(): void {
-   
   }
 
 
@@ -125,7 +125,7 @@ export class ShopComponent implements OnInit {
         hasParam = true;
       }
       if (hasParam)
-        this.initFilter();
+        this.initFilteringProduct();
       else
         this.initProducts();
     });
@@ -150,7 +150,7 @@ export class ShopComponent implements OnInit {
     })
   }
 
-  public initFilter(){
+  public initFilteringProduct(){
     let params = new HttpParams();
     if (this.categoryParam)
       params = params.append("category", this.categoryParam);
@@ -171,6 +171,19 @@ export class ShopComponent implements OnInit {
     this.productService.getCategories().subscribe ({
       next: (response:ProductCategory[]) => this.categories = response,
       error : (error:HttpErrorResponse) => this.handleError(error)
+    })
+  }
+
+  public initFilters(){
+    let params = new HttpParams();
+    if (this.categoryParam)
+      params = params.append("category",this.categoryParam);
+    if (this.subcategoryParam)
+      params = params.append("subcategory", this.subcategoryParam);
+    
+    this.productService.getFilters(params).subscribe({
+      next: (response) => this.filters = response,
+      error: (error:HttpErrorResponse) => this.handleError(error)
     })
   }
 
