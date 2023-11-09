@@ -48,6 +48,96 @@
 
             <!-- Product list -->
             <div class="row" #productList>
+
+
+                <!--filter section-->
+                <nav class="navbar navbar-expand-lg">
+                    <div class="container-fluid">
+                      <span class="navbar-brand">Product Filters</span>
+                      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarFilterContent" aria-controls="navbarFilterContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                      </button>
+                      <div class="collapse navbar-collapse" id="navbarFilterContent">
+                        <ul class="navbar-nav me-auto">
+                          <!-- Brand filter dropdown -->
+                          <li class="nav-item dropdown">
+                            <button class="nav-link dropdown-toggle" id="navbarBrandDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                              Brand
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="navbarBrandDropdown">
+                              <!-- Wrap checkboxes in div and stop propagation to keep the dropdown open when clicking inside -->
+                              <div onclick="event.stopPropagation();">
+                                <label class="dropdown-item">
+                                  <input class="form-check-input me-1" type="checkbox" value="Brand1" id="brand1">
+                                  Brand 1
+                                </label>
+                              </div>
+                              <div onclick="event.stopPropagation();">
+                                <label class="dropdown-item">
+                                  <input class="form-check-input me-1" type="checkbox" value="Brand2" id="brand2">
+                                  Brand 2
+                                </label>
+                              </div>
+                              <!-- More brand checkboxes... -->
+                            </ul>
+                          </li>
+                          <!-- Origin filter dropdown -->
+                          <li class="nav-item dropdown">
+                            <button class="nav-link dropdown-toggle" id="navbarOriginDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                              Origin
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="navbarOriginDropdown">
+                              <!-- Wrap checkboxes in div and stop propagation to keep the dropdown open when clicking inside -->
+                              <div onclick="event.stopPropagation();">
+                                <label class="dropdown-item">
+                                  <input class="form-check-input me-1" type="checkbox" value="Country1" id="country1">
+                                  Country 1
+                                </label>
+                              </div>
+                              <div onclick="event.stopPropagation();">
+                                <label class="dropdown-item">
+                                  <input class="form-check-input me-1" type="checkbox" value="Country2" id="country2">
+                                  Country 2
+                                </label>
+                              </div>
+                              <!-- More country checkboxes... -->
+                            </ul>
+                          </li>
+                          <li class="nav-item dropdown">
+                            <button class="nav-link dropdown-toggle" id="navbarSortDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                              Sort By
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="navbarSortDropdown">
+                              <div onclick="event.stopPropagation();">
+                                <label class="dropdown-item">
+                                  <input class="form-check-input me-1" type="radio" name="sortOptions" value="name" id="sortName">
+                                  Name
+                                </label>
+                              </div>
+                              <div onclick="event.stopPropagation();">
+                                <label class="dropdown-item">
+                                  <input class="form-check-input me-1" type="radio" name="sortOptions" value="price" id="sortPrice">
+                                  Price
+                                </label>
+                              </div>
+                              <div onclick="event.stopPropagation();">
+                                <label class="dropdown-item">
+                                  <input class="form-check-input me-1" type="radio" name="sortOptions" value="productId" id="sortProductId">
+                                  Product ID
+                                </label>
+                              </div>
+                            </ul>
+                          </li>
+                        </ul>
+                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Apply Filters</button>
+                      </div>
+                    </div>
+                  </nav>
+                  
+                  
+
+
+
                 <!-- Add your product cards here -->
                 <!-- For example: -->
                 <div class="col-md-4 mb-4"
