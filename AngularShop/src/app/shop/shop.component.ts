@@ -42,6 +42,8 @@ export class ShopComponent implements OnInit {
   //Filter
   searchKeywords : string [] = [];
   brands : string[] = [];
+  origins : string[] = [];
+  sortBy : string = "created"
 
   //Category
   public categories : ProductCategory[] = [];
