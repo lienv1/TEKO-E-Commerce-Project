@@ -44,6 +44,8 @@ export class ShopComponent implements OnInit {
   searchKeywords : string [] = [];
   sortBy : string = "created"
   filters ?: Filters
+  brandSet = new Set();
+  originSet = new Set();
 
   //Category
   public categories : ProductCategory[] = [];
@@ -72,7 +74,6 @@ export class ShopComponent implements OnInit {
   ngOnInit(): void {
     this.initCategories();
     this.initParam();
-    this.initFilters();
     this.isLogged();
   }
 
@@ -101,33 +102,20 @@ export class ShopComponent implements OnInit {
         this.page = Number.parseInt(pageParam);
       }
 
-      let hasParam = false;
-
       if (searchParam){
         this.searchParam = searchParam
         this.initSearch();
         return;
       }
-      if (categoryParam){
-        this.categoryParam = categoryParam
-        hasParam = true;
-      }
-      if (subcategoryParam){
-        this.subcategoryParam = subcategoryParam
-        hasParam = true;
-      }
-      if(brandParam){
-        this.brandParam = brandParam
-        hasParam = true;
-      }
-      if (originParam){
-        this.originParam = originParam
-        hasParam = true;
-      }
-      if (hasParam)
-        this.initFilteringProduct();
-      else
-        this.initProducts();
+ 
+      this.categoryParam = categoryParam === null ? "" : categoryParam
+      this.subcategoryParam = subcategoryParam === null ? "" : subcategoryParam
+      this.brandParam = brandParam === null ? "" : brandParam
+      this.originParam = originParam === null ? "" : originParam
+    
+      this.initFilteringProduct();
+      //this.initProducts();
+      this.initFilters();
     });
   }
 
@@ -156,10 +144,12 @@ export class ShopComponent implements OnInit {
       params = params.append("category", this.categoryParam);
     if (this.subcategoryParam)
       params = params.append("subcategory", this.subcategoryParam);
-    if (this.brandParam)
+    if (this.brandParam){
       params = params.append("brand", this.brandParam);
+      console.log("brand param is not empty " + this.brandParam)
+    }
     if (this.originParam)
-      params = params.append("categories", this.originParam);
+      params = params.append("origin", this.originParam);
     params = this.appendPageParam(params);
     this.productService.getProductByFilter(params).subscribe({
       next: (response) => this.handleResponse(response),
@@ -186,6 +176,7 @@ export class ShopComponent implements OnInit {
       error: (error:HttpErrorResponse) => this.handleError(error)
     })
   }
+  
 
   isLogged() {
     this.keycloakService.isLoggedIn().then(
@@ -202,6 +193,72 @@ export class ShopComponent implements OnInit {
   }
 
   //INIT SECTION END
+
+  //FILTER BAR SECTION
+
+  onOriginChange(event: any, origin: string): void {
+    const isChecked = event.target.checked;
+    // Do something with the checked state and the origin value
+    if (isChecked) {
+      // Code to handle the checkbox being checked
+      this.originSet.add(origin);
+    } else {
+      // Code to handle the checkbox being unchecked
+      this.originSet.delete(origin);
+    }
+    this.appendOriginParam();
+  }
+
+  onBrandChange(event: any, brand: string): void {
+    const isChecked = event.target.checked;
+    // Do something with the checked state and the brand value
+    if (isChecked) {
+      // Code to handle the checkbox being checked
+      this.brandSet.add(brand);
+    } else {
+      // Code to handle the checkbox being unchecked
+      this.brandSet.delete(brand);
+    }
+    this.appendBrandParam();
+  }
+
+  appendBrandParam(){
+    if (!this.brandSet || this.brandSet.size<1)
+      {
+        this.removeQueryParam("brand");
+        this.brandParam = "";
+        return;
+      }
+    this.brandParam = Array.from(this.brandSet).join("¿");
+    this.router.navigate([], {
+      queryParams: { brand: this.brandParam },
+      queryParamsHandling: 'merge'
+    })
+  }
+
+  appendOriginParam(){
+    if (!this.originSet || this.originSet.size<1)
+      {
+        this.removeQueryParam("origin");
+        this.originParam = "";
+        return;
+      }
+    this.originParam = Array.from(this.originSet).join("¿");
+    this.router.navigate([], {
+      queryParams: { origin: this.originParam },
+      queryParamsHandling: 'merge'
+    })
+  }
+
+  
+  removeQueryParam(paramKey: string) {
+    this.router.navigate([], {
+      queryParams: { [paramKey]: null },
+      queryParamsHandling: 'merge'
+    })
+  }
+
+  //FILTER BAR SECTION END
 
   appendPageParam(params : HttpParams){
     if (this.page !== 1)

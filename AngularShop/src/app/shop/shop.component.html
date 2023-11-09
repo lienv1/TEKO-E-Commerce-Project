@@ -50,7 +50,7 @@
             <div class="row" #productList>
 
 
-                <!--filter section-->
+                <!--FILTER BAR-->
                 <nav class="navbar navbar-expand-lg">
                     <div class="container-fluid">
                       <span class="navbar-brand">Product Filters</span>
@@ -68,39 +68,25 @@
                               <!-- Wrap checkboxes in div and stop propagation to keep the dropdown open when clicking inside -->
                               <div *ngFor="let brand of filters?.brands" onclick="event.stopPropagation();">
                                 <label class="dropdown-item">
-                                  <input class="form-check-input me-1" type="checkbox" value="Brand1" id="brand_"{{handleEmptySpaces(brand)}}>
-                                  {{brand}}
+                                  <input class="form-check-input me-1" type="checkbox" value="Brand1" id="brand_{{handleEmptySpaces(brand)}}" (change)="onBrandChange($event, brand)">
+                                    {{brand}}
                                 </label>
                               </div>
-                              <div onclick="event.stopPropagation();">
-                                <label class="dropdown-item">
-                                  <input class="form-check-input me-1" type="checkbox" value="Brand2" id="brand2">
-                                  Brand 2
-                                </label>
-                              </div>
-                              <!-- More brand checkboxes... -->
                             </ul>
                           </li>
                           <!-- Origin filter dropdown -->
                           <li class="nav-item dropdown">
                             <button class="nav-link dropdown-toggle" id="navbarOriginDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                              Origin
+                              Country
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="navbarOriginDropdown">
                               <!-- Wrap checkboxes in div and stop propagation to keep the dropdown open when clicking inside -->
-                              <div onclick="event.stopPropagation();">
+                              <div *ngFor="let origin of filters?.origins" onclick="event.stopPropagation();">
                                 <label class="dropdown-item">
-                                  <input class="form-check-input me-1" type="checkbox" value="Country1" id="country1">
-                                  Country 1
+                                  <input class="form-check-input me-1" type="checkbox" value="Country1" id="country_{{handleEmptySpaces(origin)}}" (change)="onOriginChange($event,origin)">
+                                  {{origin}}
                                 </label>
                               </div>
-                              <div onclick="event.stopPropagation();">
-                                <label class="dropdown-item">
-                                  <input class="form-check-input me-1" type="checkbox" value="Country2" id="country2">
-                                  Country 2
-                                </label>
-                              </div>
-                              <!-- More country checkboxes... -->
                             </ul>
                           </li>
                           <li class="nav-item dropdown">
@@ -139,10 +125,8 @@
                       </div>
                     </div>
                   </nav>
+                  <!--FILTER BAR END-->
                   
-                  
-
-
 
                 <!-- Add your product cards here -->
                 <!-- For example: -->
