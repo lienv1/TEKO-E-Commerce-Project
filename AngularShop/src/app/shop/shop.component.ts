@@ -68,7 +68,7 @@ export class ShopComponent implements OnInit {
 
   //For loading API services
   ngAfterViewInit(): void {
-    this.handleParam();
+   
   }
 
 
@@ -126,19 +126,19 @@ export class ShopComponent implements OnInit {
     let params = new HttpParams();
     params = this.appendPageParam(params);
     this.productService.getProducts(params).subscribe({
-      next: (response) => {
-        this.handleResponse(response);
-      },
-      error: (error:HttpErrorResponse) => {
-        this.popup("ERROR", error.message,"red");
-      }
+      next: (response) => this.handleResponse(response),
+      error: (error:HttpErrorResponse) => this.handleError(error)
     });
   }
 
   public initSearch(){
     let params = new HttpParams();
-    params = params.append("search", this.searchParam);
+    params = params.append("keywords", this.searchParam);
     params = this.appendPageParam(params);
+    this.productService.getProductBySearch(params).subscribe({
+      next: (response) => this.handleResponse(response),
+      error : (error:HttpErrorResponse) => this.handleError(error)
+    })
   }
 
   public initFilter(){
@@ -153,24 +153,16 @@ export class ShopComponent implements OnInit {
       params = params.append("categories", this.originParam);
     params = this.appendPageParam(params);
     this.productService.getProductByFilter(params).subscribe({
-      next: (response) => {
-        this.handleResponse(response);
-      },
-      error: (error:HttpErrorResponse) => {
-        this.popup("Error", error.message, "Red");
-      }
+      next: (response) => this.handleResponse(response),
+      error: (error:HttpErrorResponse) => this.handleError(error)
     })
   }
 
   public initCategories() {
-    this.productService.getCategories().subscribe (
-      (response:ProductCategory[]) => {
-        this.categories = response
-      },
-      (error:HttpErrorResponse) => {
-        alert(error.message);
-      }
-    )
+    this.productService.getCategories().subscribe ({
+      next: (response:ProductCategory[]) => this.categories = response,
+      error : (error:HttpErrorResponse) => this.handleError(error)
+    })
   }
 
   isLogged() {
@@ -195,13 +187,12 @@ export class ShopComponent implements OnInit {
     return params;
   }
 
-  handleParam(){
-
-  }
-
   handleResponse(response:any){
     this.currentProducts = response.content;
     this.maxItems = response.totalElements;
+  }
+  handleError(error:HttpErrorResponse){
+    this.popup("ERROR", error.message,"red");
   }
 
   //SEARCH SECTION
@@ -269,19 +260,6 @@ export class ShopComponent implements OnInit {
 
 
   //PAGE SECTION
-  //Deprecated
-  /*public getPageParam() {
-    this.route.queryParams.subscribe(
-      params => {
-        const param = params['page'];
-        let result = 1;
-        if (param != null) {
-          result = Number.parseInt(param);
-        }
-        this.page = result;
-      }
-    )
-  }*/
   public setPageParam() {
     this.router.navigate([], {
       queryParams: { page: this.page },
