@@ -17,8 +17,8 @@ export class ProductService {
 
   constructor(private http: HttpClient, private keycloakService: KeycloakService) { }
 
-  public getProducts(): Observable<any> {
-    return this.http.get<any>(`${this.backendAPI}/product/products`)
+  public getProducts(params : HttpParams): Observable<any> {
+    return this.http.get<any>(`${this.backendAPI}/product/products`, {params:params})
   }
 
   public getProduct(id: string): Observable<Product> {
@@ -26,6 +26,7 @@ export class ProductService {
   }
 
   public getProductByFilter(params:HttpParams):Observable<any>{
+    console.log(params)
     return this.http.get<any>(`${this.backendAPI}/product/filter`, {params:params})
   }
 
