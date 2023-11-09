@@ -63,7 +63,6 @@ export class ShopComponent implements OnInit {
   ngOnInit(): void {
     this.initCategories();
     this.initParam();
-    this.getPageParam();
     this.isLogged();
   }
 
@@ -125,10 +124,7 @@ export class ShopComponent implements OnInit {
 
   public initProducts() {
     let params = new HttpParams();
-    if (this.page !== 1){
-      params = params.append("page",this.page)
-      console.log(params)
-    }
+    params = this.appendPageParam(params);
     this.productService.getProducts(params).subscribe({
       next: (response) => {
         this.handleResponse(response);
@@ -142,9 +138,7 @@ export class ShopComponent implements OnInit {
   public initSearch(){
     let params = new HttpParams();
     params = params.append("search", this.searchParam);
-    if (this.page != 1){
-      params = params.append("page",this.page)
-    }
+    params = this.appendPageParam(params);
   }
 
   public initFilter(){
@@ -157,9 +151,7 @@ export class ShopComponent implements OnInit {
       params = params.append("brand", this.brandParam);
     if (this.originParam)
       params = params.append("categories", this.originParam);
-    if (this.page != 1){
-      params = params.append("page",this.page)
-    }
+    params = this.appendPageParam(params);
     this.productService.getProductByFilter(params).subscribe({
       next: (response) => {
         this.handleResponse(response);
@@ -196,6 +188,12 @@ export class ShopComponent implements OnInit {
   }
 
   //INIT SECTION END
+
+  appendPageParam(params : HttpParams){
+    if (this.page !== 1)
+      params = params.append("page", this.page-1);
+    return params;
+  }
 
   handleParam(){
 
@@ -271,7 +269,8 @@ export class ShopComponent implements OnInit {
 
 
   //PAGE SECTION
-  public getPageParam() {
+  //Deprecated
+  /*public getPageParam() {
     this.route.queryParams.subscribe(
       params => {
         const param = params['page'];
@@ -282,7 +281,7 @@ export class ShopComponent implements OnInit {
         this.page = result;
       }
     )
-  }
+  }*/
   public setPageParam() {
     this.router.navigate([], {
       queryParams: { page: this.page },
