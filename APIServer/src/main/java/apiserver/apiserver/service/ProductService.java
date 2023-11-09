@@ -1,6 +1,5 @@
 package apiserver.apiserver.service;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -15,12 +14,11 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import apiserver.apiserver.dto.CategoryListDTO;
+import apiserver.apiserver.dto.FilterDTO;
 import apiserver.apiserver.exception.ProductNotFoundException;
 import apiserver.apiserver.model.Product;
 import apiserver.apiserver.repo.ProductRepo;
-import apiserver.apiserver.specification.ProductSpecification;
 import apiserver.apiserver.specification.ProductSpecifications;
-import jakarta.persistence.Tuple;
 
 @Service
 public class ProductService {
@@ -90,32 +88,39 @@ public class ProductService {
 		}
 		return productRepo.findAll(specification, page);
 	}
-	
+
 	public List<CategoryListDTO> getCategoryList() {
-        List<String[]> results = productRepo.findCategoriesAndSubcategories();
-        Map<String, Set<String>> categoryToSubCategories = new LinkedHashMap<>();
+		List<String[]> results = productRepo.findCategoriesAndSubcategories();
+		Map<String, Set<String>> categoryToSubCategories = new LinkedHashMap<>();
 
-        for (Object[] result : results) {
-            String category = (String) result[0];
-            String subCategory = (String) result[1];
+		for (Object[] result : results) {
+			String category = (String) result[0];
+			String subCategory = (String) result[1];
 
-            // Initialize a new Set for this category if one does not already exist
-            categoryToSubCategories.computeIfAbsent(category, k -> new HashSet<>());
-            
-            // Add the subcategory to the Set for this category
-            categoryToSubCategories.get(category).add(subCategory);
-        }
+			// Initialize a new Set for this category if one does not already exist
+			categoryToSubCategories.computeIfAbsent(category, k -> new HashSet<>());
 
-        // Now we can create our list of CategoryListDTOs
-        List<CategoryListDTO> categoryListDTOs = categoryToSubCategories.entrySet().stream()
-                .map(entry -> {
-                    CategoryListDTO dto = new CategoryListDTO();
-                    dto.setCategory(entry.getKey());
-                    dto.setSubCategory(entry.getValue());
-                    return dto;
-                })
-                .collect(Collectors.toList());
+			// Add the subcategory to the Set for this category
+			categoryToSubCategories.get(category).add(subCategory);
+		}
 
-        return categoryListDTOs;
-    }
+		// Now we can create our list of CategoryListDTOs
+		List<CategoryListDTO> categoryListDTOs = categoryToSubCategories.entrySet().stream().map(entry -> {
+			CategoryListDTO dto = new CategoryListDTO();
+			dto.setCategory(entry.getKey());
+			dto.setSubCategory(entry.getValue());
+			return dto;
+		}).collect(Collectors.toList());
+		return categoryListDTOs;
+	}
+
+	public FilterDTO getFilters(List<String> category, List<String> subCategory) {
+		FilterDTO filter = new FilterDTO();
+		Set<String> brands = productRepo.findDistinctBrands(category, subCategory);
+		Set<String> origins = productRepo.findDistinctOrigins(category, subCategory);
+		filter.setBrands(brands);
+		filter.setOrigins(origins);
+		return filter;
+	}
+
 }

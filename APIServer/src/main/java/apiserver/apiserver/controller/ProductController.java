@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import apiserver.apiserver.dto.CategoryListDTO;
+import apiserver.apiserver.dto.FilterDTO;
 import apiserver.apiserver.exception.ProductNotFoundException;
 import apiserver.apiserver.model.Product;
 import apiserver.apiserver.security.AuthorizationService;
@@ -127,6 +128,13 @@ public class ProductController {
 	public ResponseEntity<List<CategoryListDTO>> getCategoryList() {
 		List<CategoryListDTO> categoryList = productService.getCategoryList();
 		return new ResponseEntity<List<CategoryListDTO>>(categoryList, HttpStatus.OK);
+	}
+	
+	@GetMapping("/filters")
+	public ResponseEntity<FilterDTO> getBrandsByFilter(@RequestParam(value = "category", required = false) List<String> category,
+			@RequestParam(value = "subcategory", required = false) List<String> subCategory ){
+		FilterDTO filters = productService.getFilters(category, subCategory);
+		return new ResponseEntity<FilterDTO>(filters,HttpStatus.OK);	
 	}
 
 }
