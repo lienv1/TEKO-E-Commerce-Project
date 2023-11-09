@@ -54,6 +54,9 @@ export class ShopComponent implements OnInit {
   public allProducts: Product[] = []
   public currentProducts: Product[] = []
 
+  //Images
+  fallbackImageLoaded = false; //Prevent infinite loop
+
   constructor(
     private title:Title,
     private route: ActivatedRoute, 
@@ -424,7 +427,10 @@ export class ShopComponent implements OnInit {
   //THEME SECTION END
 
   handleImageError(event: any) {
-    event.target.src = this.fileServer + '/images/NotFound.png'; // Set the fallback image URL directly on the DOM element
+    if (!this.fallbackImageLoaded) {
+      event.target.src = this.fileServer + '/images/NotFound.png'; // Set the fallback image URL directly on the DOM element
+      this.fallbackImageLoaded = true; // Mark that the fallback image has been loaded to prevent further attempts
+    }
   }
 
 }
