@@ -26,7 +26,7 @@
                             style="height: 100px;">
                             <a *ngFor="let group of productCategory.subCategory | keyvalue"
                                 style="color:#11698e;text-decoration: none; cursor:pointer;"
-                                (click)="scroll(productList);">{{group.value}}
+                                (click)="scroll(productList);" [routerLink]="'/shop'" [queryParams]="{'category': productCategory.category,'subcategory': group.value }">{{group.value}}
                                 <br></a> <br>
                         </div>
                     </div>
@@ -39,10 +39,10 @@
         <div class="col-lg-9">
             <!-- Search bar -->
             <div class="input-group mb-3">
-                <input #inputID type="text" (keyup.enter)="searchItBt(inputID.value); scroll(productList)"
+                <input #inputID type="text" (keyup.enter)="searchItBt();"
                     class="form-control" placeholder="{{'SEARCH FOR PRODUCTS' | translate}}"
                     aria-label="Search products">
-                <button class="btn btn-secondary" (click)="scroll(productList);searchItBt(inputID.value)"
+                <button class="btn btn-secondary" (click)="searchItBt();"
                     type="button">{{"SEARCH" | translate}}</button>
             </div>
 

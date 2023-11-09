@@ -196,8 +196,16 @@ export class ShopComponent implements OnInit {
   }
 
   //SEARCH SECTION
-  public searchItBt(keyword: string) {
-    this.removeAllParams().then(
+  public searchItBt() {
+    let keywords = this.searchInput.nativeElement.value;
+    //Remove all double or more empty spaces
+    keywords = keywords.replace(/\s{2,}/g, ' ');
+    this.router.navigate([], {
+      queryParams: { search: keywords.replace(" ", "¿") },
+      queryParamsHandling: 'merge'
+    })
+    this.scroll(this.productListElement.nativeElement);
+    /*this.removeAllParams().then(
       () => {
         this.page = 1
         const navigationExtras: NavigationExtras = {
@@ -207,7 +215,7 @@ export class ShopComponent implements OnInit {
         this.router.navigate([], navigationExtras);
         this.searchIt(keyword)
       }
-    )
+    )*/
   }
 
   public searchIt(keywords: string) {
