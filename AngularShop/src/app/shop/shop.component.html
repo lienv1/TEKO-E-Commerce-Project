@@ -49,7 +49,6 @@
             <!-- Product list -->
             <div class="row" #productList>
 
-
                 <!--FILTER BAR-->
                 <nav class="navbar navbar-expand-lg">
                     <div class="container-fluid">
@@ -68,7 +67,7 @@
                               <!-- Wrap checkboxes in div and stop propagation to keep the dropdown open when clicking inside -->
                               <div *ngFor="let brand of filters?.brands" onclick="event.stopPropagation();">
                                 <label class="dropdown-item">
-                                  <input class="form-check-input me-1" type="checkbox" value="Brand1" id="brand_{{handleEmptySpaces(brand)}}" (change)="onBrandChange($event, brand)">
+                                  <input class="form-check-input me-1" type="checkbox" value="Brand1" id="brand_{{handleEmptySpaces(brand)}}" (change)="onBrandChange($event, brand)" [checked]="brandIsChecked(brand)">
                                     {{brand}}
                                 </label>
                               </div>
@@ -83,7 +82,7 @@
                               <!-- Wrap checkboxes in div and stop propagation to keep the dropdown open when clicking inside -->
                               <div *ngFor="let origin of filters?.origins" onclick="event.stopPropagation();">
                                 <label class="dropdown-item">
-                                  <input class="form-check-input me-1" type="checkbox" value="Country1" id="country_{{handleEmptySpaces(origin)}}" (change)="onOriginChange($event,origin)">
+                                  <input class="form-check-input me-1" type="checkbox" value="Country1" id="country_{{handleEmptySpaces(origin)}}" (change)="onOriginChange($event,origin)" [checked]="originIsChecked(origin)">
                                   {{origin}}
                                 </label>
                               </div>
@@ -94,28 +93,10 @@
                               Sort By
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="navbarSortDropdown">
-                              <div onclick="event.stopPropagation();">
+                              <div *ngFor="let option of sortOptions" onclick="event.stopPropagation();">
                                 <label class="dropdown-item">
-                                  <input class="form-check-input me-1" type="radio" name="sortOptions" value="name" id="sortName">
-                                  Name
-                                </label>
-                              </div>
-                              <div onclick="event.stopPropagation();">
-                                <label class="dropdown-item">
-                                  <input class="form-check-input me-1" type="radio" name="sortOptions" value="price" id="sortPrice">
-                                  Price
-                                </label>
-                              </div>
-                              <div onclick="event.stopPropagation();">
-                                <label class="dropdown-item">
-                                  <input class="form-check-input me-1" type="radio" name="sortOptions" value="productId" id="sortProductId">
-                                  Product ID
-                                </label>
-                              </div>
-                              <div onclick="event.stopPropagation();">
-                                <label class="dropdown-item">
-                                  <input class="form-check-input me-1" type="radio" name="sortOptions" value="date" id="sortDate">
-                                  Date
+                                  <input class="form-check-input me-1" type="radio" name="sortOptions" [value]="option.key" #sortByOption (click)="onSortChange($event)">
+                                  {{option.value}}
                                 </label>
                               </div>
                             </ul>

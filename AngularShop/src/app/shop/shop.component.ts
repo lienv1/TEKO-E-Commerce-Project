@@ -15,6 +15,13 @@ import { CustomModalComponent } from '../modal/custom-modal/custom-modal.compone
 import { environment } from 'src/environments/environment';
 import { Filters } from '../model/filters';
 
+export enum Sorter {
+  productId = 'Product ID',
+  productName = 'Name',
+  price = 'Price',
+  lastModified = 'Date'
+}
+
 @Component({
   selector: 'app-shop',
   templateUrl: './shop.component.html',
@@ -42,10 +49,11 @@ export class ShopComponent implements OnInit {
 
   //Filter
   searchKeywords : string [] = [];
-  sortBy : string = "created"
+  sortBy : string = "lastModified"
   filters ?: Filters
   brandSet = new Set();
   originSet = new Set();
+  sortOptions = Object.entries(Sorter).map(([key, value]) => ({ key, value }));
 
   //Category
   public categories : ProductCategory[] = [];
@@ -97,6 +105,7 @@ export class ShopComponent implements OnInit {
       const brandParam = queryParams.get('brand');
       const originParam = queryParams.get('origin');
       const pageParam = queryParams.get('page');
+      const sortParam = queryParams.get('sort')
 
       if (pageParam && pageParam !=="1"){
         this.page = Number.parseInt(pageParam);
@@ -105,17 +114,19 @@ export class ShopComponent implements OnInit {
       if (searchParam){
         this.searchParam = searchParam
         this.initSearch();
-        return;
       }
- 
-      this.categoryParam = categoryParam === null ? "" : categoryParam
-      this.subcategoryParam = subcategoryParam === null ? "" : subcategoryParam
-      this.brandParam = brandParam === null ? "" : brandParam
-      this.originParam = originParam === null ? "" : originParam
-    
-      this.initFilteringProduct();
-      //this.initProducts();
-      this.initFilters();
+
+      else {
+        this.categoryParam = categoryParam === null ? "" : categoryParam;
+        this.subcategoryParam = subcategoryParam === null ? "" : subcategoryParam;
+        this.brandParam = brandParam === null ? "" : brandParam;
+        this.originParam = originParam === null ? "" : originParam;
+        this.initFilteringProduct();
+      }
+
+      this.sortBy = sortParam === null ? "" : sortParam;
+
+      this.initFilterBar();
     });
   }
 
@@ -132,6 +143,7 @@ export class ShopComponent implements OnInit {
     let params = new HttpParams();
     params = params.append("keywords", this.searchParam);
     params = this.appendPageParam(params);
+    params = this.appendSortParam(params);
     this.productService.getProductBySearch(params).subscribe({
       next: (response) => this.handleResponse(response),
       error : (error:HttpErrorResponse) => this.handleError(error)
@@ -144,13 +156,13 @@ export class ShopComponent implements OnInit {
       params = params.append("category", this.categoryParam);
     if (this.subcategoryParam)
       params = params.append("subcategory", this.subcategoryParam);
-    if (this.brandParam){
+    if (this.brandParam)
       params = params.append("brand", this.brandParam);
-      console.log("brand param is not empty " + this.brandParam)
-    }
     if (this.originParam)
       params = params.append("origin", this.originParam);
+
     params = this.appendPageParam(params);
+    params = this.appendSortParam(params);
     this.productService.getProductByFilter(params).subscribe({
       next: (response) => this.handleResponse(response),
       error: (error:HttpErrorResponse) => this.handleError(error)
@@ -164,7 +176,7 @@ export class ShopComponent implements OnInit {
     })
   }
 
-  public initFilters(){
+  public initFilterBar(){
     let params = new HttpParams();
     if (this.categoryParam)
       params = params.append("category",this.categoryParam);
@@ -258,12 +270,35 @@ export class ShopComponent implements OnInit {
     })
   }
 
+  brandIsChecked(brand:string){
+    this.brandSet = new Set (this.brandParam.split('¿'));
+    return this.brandSet.has(brand)
+  }
+
+  originIsChecked(origin:string){
+    this.originSet = new Set (this.originParam.split('¿'));
+    return this.originSet.has(origin);
+  }
+
+  onSortChange(event:Event){
+    this.sortBy = (event.target as HTMLInputElement).value;
+    this.router.navigate([], {
+      queryParams: { sort: this.sortBy },
+      queryParamsHandling: 'merge'
+    })
+  }
+
   //FILTER BAR SECTION END
 
   appendPageParam(params : HttpParams){
     if (this.page !== 1)
       params = params.append("page", this.page-1);
     return params;
+  }
+
+  appendSortParam(params : HttpParams){
+      params = params.append("sort", this.sortBy)
+      return params;
   }
 
   handleResponse(response:any){
