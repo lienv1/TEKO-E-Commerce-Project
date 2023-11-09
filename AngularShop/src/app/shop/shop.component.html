@@ -17,12 +17,12 @@
                     <div *ngFor="let productCategory of categories">
                         <hr>
                         <h6 class="toggle-heading" data-bs-toggle="collapse"
-                            [attr.data-bs-target]="'#categoryContent' + productCategory.category"
+                            [attr.data-bs-target]="'#categoryContent' + handleEmptySpaces(productCategory.category)"
                             style="cursor: pointer;">
                             <span class="arrow"></span>
                             {{productCategory.category}}
                         </h6>
-                        <div id="categoryContent{{productCategory.category}}" class="overflow-auto collapse"
+                        <div id="categoryContent{{handleEmptySpaces(productCategory.category)}}" class="overflow-auto collapse"
                             style="height: 100px;">
                             <a *ngFor="let group of productCategory.subCategory | keyvalue"
                                 style="color:#11698e;text-decoration: none; cursor:pointer;"

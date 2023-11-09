@@ -433,4 +433,8 @@ export class ShopComponent implements OnInit {
     }
   }
 
+  handleEmptySpaces(str:string){
+    return str.replace(/\s+/g, '-');
+  }
+
 }
