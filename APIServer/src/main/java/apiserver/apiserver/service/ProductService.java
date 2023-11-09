@@ -1,7 +1,10 @@
 package apiserver.apiserver.service;
 
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -87,19 +90,32 @@ public class ProductService {
 		}
 		return productRepo.findAll(specification, page);
 	}
+	
+	public List<CategoryListDTO> getCategoryList() {
+        List<String[]> results = productRepo.findCategoriesAndSubcategories();
+        Map<String, Set<String>> categoryToSubCategories = new LinkedHashMap<>();
 
-	public Set<CategoryListDTO> getCategoryList() {
-		Set<Tuple> results = productRepo.getCategoryList();
-		return results.stream().map(this::convertToDTO).collect(Collectors.toSet());
-	}
+        for (Object[] result : results) {
+            String category = (String) result[0];
+            String subCategory = (String) result[1];
 
-	private CategoryListDTO convertToDTO(Tuple tuple) {
-		CategoryListDTO dto = new CategoryListDTO();
-		dto.setCategory(tuple.get("category", String.class));
-		dto.setSubCategory(Arrays.asList(tuple.get("subCategory", String.class).split(",")));
-		dto.setBrands(Arrays.asList(tuple.get("brands", String.class).split(",")));
-		dto.setOrigins(Arrays.asList(tuple.get("origins", String.class).split(",")));
-		return dto;
-	}
+            // Initialize a new Set for this category if one does not already exist
+            categoryToSubCategories.computeIfAbsent(category, k -> new HashSet<>());
+            
+            // Add the subcategory to the Set for this category
+            categoryToSubCategories.get(category).add(subCategory);
+        }
 
+        // Now we can create our list of CategoryListDTOs
+        List<CategoryListDTO> categoryListDTOs = categoryToSubCategories.entrySet().stream()
+                .map(entry -> {
+                    CategoryListDTO dto = new CategoryListDTO();
+                    dto.setCategory(entry.getKey());
+                    dto.setSubCategory(entry.getValue());
+                    return dto;
+                })
+                .collect(Collectors.toList());
+
+        return categoryListDTOs;
+    }
 }

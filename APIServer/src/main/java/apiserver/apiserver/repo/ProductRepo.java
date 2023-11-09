@@ -23,11 +23,12 @@ public interface ProductRepo extends JpaRepository<Product, Long>, JpaSpecificat
 	Product updateDeletedStatus(Long productId, boolean deleted);
 
     @Query(value = "SELECT p.category AS category, " +
-            "GROUP_CONCAT(p.subCategory) AS subCategory, " +
-            "GROUP_CONCAT(p.brand) AS brands, " +
-            "GROUP_CONCAT(p.origin) AS origins " +
+            "GROUP_CONCAT(p.subCategory) AS subCategory " +
             "FROM Product p " +
             "GROUP BY p.category")
      Set<Tuple> getCategoryList();
+    
+    @Query("SELECT p.category AS category, p.subCategory AS subCategory FROM Product p")
+    List<String[]> findCategoriesAndSubcategories();
 	
 }
