@@ -57,11 +57,13 @@
                         <a class="d-flex justify-content-center align-items-center"
                             [routerLink]="['/product/']+'product.productId'"> <img class="card-img-top"
                                 style="max-height: 15em; width: auto; max-width: 17em;"
-                                src="https://achau.ch/api/images/products/thumbnails/tn_{{product.productId}}.jpg"
-                                onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/330px-No-Image-Placeholder.svg.png'" /></a>
+                                [src]="fileServer+'/images/products/'+product.productId+'.png'"
+                                (error)="handleImageError($event)"
+                                alt = "Product image" 
+                                /></a>
 
                         <div class="card-body" style="overflow-y: auto;">
-                            <h5 class="card-title"> {{product.productName}}</h5>
+                            <h5 class="card-title">{{product.productId}}  - {{product.productName}}</h5>
                             <p class="card-text">{{product.weight}}</p>
                             <div class="row">
 

@@ -12,6 +12,7 @@ import { ProductCategory } from '../model/productCategory';
 import { ProductService } from '../service/product.service';
 import { ShoppingCart } from '../service/shoppingCart';
 import { CustomModalComponent } from '../modal/custom-modal/custom-modal.component';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-shop',
@@ -23,6 +24,9 @@ export class ShopComponent implements OnInit {
   @ViewChild('productList') productListElement !: ElementRef<HTMLElement>
   @ViewChild('inputID') searchInput !: ElementRef<HTMLInputElement>
   @ViewChild("CustomModalComponent") customModalComponent !: CustomModalComponent
+
+  //URLs
+  fileServer = environment.fileServerAPI
 
   //page variables
   page: number = 1;
@@ -205,17 +209,6 @@ export class ShopComponent implements OnInit {
       queryParamsHandling: 'merge'
     })
     this.scroll(this.productListElement.nativeElement);
-    /*this.removeAllParams().then(
-      () => {
-        this.page = 1
-        const navigationExtras: NavigationExtras = {
-          queryParams: { keywords: keyword.replace(" ", "¿") },
-          queryParamsHandling: 'merge'
-        };
-        this.router.navigate([], navigationExtras);
-        this.searchIt(keyword)
-      }
-    )*/
   }
 
   public searchIt(keywords: string) {
@@ -429,5 +422,9 @@ export class ShopComponent implements OnInit {
     return theme === "dark"
   }
   //THEME SECTION END
+
+  handleImageError(event: any) {
+    event.target.src = this.fileServer + '/images/NotFound.png'; // Set the fallback image URL directly on the DOM element
+  }
 
 }
