@@ -1,14 +1,12 @@
 package apiserver.apiserver.dto;
 
-import java.util.List;
+import java.util.Set;
 
 public class CategoryListDTO {
 
 	private String category;
 	
-	private List<String> brands;
-	private List<String> subCategory;
-	private List<String> origins;
+	private Set<String> subCategory;
 
 	public CategoryListDTO() {
 	}
@@ -17,33 +15,17 @@ public class CategoryListDTO {
 		return category;
 	}
 
-	public List<String> getBrands() {
-		return brands;
-	}
-
-	public List<String> getSubCategory() {
+	public Set<String> getSubCategory() {
 		return subCategory;
 	}
 
-	public List<String> getOrigins() {
-		return origins;
-	}
-
+	
 	public void setCategory(String category) {
 		this.category = category;
 	}
 
-	public void setBrands(List<String> brands) {
-		this.brands = brands;
-	}
-
-	public void setSubCategory(List<String> subCategory) {
+	public void setSubCategory(Set<String> subCategory) {
 		this.subCategory = subCategory;
 	}
-
-	public void setOrigins(List<String> origins) {
-		this.origins = origins;
-	}
-
 
 }
