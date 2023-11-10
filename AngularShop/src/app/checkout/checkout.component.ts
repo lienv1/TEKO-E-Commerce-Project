@@ -1,7 +1,7 @@
 import { CurrencyPipe } from '@angular/common';
 import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { UntypedFormGroup, UntypedFormBuilder, UntypedFormControl, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, UntypedFormControl, Validators, FormControl, FormGroup } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -16,6 +16,8 @@ import { ShoppingCart } from '../service/shoppingCart';
 import { UserService } from '../service/user.service';
 import { CustomModalComponent } from '../modal/custom-modal/custom-modal.component';
 import { OrderDetail } from '../model/orderDetail';
+import { Address } from '../model/address';
+import { OrderService } from '../service/order.service';
 
 @Component({
   selector: 'app-checkout',
@@ -29,11 +31,16 @@ export class CheckoutComponent {
   @ViewChild("container") container !: ElementRef<HTMLDivElement>;
 
   public keycloakProfile !: KeycloakProfile
-  public addressForm !: UntypedFormGroup;
   public submitButtonDisabled = false;
   public minDate !: string;
   private username !: string;
 
+
+  //FORM
+  isSameAddress: boolean = false;
+  addressForm !: FormGroup;
+  billingAddress !: FormGroup;
+  deliveryAddress !: FormGroup;
   //ADMIN variable
   public isAdmin: boolean = false;
   public users: any[] = [];
@@ -45,17 +52,17 @@ export class CheckoutComponent {
     private translateService: TranslateService,
     private keycloakService: KeycloakService,
     private productService: ProductService,
+    private orderService : OrderService,
     private userService: UserService,
     private cart: ShoppingCart,
     private modalService: NgbModal,
     private router: Router,
     private currencyPipe: CurrencyPipe,
-    private formBuilder: UntypedFormBuilder
   ) {
   }
-/*
+
   ngOnInit(): void {
-    this.initForm();
+    this.initAddressForm();
     //Check if it's logged in, then load profile
     this.checkAndProceedLoadingProfile()
     this.title.setTitle("Checkout");
@@ -68,18 +75,22 @@ export class CheckoutComponent {
   }
 
 
-  initForm() {
-    this.addressForm = this.formBuilder.group({
-      company: new UntypedFormControl('', Validators.required),
-      firstName: new UntypedFormControl('', Validators.required),
-      lastName: new UntypedFormControl('', Validators.required),
-      phone: new UntypedFormControl('', Validators.required),
-      email: new UntypedFormControl('', [Validators.required, Validators.email, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]),
-      street: new UntypedFormControl('', Validators.required),
-      city: new UntypedFormControl('', Validators.required),
-      postalCode: new UntypedFormControl('', Validators.required),
-      delivery: new UntypedFormControl(new Date()),
-      comment: new UntypedFormControl('')
+  initAddressForm() {
+    this.deliveryAddress = new FormGroup({
+      deliveryStreetInput: new FormControl(''),
+      deliveryCityInput: new FormControl(''),
+      deliveryStateInput: new FormControl(''),
+      deliveryZipInput: new FormControl(''),
+      deliveryCountryInput: new FormControl('')
+    });
+
+    this.addressForm = new FormGroup({
+      companyInput: new FormControl(''),
+      firstnameInput: new FormControl(''),
+      lastnameInput: new FormControl(''),
+      emailInput: new FormControl(''),
+      phoneInput: new FormControl(''),
+      deliveryAddress: this.deliveryAddress
     });
   }
 
@@ -99,7 +110,8 @@ export class CheckoutComponent {
     this.keycloakService.isLoggedIn().then(
       (isLogged) => {
         if (isLogged) {
-          this.loadUser();
+          const username = this.keycloakService.getUsername();
+          this.loadUser(username);
         }
         else {
           this.router.navigate(['/login'])
@@ -111,66 +123,95 @@ export class CheckoutComponent {
     )
   }
 
-  public loadUser() {
-    this.keycloakService.loadUserProfile().then(
-      (user) => {
-        this.keycloakProfile = user;
-        this.fillForm(user);
-        if (user.username != null)
-          this.username = user.username
-      }
-    )
+  public loadUser(username:string) {
+    this.userService.getUserdata(username).subscribe({
+      next: (response) => {this.fillFormBackend(response)},
+      error: (error) => this.popupModal(error.message, "Error", "Red")
+    })
   }
 
   //Form section
-  fillForm(user: any) {
-    const company = user.attributes.company != null ? user.attributes.company.toString() : ""; //toString() needed, otherwise it returns an array
-    const phone = user.attributes.phone != null ? user.attributes.phone.toString() : "";
-    const street = user.attributes.street != null ? user.attributes.street.toString() : "";
-    const zip = user.attributes.zip != null ? user.attributes.zip.toString() : "";
-    const city = user.attributes.city != null ? user.attributes.city.toString() : "";
+  fillFormBackend(user: User) {
+    // Set value for the main address form controls
+    this.addressForm.get('companyInput')?.setValue(user.company);
+    this.addressForm.get('firstnameInput')?.setValue(user.firstname);
+    this.addressForm.get('lastnameInput')?.setValue(user.lastname);
+    this.addressForm.get('emailInput')?.setValue(user.email);
+    this.addressForm.get('phoneInput')?.setValue(user.phone);
 
-    this.addressForm = new UntypedFormGroup({
-      company: new UntypedFormControl(company), 
-      firstName: new UntypedFormControl(user.firstName),
-      lastName: new UntypedFormControl(user.lastName),
-      phone: new UntypedFormControl(phone),
-      email: new UntypedFormControl(user.email),
-      street: new UntypedFormControl(street),
-      postalCode: new UntypedFormControl(zip),
-      city: new UntypedFormControl(city),
-      delivery: new UntypedFormControl(new Date()),
-      comment: new UntypedFormControl(' ')
-    });
+    // Set value for the nested delivery address form group controls
+    this.addressForm.get('deliveryAddress.deliveryStreetInput')?.setValue(user.deliveryAddress.street);
+    this.addressForm.get('deliveryAddress.deliveryCityInput')?.setValue(user.deliveryAddress.city);
+    this.addressForm.get('deliveryAddress.deliveryStateInput')?.setValue(user.deliveryAddress.state);
+    this.addressForm.get('deliveryAddress.deliveryZipInput')?.setValue(user.deliveryAddress.postalCode);
+    this.addressForm.get('deliveryAddress.deliveryCountryInput')?.setValue(user.deliveryAddress.country);
   }
 
   getUserfromForm(): User {
+    const company = this.addressForm.value.companyInput;
+    const firstname = this.addressForm.value.firstnameInput;
+    const lastname = this.addressForm.value.lastnameInput;
+    const email = this.addressForm.value.emailInput;
+    const phone = this.addressForm.value.phoneInput;
+    const billingStreet = this.addressForm.value.billingAddress.billingStreetInput;
+    const billingCity = this.addressForm.value.billingAddress.billingCityInput;
+    const billingState = this.addressForm.value.billingAddress.billingStateInput;
+    const billingZip = this.addressForm.value.billingAddress.billingZipInput;
+    const billingCountry = this.addressForm.value.billingAddress.billingCountryInput;
 
-    let username: string | undefined = this.username;
-    let company: string = this.addressForm.value.company;
-    let phone: string = this.addressForm.value.phone;
-    let email: string = this.addressForm.value.email;
-    let firstname: string = this.addressForm.value.firstName;
-    let lastname: string = this.addressForm.value.lastName;
-    let street: string = this.addressForm.value.street;
-    let postalCode: string = this.addressForm.value.postalCode;
-    let city: string = this.addressForm.value.city;
+    const billingAddress: Address = {
+      street: billingStreet,
+      city: billingCity,
+      state: billingState,
+      postalCode: billingZip,
+      country: billingCountry
+    };
+
+    let deliveryAddress: Address
+
+    if (!this.isSameAddress) {
+      const deliveryStreet = this.addressForm.value.deliveryAddress.deliveryStreetInput;
+      const deliveryCity = this.addressForm.value.deliveryAddress.deliveryCityInput;
+      const deliveryState = this.addressForm.value.deliveryAddress.deliveryStateInput;
+      const deliveryZip = this.addressForm.value.deliveryAddress.deliveryZipInput;
+      const deliveryCountry = this.addressForm.value.deliveryAddress.deliveryCountryInput;
+      deliveryAddress = {
+        street: deliveryStreet,
+        city: deliveryCity,
+        state: deliveryState,
+        postalCode: deliveryZip,
+        country: deliveryCountry
+      };
+    }
+    else
+      deliveryAddress = billingAddress
 
     const user: User = {
-      username: username,
-      company: company,
-      phone: phone,
-      email: email,
       firstname: firstname,
       lastname: lastname,
-      street: street,
-      postalCode: postalCode,
-      city: city
+      company: company,
+      email: email,
+      phone: phone,
+      deliveryAddress: deliveryAddress,
+      billingAddress: billingAddress,
+      username: this.username
     }
-    return user
+    return user;
   }
 
+
+
   //Form section end
+
+  toggleInput(event: Event): void {
+    const checkbox = event.target as HTMLInputElement;
+    this.isSameAddress = checkbox.checked;
+    if (this.isSameAddress) {
+      this.deliveryAddress.disable();
+      return;
+    }
+    this.deliveryAddress.enable();
+  }
 
   //Submit section
   onSubmit() {
@@ -227,20 +268,13 @@ export class CheckoutComponent {
     const deliveryDate = this.addressForm.value.delivery;
     const user = this.getUserfromForm();
     const order: Order = {
+      user : user,
       orderDetails: orderedProducts,
-      orderDate: deliveryDate,
-      comment: comment
+      comment: comment,
+      orderDate: deliveryDate
+      
     }
-
-    this.productService.sendOrder(user, order).subscribe(
-      (response: HttpStatusCode) => {
-        this.processingCompletedOrder();
-      },
-      (error: HttpErrorResponse) => {
-        this.popupModal(error.message, "ERROR", "red")
-        this.enableSubmit();
-      }
-    )
+    this.orderService.postOrder(order,this.username)
   }
 
   public disableSubmit() {
@@ -328,7 +362,7 @@ export class CheckoutComponent {
     let username = this.customerSelectElement.nativeElement.value;
     for (let i = 0; i < this.users.length; i++) {
       if (this.users[i].username === username) {
-        this.fillForm(this.users[i])
+        this.fillFormBackend(this.users[i])
         this.username = this.users[i].username;
         return;
       }
@@ -365,5 +399,5 @@ export class CheckoutComponent {
   public getTotal() {
     return this.cart.getSubtotal();
   }
-*/
+
 }

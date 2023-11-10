@@ -2,7 +2,7 @@
 <app-custom-modal #CustomModalComponent> </app-custom-modal>
 <!--Popup section ends-->
 
-<script type="text/comment">
+
 
 <div class="container" #container>
     <h1 class="text-center mt-4">{{'CHECKOUT' | translate}}</h1>
@@ -27,65 +27,71 @@
 
     <div class="row mt-5">
         <div class="col-md-8">
-            <form [formGroup]="addressForm" (ngSubmit)="onSubmit()" ngNoForm>
-                <h4>{{'DELIVERY ADDRESS'| translate}}</h4>
-                <div class="mb-3">
-                    <label for="company" class="form-label">{{'COMPANY'| translate}}</label>
-                    <input id="company" type="text" class="form-control" formControlName="company" required>
-                </div>
-                <div class="mb-3">
-                    <label for="firstName" class="form-label">{{'FIRSTNAME'| translate}}</label>
-                    <input id="firstName" type="text" class="form-control" formControlName="firstName" required>
-                </div>
-                <div class="mb-3">
-                    <label for="lastName" class="form-label">{{'LASTNAME'| translate}}</label>
-                    <input id="lastName" type="text" class="form-control" formControlName="lastName" required>
-                </div>
-                <div class="mb-3">
-                    <label for="phone" class="form-label">{{'PHONE'| translate}}</label>
-                    <input id="phone" type="text" class="form-control" formControlName="phone" required>
-                </div>
-                <div class="mb-3">
-                    <label for="email" class="form-label">{{'EMAIL ADDRESS'| translate}}</label>
-                    <input id="email" type="email" class="form-control" formControlName="email">
-                </div>
-                <div class="mb-3">
-                    <label for="street" class="form-label">{{'STREET'| translate}}</label>
-                    <input id="street" type="text" class="form-control" formControlName="street" required>
-                </div>
-                <div class="mb-3">
-                    <label for="postalCode" class="form-label">{{'ZIP CODE'| translate}}</label>
-                    <input id="postalCode" type="text" class="form-control" formControlName="postalCode" required>
-                </div>
-                <div class="mb-3">
-                    <label for="city" class="form-label">{{'CITY'| translate}}</label>
-                    <input id="city" type="text" class="form-control" formControlName="city" required>
-                </div>
-                <div class="mb-3">
-                    <label for="delivery" class="form-label">{{"DELIVERY DATE" | translate}}</label>
-                    <input id="delivery" type="date" class="form-control" formControlName="delivery" min={{minDate}}
-                        required>
-                </div>
-                <div class="mb-3">
-                    <label for="comment" class="form-label">{{"COMMENT" | translate}} ({{"MAXIMUM CHARACTERS" |
-                        translate}}) </label>
-                    <textarea id="comment" type="text" class="form-control" rows="3" formControlName="comment"
-                        maxlength="1000"></textarea>
-                </div>
+            <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
 
-                <h4>{{"PAYMENT INFORMATION" | translate}}</h4>
-
+                <!-- Personal Information -->
+                <h4>Personal Information</h4>
+              
                 <div class="mb-3">
-                    {{"PAYMENT OPTIONS" | translate}}*
+                  <label for="companyInput" class="form-label">Company</label>
+                  <input type="text" class="form-control" id="companyInput" placeholder="Company" formControlName="companyInput">
                 </div>
-
-                <select class="form-select my-4" aria-label="Default select example">
-                    <option selected value="1"> {{"INVOICE" | translate}}</option>
-                </select>
-
-                <button #submitBT [disabled]="submitButtonDisabled" type="submit" class="btn btn-secondary">{{'SUBMIT'|
-                    translate}}</button>
-            </form>
+              
+                <!-- Name -->
+                <div class="mb-3">
+                  <label for="firstnameInput" class="form-label">{{'FIRSTNAME' | translate}}</label>
+                  <input type="text" class="form-control" id="firstnameInput" placeholder="John Doe" formControlName="firstnameInput">
+                </div>
+              
+                <div class="mb-3">
+                  <label for="lastnameInput" class="form-label">{{'LASTNAME' | translate}}</label>
+                  <input type="text" class="form-control" id="lastnameInput" placeholder="John Doe" formControlName="lastnameInput">
+                </div>
+              
+                <!-- Email -->
+                <div class="mb-3">
+                  <label for="emailInput" class="form-label">Email Address</label>
+                  <input type="email" class="form-control" id="emailInput" placeholder="name@example.com" formControlName="emailInput" required>
+                </div>
+              
+                <!-- Phone -->
+                <div class="mb-3">
+                  <label for="phoneInput" class="form-label">Phone Number</label>
+                  <input type="tel" class="form-control" id="phoneInput" placeholder="+1234567890" formControlName="phoneInput">
+                </div>
+              
+                <hr class="my-4">
+                        
+                <!-- Delivery Address -->
+                <h4>Delivery Address</h4>
+  
+                <div formGroupName="deliveryAddress">
+                  <div class="mb-3">
+                    <label for="deliveryStreetInput" class="form-label">Address Line</label>
+                    <input type="text" class="form-control" id="deliveryStreetInput" placeholder="1234 Main St" formControlName="deliveryStreetInput">
+                  </div>
+                  <div class="mb-3">
+                    <label for="deliveryCityInput" class="form-label">City</label>
+                    <input type="text" class="form-control" id="deliveryCityInput" formControlName="deliveryCityInput">
+                  </div>
+                  <div class="mb-3">
+                    <label for="deliveryStateInput" class="form-label">State</label>
+                    <input type="text" class="form-control" id="deliveryStateInput" formControlName="deliveryStateInput">
+                  </div>
+                  <div class="mb-3">
+                    <label for="deliveryZipInput" class="form-label">Zip Code</label>
+                    <input type="text" class="form-control" id="deliveryZipInput" formControlName="deliveryZipInput">
+                  </div>
+                  <div class="mb-3">
+                    <label for="deliveryCountryInput" class="form-label">Country</label>
+                    <input type="text" class="form-control" id="deliveryCountryInput" formControlName="deliveryCountryInput">
+                  </div>
+                </div>
+            
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-dark border border-light">Update Profile</button>
+              
+              </form>
 
             <div>*{{"ONLY INVOICING MESSAGE" | translate}}</div>
 
@@ -105,4 +111,3 @@
     <br>
     <br>
 </div>
-</script>

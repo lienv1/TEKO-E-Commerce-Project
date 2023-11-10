@@ -20,4 +20,8 @@ export class OrderService {
     return this.http.get<Order[]>(`${this.backendAPI}/order/username/${username}`)
   }
 
+  postOrder(order:Order,username:string){
+    return this.http.post<Order>(`${this.backendAPI}/order/username/${username}`, order);
+  }
+
 }
