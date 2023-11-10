@@ -14,7 +14,7 @@ export class OrderService {
   keycloakAPI: string = environment.keycloakAPI;
   keycloakRealm : string = environment.keycloakRealm;
 
-  constructor(private http: HttpClient, private keycloakService: KeycloakService) { }
+  constructor(private http: HttpClient) { }
 
   getAllOrdersByUsername(username:string):Observable<Order[]>{
     return this.http.get<Order[]>(`${this.backendAPI}/order/username/${username}`)

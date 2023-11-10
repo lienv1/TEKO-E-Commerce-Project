@@ -61,9 +61,42 @@
                 </div>
               
                 <hr class="my-4">
-                        
+          
+                <!-- Billing Address -->
+                <h4>Billing Address</h4>
+                <div formGroupName="billingAddress">
+                  <div class="mb-3">
+                    <label for="billingStreetInput" class="form-label">Address Line</label>
+                    <input type="text" class="form-control" id="billingStreetInput" placeholder="1234 Main St" formControlName="billingStreetInput" required>
+                  </div>
+                  <div class="mb-3">
+                    <label for="billingCityInput" class="form-label">City</label>
+                    <input type="text" class="form-control" id="billingCityInput" formControlName="billingCityInput" required>
+                  </div>
+                  <div class="mb-3">
+                    <label for="billingStateInput" class="form-label">State</label>
+                    <input type="text" class="form-control" id="billingStateInput" formControlName="billingStateInput" required>
+                  </div>
+                  <div class="mb-3">
+                    <label for="billingZipInput" class="form-label">Zip Code</label>
+                    <input type="text" class="form-control" id="billingZipInput" formControlName="billingZipInput" required>
+                  </div>
+                  <div class="mb-3">
+                    <label for="billingCountryInput" class="form-label">Country</label>
+                    <input type="text" class="form-control" id="billingCountryInput" formControlName="billingCountryInput" required>
+                  </div>
+                </div>
+              
+                <hr class="my-4">
+              
                 <!-- Delivery Address -->
                 <h4>Delivery Address</h4>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="sameAddressCheck" (change)="toggleInput($event)">
+                  <label class="form-check-label" for="sameAddressCheck">
+                    Same as billing address
+                  </label>
+                </div>
   
                 <div formGroupName="deliveryAddress">
                   <div class="mb-3">
@@ -87,9 +120,21 @@
                     <input type="text" class="form-control" id="deliveryCountryInput" formControlName="deliveryCountryInput">
                   </div>
                 </div>
+
+                <div class="mb-3">
+                    <label for="delivery" class="form-label">{{"DELIVERY DATE" | translate}}</label>
+                    <input id="delivery" type="date" class="form-control" formControlName="deliveryDateInput" min={{minDate}}
+                        required>
+                </div>
+                <div class="mb-3">
+                    <label for="comment" class="form-label">{{"COMMENT" | translate}} ({{"MAXIMUM CHARACTERS" |
+                        translate}}) </label>
+                    <textarea id="comment" type="text" class="form-control" rows="3" formControlName="commentInput"
+                        maxlength="1000"></textarea>
+                </div>
             
                 <!-- Submit Button -->
-                <button type="submit" class="btn btn-dark border border-light">Update Profile</button>
+                <button type="submit" #submitBT class="btn btn-dark border border-light">Submit</button>
               
               </form>
 

@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { KeycloakService } from 'keycloak-angular';
 import { Observable, from, switchMap } from 'rxjs';
@@ -19,6 +19,12 @@ export class UserService {
 
   public getUserdata(username:string): Observable<User> {
     return this.http.get<User>(`${this.backendAPI}/user/username/${username}`, { withCredentials: true });
+  }
+
+  public getUsersByKeyword(keyword:string): Observable<User[]> {
+    const param = new HttpParams();
+    param.append('keyword',keyword);
+    return this.http.get<User[]>(`${this.backendAPI}/user/search`, { params:param });
   }
 
   public getOrdersByUsername(username:string):Observable<Order[]>{

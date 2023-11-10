@@ -1,6 +1,7 @@
 import { Address } from "./address";
 
 export interface User {
+    userId?:number;
     firstname: string;
     lastname: string;
     company: string;

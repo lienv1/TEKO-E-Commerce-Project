@@ -18,6 +18,7 @@ import { CustomModalComponent } from '../modal/custom-modal/custom-modal.compone
 import { OrderDetail } from '../model/orderDetail';
 import { Address } from '../model/address';
 import { OrderService } from '../service/order.service';
+import { error } from 'console';
 
 @Component({
   selector: 'app-checkout',
@@ -34,6 +35,7 @@ export class CheckoutComponent {
   public submitButtonDisabled = false;
   public minDate !: string;
   private username !: string;
+  private userId !: number;
 
 
   //FORM
@@ -76,6 +78,14 @@ export class CheckoutComponent {
 
 
   initAddressForm() {
+    this.billingAddress = new FormGroup({
+      billingStreetInput: new FormControl(''),
+      billingCityInput: new FormControl(''),
+      billingStateInput: new FormControl(''),
+      billingZipInput: new FormControl(''),
+      billingCountryInput: new FormControl('')
+    });
+
     this.deliveryAddress = new FormGroup({
       deliveryStreetInput: new FormControl(''),
       deliveryCityInput: new FormControl(''),
@@ -90,6 +100,9 @@ export class CheckoutComponent {
       lastnameInput: new FormControl(''),
       emailInput: new FormControl(''),
       phoneInput: new FormControl(''),
+      deliveryDateInput : new FormControl(''),
+      commentInput : new FormControl(''),
+      billingAddress: this.billingAddress,
       deliveryAddress: this.deliveryAddress
     });
   }
@@ -110,8 +123,15 @@ export class CheckoutComponent {
     this.keycloakService.isLoggedIn().then(
       (isLogged) => {
         if (isLogged) {
-          const username = this.keycloakService.getUsername();
-          this.loadUser(username);
+          this.keycloakService.loadUserProfile().then(
+            (user) => {
+            const username = user.username;
+            if (username){
+              this.username = username;
+              this.loadUser(username);
+            }
+            }
+          )
         }
         else {
           this.router.navigate(['/login'])
@@ -125,26 +145,37 @@ export class CheckoutComponent {
 
   public loadUser(username:string) {
     this.userService.getUserdata(username).subscribe({
-      next: (response) => {this.fillFormBackend(response)},
+      next: (response) => {this.fillFormBackend(response); if(response.userId) this.userId = response.userId},
       error: (error) => this.popupModal(error.message, "Error", "Red")
     })
   }
 
   //Form section
   fillFormBackend(user: User) {
-    // Set value for the main address form controls
-    this.addressForm.get('companyInput')?.setValue(user.company);
-    this.addressForm.get('firstnameInput')?.setValue(user.firstname);
-    this.addressForm.get('lastnameInput')?.setValue(user.lastname);
-    this.addressForm.get('emailInput')?.setValue(user.email);
-    this.addressForm.get('phoneInput')?.setValue(user.phone);
+     // Set value for the main address form controls
+     this.addressForm.get('companyInput')?.setValue(user.company);
+     this.addressForm.get('firstnameInput')?.setValue(user.firstname);
+     this.addressForm.get('lastnameInput')?.setValue(user.lastname);
+     this.addressForm.get('emailInput')?.setValue(user.email);
+     this.addressForm.get('phoneInput')?.setValue(user.phone);
+ 
+     // Set value for the nested billing address form group controls
+     this.addressForm.get('billingAddress.billingStreetInput')?.setValue(user.billingAddress.street);
+     this.addressForm.get('billingAddress.billingCityInput')?.setValue(user.billingAddress.city);
+     this.addressForm.get('billingAddress.billingStateInput')?.setValue(user.billingAddress.state);
+     this.addressForm.get('billingAddress.billingZipInput')?.setValue(user.billingAddress.postalCode);
+     this.addressForm.get('billingAddress.billingCountryInput')?.setValue(user.billingAddress.country);
+ 
+     // Set value for the nested delivery address form group controls
+     this.addressForm.get('deliveryAddress.deliveryStreetInput')?.setValue(user.deliveryAddress.street);
+     this.addressForm.get('deliveryAddress.deliveryCityInput')?.setValue(user.deliveryAddress.city);
+     this.addressForm.get('deliveryAddress.deliveryStateInput')?.setValue(user.deliveryAddress.state);
+     this.addressForm.get('deliveryAddress.deliveryZipInput')?.setValue(user.deliveryAddress.postalCode);
+     this.addressForm.get('deliveryAddress.deliveryCountryInput')?.setValue(user.deliveryAddress.country);
 
-    // Set value for the nested delivery address form group controls
-    this.addressForm.get('deliveryAddress.deliveryStreetInput')?.setValue(user.deliveryAddress.street);
-    this.addressForm.get('deliveryAddress.deliveryCityInput')?.setValue(user.deliveryAddress.city);
-    this.addressForm.get('deliveryAddress.deliveryStateInput')?.setValue(user.deliveryAddress.state);
-    this.addressForm.get('deliveryAddress.deliveryZipInput')?.setValue(user.deliveryAddress.postalCode);
-    this.addressForm.get('deliveryAddress.deliveryCountryInput')?.setValue(user.deliveryAddress.country);
+     //Detail
+     this.addressForm.get('deliveryDateInput')?.setValue(new Date());
+
   }
 
   getUserfromForm(): User {
@@ -187,6 +218,7 @@ export class CheckoutComponent {
       deliveryAddress = billingAddress
 
     const user: User = {
+      userId: this.userId,
       firstname: firstname,
       lastname: lastname,
       company: company,
@@ -215,7 +247,6 @@ export class CheckoutComponent {
 
   //Submit section
   onSubmit() {
-
     this.disableSubmit();
 
     if (this.addressForm.invalid) {
@@ -224,7 +255,7 @@ export class CheckoutComponent {
       return;
     }
 
-    if (this.addressForm.value.delivery == null || this.addressForm.value.delivery <= new Date()) {
+    if (this.addressForm.value.deliveryDateInput == null || this.addressForm.value.deliveryDateInput <= new Date()) {
       this.popupModal("DELIVERY DATE MISSING OR INVALID", "WARNING", "red");
       this.enableSubmit();
       return
@@ -248,12 +279,11 @@ export class CheckoutComponent {
       return;
     }
 
-    const comment = this.addressForm.value.comment;
+    const comment = this.addressForm.value.commentInput;
 
     const items: CartItem[] = this.cart.getOrder();
     const orderedProducts: OrderDetail[] = items.map(item => {
       return {
-        id: item.product.productId,
         quantity: item.quantity,
         product: item.product
       }
@@ -265,7 +295,7 @@ export class CheckoutComponent {
       return;
     }
 
-    const deliveryDate = this.addressForm.value.delivery;
+    const deliveryDate = this.addressForm.value.deliveryDateInput;
     const user = this.getUserfromForm();
     const order: Order = {
       user : user,
@@ -274,7 +304,11 @@ export class CheckoutComponent {
       orderDate: deliveryDate
       
     }
-    this.orderService.postOrder(order,this.username)
+    console.log(order);
+    this.orderService.postOrder(order,this.username).subscribe({
+      next: (response) => {console.log(response)},
+      error: (error:HttpErrorResponse) => {alert(error.message)}
+    })
   }
 
   public disableSubmit() {
@@ -318,14 +352,14 @@ export class CheckoutComponent {
     }
   }
 
-  public getUsers(keyword: string) {
+  public getUsers(keyword: string) {/*
     if (keyword == null || keyword.length < 3) {
       this.popupModal("Please type at least 3 characters", "WARNING", "red");
       return;
     }
     this.users = [];
 
-    this.userService.getUsersByUsername(keyword).subscribe(
+    this.userService.getUsersByKeyword(keyword).subscribe(
       (response) => {
         let data = response;
         for (let i = 0; i < data.length; i++) {
@@ -337,16 +371,14 @@ export class CheckoutComponent {
           this.users.push(data[i]);
         }
         if (this.users.length > 0) {
-          this.fillForm(this.users[0]);
+          this.fillFormBackend(this.users[0]);
           if (this.users[0].username != null){
             this.username = this.users[0].username;
           }
         }
       }
       
-    );
-
-
+    );*/
   }
 
   public stringContainAllOfArray(str: string, keywords: string[]) {

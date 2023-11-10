@@ -79,6 +79,7 @@ public class OrderController {
 			Order addedOrder = orderService.addOrder(order);
 			return new ResponseEntity<Order>(addedOrder, HttpStatus.OK);
 		} catch (DataIntegrityViolationException e) {
+			e.printStackTrace();
 			return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
 		}
 	}
