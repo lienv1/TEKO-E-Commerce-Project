@@ -14,6 +14,6 @@ export interface Product {
     productName ?: string,
     searchIndex ?: string,
     stock ?: number,
-    taxcode ?:number,
+    tax ?:number,
     weight ?: number
 }

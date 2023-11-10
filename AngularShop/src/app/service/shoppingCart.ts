@@ -97,8 +97,8 @@ export class ShoppingCart {
     public getTotalTax(){
       let sum = 0;
       for (let i = 0; i<this.items.length; i++){
-        const taxPercent = parseFloat(this.items[i].product.steuer);
-        const price = parseFloat(this.items[i].product.preis);
+        const taxPercent = this.items[i].product.tax;
+        const price = this.items[i].product.price;
         let tax = price/100*taxPercent;
         tax = tax * this.items[i].quantity;
         sum += tax;
@@ -110,7 +110,7 @@ export class ShoppingCart {
       let total = 0;
       for (let i = 0; i<this.items.length;i++){
         const item = this.items[i];
-        const price = parseFloat(item.product.preis) * item.quantity;
+        const price = parseFloat(item.product.price) * item.quantity;
         total += price;
       }
       return total
