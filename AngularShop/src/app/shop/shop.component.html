@@ -14,15 +14,15 @@
                 <div class="filter-section border p-3 rounded">
 
                     <!-- Categories -->
-                    <div *ngFor="let productCategory of categories">
+                    <div *ngFor="let productCategory of categories ; let i = index">
                         <hr>
                         <h6 class="toggle-heading" data-bs-toggle="collapse"
-                            [attr.data-bs-target]="'#categoryContent' + handleEmptySpaces(productCategory.category)"
+                        [attr.data-bs-target]="'#subcategoryList' + i"
                             style="cursor: pointer;">
                             <span class="arrow"></span>
                             {{productCategory.category}}
                         </h6>
-                        <div id="categoryContent{{handleEmptySpaces(productCategory.category)}}" class="overflow-auto collapse"
+                        <div id="{{'subcategoryList' + i}}" class="overflow-auto collapse"
                             style="height: 100px;">
                             <a *ngFor="let group of productCategory.subCategory | keyvalue"
                                 style="color:#11698e;text-decoration: none; cursor:pointer;"

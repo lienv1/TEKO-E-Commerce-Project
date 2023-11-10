@@ -271,11 +271,15 @@ export class ShopComponent implements OnInit {
   }
 
   brandIsChecked(brand:string){
+    if(!this.brandParam)
+      return false;
     this.brandSet = new Set (this.brandParam.split('¿'));
     return this.brandSet.has(brand)
   }
 
   originIsChecked(origin:string){
+    if(!this.originParam)
+      return false;
     this.originSet = new Set (this.originParam.split('¿'));
     return this.originSet.has(origin);
   }
