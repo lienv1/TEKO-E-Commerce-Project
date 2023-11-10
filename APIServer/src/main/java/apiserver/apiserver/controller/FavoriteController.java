@@ -46,13 +46,13 @@ public class FavoriteController {
 	
 	@PreAuthorize("hasAnyRole('ADMIN','CUSTOMER')")
 	@PostMapping("/product/{productId}/username/{username}")
-	public ResponseEntity<Favorite> addFavorite(@PathVariable("productId") Long id, @PathVariable("username") String username, Principal principal){
+	public ResponseEntity<Boolean> addFavorite(@PathVariable("productId") Long id, @PathVariable("username") String username, Principal principal){
 		boolean isAuthenticated = authorizationService.isAuthenticatedByPrincipal(principal, username);
 		if (!isAuthenticated) {
 			return new ResponseEntity(HttpStatus.UNAUTHORIZED);
 		}
-		Favorite addedFavorite = favoriteService.addFavoriteByUsernameAndProductId(username, id);
-		return new ResponseEntity<Favorite>(addedFavorite,HttpStatus.OK);
+		favoriteService.addFavoriteByUsernameAndProductId(username, id);
+		return new ResponseEntity<Boolean>(true,HttpStatus.OK);
 	}
 	
 	@PreAuthorize("hasAnyRole('ADMIN','CUSTOMER')")

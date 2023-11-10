@@ -95,25 +95,25 @@ export class ProductPageComponent {
     this.keycloakService.loadUserProfile().then(
       (user) => {
         this.username = user.username;
-        this.isFavourite();
+        this.isFavorite();
       }
     )
   }
 
-  isFavourite() {
+  isFavorite() {
     if (this.productId == null)
       return;
     if (this.username == null)
       return;
 
-    this.productService.isFavourite(this.username, this.productId).subscribe(
-      (response: boolean) => {
+    this.productService.isFavourite(this.username, this.productId).subscribe({
+     next : (response: boolean) => {
         this.favourite = response
       },
-      (error: HttpErrorResponse) => {
-        alert(error);
+      error : (error: HttpErrorResponse) => {
+        alert(error.message);
       }
-    )
+    })
   }
 
   public addFavourite() {
@@ -178,7 +178,7 @@ export class ProductPageComponent {
       return
     }
     if (option === "carton") {
-      quantity *= this.product.pack === null ? this.product.pack : 1
+      quantity *= (this.product.pack === undefined || this.product.pack == null)  ? 1 : this.product.pack
     }
     console.log("option is " + option + ", quantity is " + quantity);
 

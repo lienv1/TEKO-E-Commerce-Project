@@ -47,36 +47,16 @@ export class ProductService {
 
   //Favourite functions
   public isFavourite(username:string, id:string): Observable<boolean> {
-    return from(this.keycloakService.getToken()).pipe(
-      switchMap((token: string) => {
-        const headers = new HttpHeaders({
-          Authorization: `Bearer ${token}`,
-        });
-        return this.http.get<boolean>(`${this.backendAPI}/product/favourite/user/${username}/product/${id}`, { headers });
-      })
-    );
+    return this.http.get<boolean>(`${this.backendAPI}/favorite/product/${id}/username/${username}`);
+   
   }
 
-  public addFavourite(username:string, id:string):Observable<any>{
-    return from(this.keycloakService.getToken()).pipe(
-      switchMap((token: string) => {
-        const headers = new HttpHeaders({
-          Authorization: `Bearer ${token}`,
-        });
-        return this.http.post(`${this.backendAPI}/product/favourite/user/${username}/product/${id}`, { headers });
-      })
-    );
+  public addFavourite(username:string, id:string):Observable<any>{  
+    return this.http.post<any>(`${this.backendAPI}/favorite/product/${id}/username/${username}`,true);
   }
 
   public deleteFavourite(username:string, id:string):Observable<any>{
-    return from(this.keycloakService.getToken()).pipe(
-      switchMap((token: string) => {
-        const headers = new HttpHeaders({
-          Authorization: `Bearer ${token}`,
-        });
-        return this.http.delete(`${this.backendAPI}/product/favourite/user/${username}/product/${id}`, { headers });
-      })
-    );
+    return this.http.delete(`${this.backendAPI}/favorite/product/${id}/username/${username}`);
   }
 
   public getFavourites(username:string):Observable<Product[]>{
