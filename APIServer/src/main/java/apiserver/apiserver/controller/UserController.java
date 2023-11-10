@@ -2,6 +2,7 @@ package apiserver.apiserver.controller;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import apiserver.apiserver.exception.UserNotFoundException;
 import apiserver.apiserver.model.User;
@@ -42,6 +44,13 @@ public class UserController {
 	public ResponseEntity<List<User>> getAllUser() {
 		List<User> list = userService.getAllUser();
 		return new ResponseEntity<List<User>>(list, HttpStatus.OK);
+	}
+	
+	@GetMapping("/search")
+	@PreAuthorize(value= "hasRole('ADMIN')")
+	public ResponseEntity<Set<User>> getAllUsersByKeyword(@RequestParam(value = "keyword", required = false) String keyword) {
+		Set<User> list = userService.getUsersByKeyword(keyword);
+		return new ResponseEntity<Set<User>>(list, HttpStatus.OK);
 	}
 	
 	@GetMapping("/username/{username}")

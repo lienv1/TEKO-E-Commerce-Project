@@ -1,6 +1,7 @@
 package apiserver.apiserver.service;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -35,6 +36,10 @@ public class UserService {
 
 	public User getUserByUsername(String username) throws UserNotFoundException {
 		return userRepo.findByUsername(username).orElseThrow(() -> new UserNotFoundException("User not found"));
+	}
+	
+	public Set<User> getUsersByKeyword(String keyword){
+		return userRepo.findByUsernameContainingIgnoreCase(keyword);
 	}
 
 	public User editUserByUsername(User newUser, String username) throws UserNotFoundException {
