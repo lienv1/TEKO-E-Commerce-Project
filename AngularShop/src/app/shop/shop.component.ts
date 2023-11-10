@@ -426,15 +426,14 @@ export class ShopComponent implements OnInit {
 
   //CART SECTION
 
-  public addItemToCart(product: Product) {
-    const quantityInput = <HTMLInputElement>document.getElementById(`quantity-${product.productId}`)
+  public addItemToCart(product: Product, quantityInput:HTMLInputElement, quantitySelector:HTMLSelectElement) {
     let quantity = parseFloat(quantityInput.value)
     if (quantity < 1) {
       return
     }
-    const quantitySelector = <HTMLSelectElement>document.getElementById(`quantityType-${product.productId}`)
+
     const selector = quantitySelector.value
-    if (selector == "carton") {
+    if (selector === "carton") {
       quantity *= product.pack!
     }
     const cartItem: CartItem = {

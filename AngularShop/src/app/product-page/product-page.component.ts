@@ -146,12 +146,12 @@ export class ProductPageComponent {
     )
   }
 
-  public formatPrice(price ?: string): string {
+  public formatPrice(priceNumber ?: number): string {
 
-    if (price == null){
+    if (priceNumber == null){
       return "";
     }
-    const priceNumber = parseFloat(price);
+   
     // Format the price as Swiss Franc (CHF)
     let formattedPrice = this.currencyPipe.transform(priceNumber, 'CHF');
   

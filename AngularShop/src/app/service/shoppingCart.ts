@@ -46,12 +46,12 @@ export class ShoppingCart {
     public findItemInCart(item: any): boolean {
       // Find the item in the cart based on your own criteria
       // For example, comparing item IDs
-      const existingItem = this.items.find((cartItem) => cartItem.product.artikelNrLAG === item.product.artikelNrLAG);
+      const existingItem = this.items.find((cartItem) => cartItem.product.productId === item.product.productId);
       return !!existingItem; // Return true if an existing item is found, false otherwise
     }
 
     public removeItemById(id:number) {
-      const index = this.items.findIndex(item => item.product.artikelNrLAG === id)
+      const index = this.items.findIndex(item => item.product.productId === id)
       if (index > -1) {
         this.items.splice(index, 1);
         this.saveCartItemsToStorage();
@@ -59,7 +59,7 @@ export class ShoppingCart {
     }
 
     public increaseQuantityById(itemId: number, quantity : number): void {
-      const item = this.items.find(item => item.product.artikelNrLAG === itemId);
+      const item = this.items.find(item => item.product.productId === itemId);
         this.removeItem(item);
         item.quantity += quantity;
         this.addItem(item);
@@ -69,7 +69,7 @@ export class ShoppingCart {
     
     public replaceQuantityById(itemId: number, quantity : number): void {
       this.loadCartItemsFromStorage();
-      const item = this.items.find(item => item.product.artikelNrLAG === itemId);
+      const item = this.items.find(item => item.product.productId === itemId);
       this.removeItem(item);
       item.quantity = quantity;
       this.addItem(item);
@@ -79,7 +79,7 @@ export class ShoppingCart {
     public mergeItems() {
       const mergedItems: any[] = [];
       this.items.forEach((item) => {
-        const existingItem = mergedItems.find((mergedItem) => mergedItem.product.artikelNrLAG  === item.product.artikelNrLAG);
+        const existingItem = mergedItems.find((mergedItem) => mergedItem.product.productId  === item.product.productId);
         if (existingItem) {
           existingItem.quantity += item.quantity;
         } else {

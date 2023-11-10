@@ -89,7 +89,10 @@ export class CartComponent {
 
   public getCarton(item:CartItem){
     let quantity = item.quantity
-    let perCarton = item.product.pack === null ? item.product.pack : 1
+    let perCarton = item.product.pack === null ? 1 : item.product.pack
+    if (perCarton === undefined){
+      perCarton = 1
+    }
     return Math.round(quantity/perCarton)
   }
 

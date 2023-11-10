@@ -102,7 +102,7 @@
                             </ul>
                           </li>
                         </ul>
-                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Apply Filters</button>
+                        <!--<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Apply Filters</button>-->
                       </div>
                     </div>
                   </nav>
@@ -116,7 +116,7 @@
                     <div class="card">
 
                         <a class="d-flex justify-content-center align-items-center"
-                            [routerLink]="['/product/']+'product.productId'"> <img class="card-img-top"
+                            [routerLink]="['/product/'+product.productId]"> <img class="card-img-top"
                                 style="max-height: 15em; width: auto; max-width: 17em;"
                                 [src]="fileServer+'/images/products/'+product.productId+'.png'"
                                 (error)="handleImageError($event)"
@@ -129,12 +129,12 @@
                             <div class="row">
 
                                 <div class="col-sm mb-3">
-                                    <input id="quantity-{{product.productId}}" type="number" class="form-control"
+                                    <input #quantityInput type="number" class="form-control"
                                         id="quantity" min="1" value="1">
                                 </div>
 
                                 <div class="col-sm mb-3">
-                                    <select class="form-select" id="quantityType-{{product.productId}}"
+                                    <select class="form-select" #selectQuantity
                                         aria-label="Quantity Type">
                                         <option value="piece">{{"UNIT" | translate}}</option>
                                         <option *ngIf="hasCarton(product)" selected value="carton">{{"CARTON" |
@@ -142,7 +142,7 @@
                                     </select>
                                 </div>
 
-                                <button class="btn btn-secondary" (click)="addItemToCart(product)"><i
+                                <button class="btn btn-secondary" (click)="addItemToCart(product,quantityInput,selectQuantity)"><i
                                         class="bi bi-cart-plus"></i> {{"ADD TO CART" | translate}}</button>
                             </div>
                         </div>

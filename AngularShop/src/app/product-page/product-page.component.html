@@ -1,1 +1,92 @@
-<p>product-page works!</p>
+<!--Popup section-->
+<app-custom-modal #CustomModalComponent> </app-custom-modal>
+<!--Popup section ends-->
+
+<!-- Product Showcase -->
+<div #container class="container my-5">
+    <div class="row">
+        <div class="col-lg-6">
+            <img src="https://achau.ch/api/images/products/{{productId}}.jpg" class="img-fluid" alt="Product Image"
+                onerror="this.src='https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/330px-No-Image-Placeholder.svg.png'">
+        </div>
+        <div class="col-lg-6">
+            <h2 class="mb-4">{{ "PRODUCT DETAILS" | translate}}</h2>
+            <table class="table table-striped">
+                <tbody>
+                    <tr>
+                        <th scope="row">{{'PRODUCT ID'|translate}}</th>
+                        <td>{{productId}}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">{{'GTIN'|translate}}</th>
+                        <td>{{product?.gtinUnit}}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">{{'PRODUCT NAME'|translate}}</th>
+                        <td>{{product?.productName}}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">{{'BRAND'|translate}}</th>
+                        <td>{{product?.brand}}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">{{'WEIGHT PER UNIT'|translate}}</th>
+                        <td>{{product?.weight}}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">{{'COUNTRY OF ORIGIN'|translate}}</th>
+                        <td>{{product?.origin}}</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">{{'PACKAGING SIZE'|translate}}</th>
+                        <td>{{product?.pack}}</td>
+                    </tr>
+                    <!--<tr>
+                        <th scope="row">{{'STOCK'|translate}}</th>
+                        <td>100 units</td>
+                    </tr>-->
+
+                    <tr>
+                        <th scope="row">{{'TAX'|translate}}</th>
+                        <td>{{product?.taxcode}} %</td>
+                    </tr>
+
+                    <tr *ngIf="logged">
+                        <th scope="row">{{'PRICE PER UNIT'|translate}}</th>
+                        <td>{{formatPrice(product?.price)}}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="mb-3">
+                <label for="quantityType" class="form-label">{{'CHOOSE QUANTITY TYPE' | translate}}</label>
+                <select #quantityOption class="form-select" id="quantityType" aria-label="Quantity Type">
+                    
+                    <option value="piece">{{"UNIT" | translate}}</option>
+                    <option *ngIf="hasCarton()" selected value="carton">{{"CARTON" | translate}}</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="quantity" class="form-label">{{"QUANTITY"| translate}}:</label>
+                <input #quantityInput type="number" class="form-control" id="quantity" min="1" value="1">
+            </div>
+            <div class="mb-3">
+                <button class="btn btn-secondary" (click)="addToCart()"><i class="bi bi-cart-plus"></i> {{"ADD TO CART" | translate}}</button>
+            </div>
+            <div class="alert alert-success" *ngIf="cartMessage">{{ cartMessage }}</div>
+            <div *ngIf="logged">
+                <div *ngIf="favourite" class="mb-3">
+                    <button class="btn btn-secondary" (click)="removeFavourite()"><i class="bi bi-bookmark-dash"></i> {{"REMOVE FROM FAVOURITES" |
+                        translate}}</button>
+                </div>
+                <div *ngIf="!favourite" class="mb-3">
+                    <button class="btn btn-secondary" (click)="addFavourite()"><i class="bi bi-bookmark-star-fill"></i> {{"ADD TO FAVOURITES" | translate}} </button>
+                </div>
+                <div class="mb-3">
+                    <button class="btn btn-secondary" [routerLink]="['/cart']"><i class="bi bi-cart4"></i> {{"PROCEED TO CART" | translate}} </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
