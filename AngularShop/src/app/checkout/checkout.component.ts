@@ -306,7 +306,7 @@ export class CheckoutComponent {
     }
     console.log(order);
     this.orderService.postOrder(order,this.username).subscribe({
-      next: (response) => {console.log(response)},
+      next: (response) => {this.processingCompletedOrder()},
       error: (error:HttpErrorResponse) => {alert(error.message)}
     })
   }

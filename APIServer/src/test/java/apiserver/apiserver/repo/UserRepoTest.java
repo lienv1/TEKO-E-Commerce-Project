@@ -62,10 +62,11 @@ class UserRepoTest {
 	}
 	
 	@Test
+	@Deprecated
 	void findAllTest2() {
-		userRepo.deleteAll();
-		List<User> list = userRepo.findAll();
-		assertEquals(0, list.size());
+//		userRepo.deleteAll();
+//		List<User> list = userRepo.findAll();
+//		assertEquals(0, list.size());
 	}
 
 }

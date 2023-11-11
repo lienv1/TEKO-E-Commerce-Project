@@ -3,11 +3,13 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateService } from '@ngx-translate/core';
+import { KeycloakService } from 'keycloak-angular';
 import { CustomModalComponent } from 'src/app/modal/custom-modal/custom-modal.component';
 import { CartItem } from 'src/app/model/cartItem';
 import { FunctionModel } from 'src/app/model/functionModel';
 import { Order } from 'src/app/model/order';
 import { OrderDetail } from 'src/app/model/orderDetail';
+import { OrderService } from 'src/app/service/order.service';
 import { ShoppingCart } from 'src/app/service/shoppingCart';
 
 @Component({
@@ -20,11 +22,26 @@ export class OrderHistoryComponent implements OnInit {
   @ViewChild("CustomModalComponent") customModalComponent !: CustomModalComponent
   orders:Order[] = []
 
-  page = 1
+  username !: string;
+  page = 1;
 
-  constructor(private translateService:TranslateService, private cart:ShoppingCart,private router:Router, private modalService:NgbModal, private datePipe: DatePipe){}
+  constructor(private translateService:TranslateService, private keycloakService:KeycloakService, private orderService:OrderService, private cart:ShoppingCart,private router:Router, private modalService:NgbModal, private datePipe: DatePipe){}
 
   ngOnInit(): void {
+    this.initUser();
+  }
+
+  initUser(){
+    this.keycloakService.loadUserProfile().then(
+      (user) => { let username = user.username; if (username) this.initOrder(username)}
+    )
+  }
+
+  initOrder(username:string){
+    this.orderService.getAllOrdersByUsername(username).subscribe({
+      next: (response) => this.orders = response,
+      error: (error) => alert(error.message)
+    })
   }
 
   public loadItemsToCart(order:Order){

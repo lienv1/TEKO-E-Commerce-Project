@@ -54,7 +54,7 @@ public class OrderController {
 
 	@GetMapping("/username/{username}")
 	@PreAuthorize(value = "hasAnyRole('ADMIN','CUSTOMER')")
-	public ResponseEntity<List<Order>> getOrderByUsername(@PathVariable("username") String username,
+	public ResponseEntity<List<Order>> getOrdersByUsername(@PathVariable("username") String username,
 			Principal principal) {
 		boolean isAuthenticated = authorizationService.isAuthenticatedByPrincipal(principal, username);
 
