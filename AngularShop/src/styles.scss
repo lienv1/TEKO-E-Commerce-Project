@@ -2,3 +2,17 @@
 @import '~bootstrap-icons/font/bootstrap-icons.css';
 /* Importing Bootstrap SCSS file. */
 @import 'bootstrap/scss/bootstrap';
+
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.darkModeText {
+    color: #a9c3ce;
+  }
+  
+.lightModeText {
+color: #095779;
+}
