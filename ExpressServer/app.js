@@ -19,13 +19,21 @@ function createStorage(path) {
     });
 }
 
-// Configure upload for each path
-const uploadImages = multer({
-    storage: createStorage('Files/Images')
+// Dynamic storage configuration based on the directory parameter
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        // Construct the directory path
+        const dirPath = path.join(__dirname, 'Files', 'Images', req.params.dir);
+        cb(null, dirPath);
+    },
+    filename: function (req, file, cb) {
+        // You can also customize the filename here if needed
+        cb(null, file.originalname);
+    }
 });
-const uploadProducts = multer({
-    storage: createStorage('Files/Images/Products')
-});
+
+// Initialize multer with the dynamic storage configuration
+const upload = multer({ storage: storage });
 
 // Middleware for serving files from both directories
 app.use('/images/products', express.static('Files/Images/Products'));
@@ -59,16 +67,16 @@ async function isAuthorized(token) {
 }
 
 // GET requests to fetch images from directories
-app.get('/images/products/:name', (req, res) => {
-    res.sendFile(path.join(__dirname, 'Files/Images/Products', req.params.name));
-});
-
-app.get('/images/:name', (req, res) => {
-    res.sendFile(path.join(__dirname, 'Files/Images', req.params.name));
+app.get('/images/:dir/:name', (req, res) => {
+    // Correctly concatenate the directory and filename
+    const filePath = path.join(__dirname, 'Files', 'Images', 'Products', req.params.dir, req.params.name);
+    
+    // Send the file at the constructed path
+    res.sendFile(filePath);
 });
 
 // POST requests for uploading images to directories
-app.post('/images/products', uploadProducts.single('image'), async(req, res) => {
+app.post('/images/:dir', upload.single('image'), async (req, res) => {
     const token = req.headers.authorization?.split(' ')[1];
 
     if (!token) {
@@ -92,51 +100,16 @@ app.post('/images/products', uploadProducts.single('image'), async(req, res) => 
             });
         }
     } catch (error) {
-        // Handle any errors that occur during authorization check.
+        // Handle any errors that occur during the authorization check.
         console.error('Authorization check failed:', error);
         res.status(500).json({
             error: 'Internal Server Error'
         });
     }
-});
-
-app.post('/images', uploadImages.single('image'), async(req, res) => {
-
-    const token = req.headers.authorization?.split(' ')[1];
-
-    if (!token) {
-        return res.status(401).json({
-            error: 'Unauthorized - Access Token missing'
-        });
-    }
-
-    try {
-        const isAuthorizedResult = await isAuthorized(token);
-
-        if (isAuthorizedResult) {
-            // The user is authorized; proceed with the file upload or other operations.
-            res.json({
-                file: req.file
-            });
-        } else {
-            // The user is not authorized.
-            res.status(401).json({
-                error: 'Unauthorized - Invalid Access Token'
-            });
-        }
-    } catch (error) {
-        // Handle any errors that occur during authorization check.
-        console.error('Authorization check failed:', error);
-        res.status(500).json({
-            error: 'Internal Server Error'
-        });
-    }
-
 });
 
 // DELETE requests to delete images from directories
-app.delete('/images/products/:name', async (req, res) => {
-
+app.delete('/images/:dir/:name', async (req, res) => {
     const token = req.headers.authorization?.split(' ')[1];
 
     if (!token) {
@@ -149,13 +122,20 @@ app.delete('/images/products/:name', async (req, res) => {
         const isAuthorizedResult = await isAuthorized(token);
 
         if (isAuthorizedResult) {
-            // The user is authorized; proceed with the file upload or other operations.
-            const filePath = path.join(__dirname, 'Files/Images/Products', req.params.name);
+            // The user is authorized; proceed with the file deletion.
+            const filePath = path.join(__dirname, 'Files', 'Images', req.params.dir, req.params.name);
             fs.unlink(filePath, (err) => {
                 if (err) {
-                    return res.status(404).json({
-                        error: 'File not found'
-                    });
+                    // Error handling if the file does not exist or cannot be deleted
+                    if (err.code === 'ENOENT') {
+                        return res.status(404).json({
+                            error: 'File not found'
+                        });
+                    } else {
+                        return res.status(500).json({
+                            error: 'Error deleting the file'
+                        });
+                    }
                 }
                 res.json({
                     message: 'File deleted successfully'
@@ -168,56 +148,14 @@ app.delete('/images/products/:name', async (req, res) => {
             });
         }
     } catch (error) {
-        // Handle any errors that occur during authorization check.
+        // Handle any errors that occur during the authorization check.
         console.error('Authorization check failed:', error);
         res.status(500).json({
             error: 'Internal Server Error'
         });
     }
-
 });
 
-app.delete('/images/:name', async (req, res) => {
-
-    const token = req.headers.authorization?.split(' ')[1];
-
-    if (!token) {
-        return res.status(401).json({
-            error: 'Unauthorized - Access Token missing'
-        });
-    }
-
-    try {
-        const isAuthorizedResult = await isAuthorized(token);
-
-        if (isAuthorizedResult) {
-            // The user is authorized; proceed with the file upload or other operations.
-            const filePath = path.join(__dirname, 'Files/Images', req.params.name);
-            fs.unlink(filePath, (err) => {
-                if (err) {
-                    return res.status(404).json({
-                        error: 'File not found'
-                    });
-                }
-                res.json({
-                    message: 'File deleted successfully'
-                });
-            });
-        } else {
-            // The user is not authorized.
-            res.status(401).json({
-                error: 'Unauthorized - Invalid Access Token'
-            });
-        }
-    } catch (error) {
-        // Handle any errors that occur during authorization check.
-        console.error('Authorization check failed:', error);
-        res.status(500).json({
-            error: 'Internal Server Error'
-        });
-    }
-
-});
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
