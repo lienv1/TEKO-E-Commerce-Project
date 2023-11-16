@@ -66,6 +66,29 @@ async function isAuthorized(token) {
     }
 }
 
+app.get('/images/:folder', (req, res) => {
+    const folderPath = path.join(__dirname, 'Files', 'Images', req.params.folder);
+    fs.readdir(folderPath, (err, files) => {
+        if (err) {
+            // Handle error if the directory doesn't exist or can't be read
+            console.error('Error reading directory:', err);
+            return res.status(500).json({
+                error: 'Error reading directory'
+            });
+        }
+
+        // Filter out directories and return only file names
+        const fileNames = files.filter(file => {
+            return fs.statSync(path.join(folderPath, file)).isFile();
+        });
+
+        res.json({
+            files: fileNames
+        });
+    });
+});
+
+
 // GET requests to fetch images from directories
 app.get('/images/:dir/:name', (req, res) => {
     // Correctly concatenate the directory and filename
