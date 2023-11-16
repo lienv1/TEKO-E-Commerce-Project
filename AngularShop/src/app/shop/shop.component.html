@@ -11,15 +11,20 @@
 
             <!-- Filter options -->
             <div class="container mt-5">
-                <div class="filter-section border p-3 rounded">
 
+              <div *ngIf="logged" class="filter-section border p-3 rounded">
+                <h5 style="cursor:pointer ;">Favorite</h5>
+              </div>
+
+                <div class="filter-section border p-3 rounded">
                     <!-- Categories -->
+                    <h5>Category</h5>
                     <div *ngFor="let productCategory of categories ; let i = index">
                         <hr>
                         <h6 class="toggle-heading" data-bs-toggle="collapse"
                         [attr.data-bs-target]="'#subcategoryList' + i"
                             style="cursor: pointer;">
-                            <span class="arrow"></span>
+                            <i class="bi bi-caret-down"></i>
                             {{productCategory.category}}
                         </h6>
                         <div id="{{'subcategoryList' + i}}" class="overflow-auto collapse"

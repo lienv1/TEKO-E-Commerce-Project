@@ -324,8 +324,7 @@ export class ShopComponent implements OnInit {
     //Remove all double or more empty spaces
     keywords = keywords.replace(/\s{2,}/g, ' ');
     this.router.navigate([], {
-      queryParams: { search: keywords.replace(" ", "¿") },
-      queryParamsHandling: 'merge'
+      queryParams: { search: keywords.replace(" ", "¿") }
     })
     this.scroll(this.productListElement.nativeElement);
   }
