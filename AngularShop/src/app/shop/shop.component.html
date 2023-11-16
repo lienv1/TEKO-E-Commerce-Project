@@ -13,7 +13,7 @@
             <div class="container mt-5">
 
               <div *ngIf="logged" class="filter-section border p-3 rounded">
-                <h5 style="cursor:pointer ;">Favorite</h5>
+                <h5 style="cursor:pointer;" (click)="scroll(productList);" [routerLink]="'/shop'" [queryParams]="{'favorite': username}">Favorite</h5>
               </div>
 
                 <div class="filter-section border p-3 rounded">

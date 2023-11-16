@@ -46,6 +46,7 @@ export class ShopComponent implements OnInit {
   subcategoryParam !: string;
   brandParam !: string;
   originParam !: string;
+  favoriteParam !: string;
 
   //Filter
   searchKeywords : string [] = [];
@@ -80,15 +81,11 @@ export class ShopComponent implements OnInit {
     private modalService: NgbModal) { this.title.setTitle("Shop")}
 
   ngOnInit(): void {
+    this.isLogged().then( () =>
+      this.initParam()
+    );
     this.initCategories();
-    this.initParam();
-    this.isLogged();
   }
-
-  //For loading API services
-  ngAfterViewInit(): void {
-  }
-
 
   @HostListener('window:popstate', ['$event'])
   onPopState(event: any) {
@@ -100,12 +97,13 @@ export class ShopComponent implements OnInit {
   public initParam(){
     this.route.queryParamMap.subscribe(queryParams => {
       const searchParam = queryParams.get('search');
+      const favoriteParam = queryParams.get('favorite');
       const categoryParam = queryParams.get('category');
       const subcategoryParam = queryParams.get('subcategory');
       const brandParam = queryParams.get('brand');
       const originParam = queryParams.get('origin');
       const pageParam = queryParams.get('page');
-      const sortParam = queryParams.get('sort')
+      const sortParam = queryParams.get('sort');
 
       if (pageParam && pageParam !=="1"){
         this.page = Number.parseInt(pageParam);
@@ -114,6 +112,11 @@ export class ShopComponent implements OnInit {
       if (searchParam){
         this.searchParam = searchParam
         this.initSearch();
+      }
+
+      if(favoriteParam){
+        this.favoriteParam = favoriteParam;
+        this.initFavorite();
       }
 
       else {
@@ -148,6 +151,19 @@ export class ShopComponent implements OnInit {
       next: (response) => this.handleResponse(response),
       error : (error:HttpErrorResponse) => this.handleError(error)
     })
+  }
+
+  public initFavorite(){
+    let params = new HttpParams();
+    //params = params.append("favorite", this.favoriteParam);
+    params = this.appendPageParam(params);
+    params = this.appendSortParam(params);
+    if(this.username)
+      this.productService.getFavourites(this.username, params).subscribe({
+        next: (response) => this.handleResponse(response),
+        error : (error:HttpErrorResponse) => this.handleError(error)
+      })
+    else console.log("username is null")
   }
 
   public initFilteringProduct(){
@@ -190,17 +206,19 @@ export class ShopComponent implements OnInit {
   }
   
 
-  isLogged() {
-    this.keycloakService.isLoggedIn().then(
+  isLogged() : Promise<void>{
+    return this.keycloakService.isLoggedIn().then(
       (logged) => {
         this.logged = logged
         if (logged)
-        this.keycloakService.loadUserProfile().then(
+        return this.keycloakService.loadUserProfile().then(
           (user) => {
             this.username = user.username;
           }
         )
-      }
+        else return
+      },
+      () => {return }
     )
   }
 
@@ -288,7 +306,6 @@ export class ShopComponent implements OnInit {
     let orderBy : string = orderByAsc ? 'asc' : 'desc';
     console.log(orderByAsc+ " " + orderBy)
     this.sortBy = (event.target as HTMLInputElement).value + ","+ orderBy;
-    console.log(this.sortBy);
     this.router.navigate([], {
       queryParams: { 
         sort: this.sortBy
@@ -306,6 +323,7 @@ export class ShopComponent implements OnInit {
   }
 
   appendSortParam(params : HttpParams){
+    if (this.sortBy)
       params = params.append("sort", this.sortBy)
       return params;
   }

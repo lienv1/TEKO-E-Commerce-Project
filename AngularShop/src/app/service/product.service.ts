@@ -59,15 +59,8 @@ export class ProductService {
     return this.http.delete(`${this.backendAPI}/favorite/product/${id}/username/${username}`);
   }
 
-  public getFavourites(username:string):Observable<Product[]>{
-    return from(this.keycloakService.getToken()).pipe(
-      switchMap((token: string) => {
-        const headers = new HttpHeaders({
-          Authorization: `Bearer ${token}`,
-        });
-        return this.http.get<Product[]>(`${this.backendAPI}/product/favourite/user/${username}/all`, { headers });
-      })
-    );
+  public getFavourites(username:string, params:HttpParams):Observable<Product[]>{
+    return this.http.get<any[]>(`${this.backendAPI}/product/favorite/username/${username}`, {params:params});
   }
   
 }
