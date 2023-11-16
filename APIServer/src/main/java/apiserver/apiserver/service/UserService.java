@@ -80,4 +80,8 @@ public class UserService {
 		return userRepo.save(user);
 	}
 	
+	public boolean userExistsByUsername(String username) {
+		return userRepo.existsByUsername(username);
+	}
+	
 }

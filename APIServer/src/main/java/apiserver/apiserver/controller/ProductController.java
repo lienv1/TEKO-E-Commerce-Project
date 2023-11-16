@@ -19,6 +19,7 @@ import apiserver.apiserver.exception.ProductNotFoundException;
 import apiserver.apiserver.model.Product;
 import apiserver.apiserver.security.AuthorizationService;
 import apiserver.apiserver.service.ProductService;
+import apiserver.apiserver.service.UserService;
 
 @RestController
 @RequestMapping("/product")
@@ -32,9 +33,13 @@ public class ProductController {
 	@Autowired
 	private AuthorizationService authorizationService;
 
-	public ProductController(ProductService productService, AuthorizationService authorizationService) {
+	@Autowired
+	private UserService userService;
+	
+	public ProductController(ProductService productService, AuthorizationService authorizationService, UserService userService) {
 		this.productService = productService;
 		this.authorizationService = authorizationService;
+		this.userService = userService;
 	}
 
 	@GetMapping("/all")
@@ -131,8 +136,10 @@ public class ProductController {
 			@PageableDefault(size = MAXITEM) Pageable pageable,
 			@PathVariable("username") String username
  			) {
+		boolean userExist = userService.userExistsByUsername(username);
+		if (!userExist) return ResponseEntity.notFound().build();		
+		
 		Page<Product> list = productService.getProductsByFavorite(username,pageable);
-		System.out.println(pageable);
 		return new ResponseEntity<Page<Product>>(list, HttpStatus.OK);
 	}
 	

@@ -21,6 +21,7 @@ import apiserver.apiserver.exception.OrderNotFoundException;
 import apiserver.apiserver.model.Order;
 import apiserver.apiserver.security.AuthorizationService;
 import apiserver.apiserver.service.OrderService;
+import apiserver.apiserver.service.UserService;
 
 @RestController
 @RequestMapping("/order")
@@ -32,9 +33,13 @@ public class OrderController {
 	@Autowired
 	private AuthorizationService authorizationService;
 
-	public OrderController(OrderService orderService, AuthorizationService authorizationService) {
+	@Autowired
+	private UserService userService;
+	
+	public OrderController(OrderService orderService, AuthorizationService authorizationService, UserService userService) {
 		this.orderService = orderService;
 		this.authorizationService = authorizationService;
+		this.userService = userService;
 	}
 
 	@GetMapping("/id/{id}")
@@ -45,7 +50,7 @@ public class OrderController {
 		if (!isAuthenticated) {
 			return new ResponseEntity(HttpStatus.UNAUTHORIZED);
 		}
-
+	
 		try {
 			Order order = orderService.getOrderById(id);
 			return new ResponseEntity<Order>(order, HttpStatus.OK);
@@ -65,6 +70,9 @@ public class OrderController {
 		if (!isAuthenticated) {
 			return new ResponseEntity(HttpStatus.UNAUTHORIZED);
 		}
+		
+		boolean userExist = userService.userExistsByUsername(username);
+		if (!userExist) return ResponseEntity.notFound().build();		
 
 		Page<Order> orders = orderService.getAllOrdersByUsername(username,page);
 		return new ResponseEntity<Page<Order>>(orders, HttpStatus.OK);
@@ -78,6 +86,10 @@ public class OrderController {
 		if (!isAuthenticated) {
 			return new ResponseEntity(HttpStatus.UNAUTHORIZED);
 		}
+		
+		boolean userExist = userService.userExistsByUsername(username);
+		if (!userExist) return ResponseEntity.notFound().build();		
+		
 		try {
 			System.out.println("Trying to add order");
 			Order addedOrder = orderService.addOrder(order);

@@ -10,10 +10,12 @@ import org.springframework.stereotype.Repository;
 import apiserver.apiserver.model.User;
 
 @Repository
-public interface UserRepo extends JpaRepository<User, Long>{
-	
+public interface UserRepo extends JpaRepository<User, Long> {
+
 	Optional<User> findByUsername(String username);
-	
+
 	Set<User> findByUsernameContainingIgnoreCase(String keyword);
+
+	boolean existsByUsername(String username);
 
 }
