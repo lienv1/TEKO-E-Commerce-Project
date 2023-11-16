@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import apiserver.apiserver.model.Favorite;
 import apiserver.apiserver.security.AuthorizationService;
 import apiserver.apiserver.service.FavoriteService;
+import apiserver.apiserver.service.UserService;
 
 @RestController
 @RequestMapping("/favorite")
@@ -27,9 +28,13 @@ public class FavoriteController {
 	@Autowired
 	private AuthorizationService authorizationService;
 	
-	public FavoriteController(FavoriteService favoriteService, AuthorizationService authorizationService) {
+	@Autowired
+	private UserService userService;
+	
+	public FavoriteController(FavoriteService favoriteService, AuthorizationService authorizationService, UserService userService) {
 		this.favoriteService = favoriteService;
 		this.authorizationService = authorizationService;
+		this.userService = userService;
 	}
 	
 	@PreAuthorize("hasAnyRole('ADMIN','CUSTOMER')")
@@ -39,6 +44,8 @@ public class FavoriteController {
 		if (!isAuthenticated) {
 			return new ResponseEntity(HttpStatus.UNAUTHORIZED);
 		}
+		boolean userExist = userService.userExistsByUsername(username);
+		if (!userExist) return ResponseEntity.notFound().build();		
 		
 		boolean isFavorite = favoriteService.isFavorite(username, id);
 		return new ResponseEntity<Boolean>(isFavorite,HttpStatus.OK);
@@ -51,6 +58,8 @@ public class FavoriteController {
 		if (!isAuthenticated) {
 			return new ResponseEntity(HttpStatus.UNAUTHORIZED);
 		}
+		boolean userExist = userService.userExistsByUsername(username);
+		if (!userExist) return ResponseEntity.notFound().build();		
 		favoriteService.addFavoriteByUsernameAndProductId(username, id);
 		return new ResponseEntity<Boolean>(true,HttpStatus.OK);
 	}
@@ -62,6 +71,8 @@ public class FavoriteController {
 		if (!isAuthenticated) {
 			return new ResponseEntity(HttpStatus.UNAUTHORIZED);
 		}
+		boolean userExist = userService.userExistsByUsername(username);
+		if (!userExist) return ResponseEntity.notFound().build();		
 		try {
 			favoriteService.removeFavoriteByUsernameAndProductId(username, id);
 			return new ResponseEntity(HttpStatus.OK);
