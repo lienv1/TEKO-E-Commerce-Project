@@ -41,7 +41,7 @@ app.use('/images', express.static('Files/Images'));
 
 //Security configuration
 const keycloakUrl = process.env.KEYCLOAK_URL || 'http://localhost:8180'; // Use environment variable or default to http://localhost:8180
-const jwksUrl = keycloakUrl + '/realms/master/protocol/openid-connect/userinfo';
+const jwksUrl = keycloakUrl + '/realms/E-Commerce/protocol/openid-connect/userinfo';
 
 async function isAuthorized(token) {
     if (!token) {
