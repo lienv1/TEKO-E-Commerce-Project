@@ -11,6 +11,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import apiserver.apiserver.dto.CategoryListDTO;
 import apiserver.apiserver.dto.FilterDTO;
@@ -121,6 +122,16 @@ public class ProductController {
 			@RequestParam(value = "keywords", required = false) List<String> keywords
 			) {
 		Page<Product> list = productService.getProductsBySearch(keywords,pageable);
+		return new ResponseEntity<Page<Product>>(list, HttpStatus.OK);
+	}
+	
+	@GetMapping("/favorite/username/{username}")
+	@PreAuthorize("hasRole('ADMIN') or #username ==  authentication.name")
+	public ResponseEntity<Page<Product>> getProductsByFavorite(
+			@PageableDefault(size = MAXITEM, sort = "lastModified") Pageable pageable,
+			@PathVariable("username") String username
+ 			) {
+		Page<Product> list = productService.getProductsByFavorite(username,pageable);
 		return new ResponseEntity<Page<Product>>(list, HttpStatus.OK);
 	}
 	
