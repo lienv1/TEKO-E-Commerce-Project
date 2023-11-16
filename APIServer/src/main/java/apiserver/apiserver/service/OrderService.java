@@ -5,6 +5,8 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import apiserver.apiserver.exception.OrderNotFoundException;
@@ -48,8 +50,8 @@ public class OrderService {
 		}
 	}
 
-	public List<Order> getAllOrdersByUsername(String username) {
-		return orderRepo.findByUserUsername(username);
+	public Page<Order> getAllOrdersByUsername(String username, Pageable page) {
+		return orderRepo.findByUserUsername(username,page);
 	}
 
 }

@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -54,16 +56,18 @@ public class OrderController {
 
 	@GetMapping("/username/{username}")
 	@PreAuthorize(value = "hasAnyRole('ADMIN','CUSTOMER')")
-	public ResponseEntity<List<Order>> getOrdersByUsername(@PathVariable("username") String username,
-			Principal principal) {
+	public ResponseEntity<Page<Order>> getOrdersByUsername(@PathVariable("username") String username,
+			Principal principal,
+			Pageable page
+			) {
 		boolean isAuthenticated = authorizationService.isAuthenticatedByPrincipal(principal, username);
 
 		if (!isAuthenticated) {
 			return new ResponseEntity(HttpStatus.UNAUTHORIZED);
 		}
 
-		List<Order> orders = orderService.getAllOrdersByUsername(username);
-		return new ResponseEntity<List<Order>>(orders, HttpStatus.OK);
+		Page<Order> orders = orderService.getAllOrdersByUsername(username,page);
+		return new ResponseEntity<Page<Order>>(orders, HttpStatus.OK);
 	}
 
 	@PostMapping("/username/{username}")
