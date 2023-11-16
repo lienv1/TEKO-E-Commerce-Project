@@ -131,8 +131,8 @@
                         <a class="d-flex justify-content-center align-items-center"
                             [routerLink]="['/product/'+product.productId]"> <img class="card-img-top"
                                 style="max-height: 15em; width: auto; max-width: 17em;"
-                                [src]="fileServer+'/images/products/'+product.productId+'.png'"
-                                (error)="handleImageError($event)"
+                                src ="{{fileServer}}/images/products/{{product.productId}}.png"
+                                onerror="this.onerror=null; this.src='assets/NotFound.png'"
                                 alt = "Product image" 
                                 /></a>
 

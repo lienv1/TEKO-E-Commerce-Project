@@ -105,9 +105,11 @@ export class ShopComponent implements OnInit {
       const pageParam = queryParams.get('page');
       const sortParam = queryParams.get('sort');
 
-      if (pageParam && pageParam !=="1"){
+      if (pageParam && pageParam !== "1"){
         this.page = Number.parseInt(pageParam);
       }
+      else
+        this.page=1;
 
       if (searchParam){
         this.searchParam = searchParam
@@ -317,8 +319,9 @@ export class ShopComponent implements OnInit {
   //FILTER BAR SECTION END
 
   appendPageParam(params : HttpParams){
-    if (this.page !== 1)
+    if (this.page !== 1){
       params = params.append("page", this.page-1);
+    }
     return params;
   }
 

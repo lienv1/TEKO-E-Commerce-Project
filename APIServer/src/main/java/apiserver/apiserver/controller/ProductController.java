@@ -132,6 +132,7 @@ public class ProductController {
 			@PathVariable("username") String username
  			) {
 		Page<Product> list = productService.getProductsByFavorite(username,pageable);
+		System.out.println(pageable);
 		return new ResponseEntity<Page<Product>>(list, HttpStatus.OK);
 	}
 	
