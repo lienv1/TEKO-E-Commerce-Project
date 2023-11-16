@@ -5,3 +5,4 @@ ExpressServer/Files/
 AngularShop/src/environments/
 APIServer/src/main/resources/application.properties
 AngularShop/src/assets/legal/
+AngularShop/src/assets/legal/i18n/
