@@ -6,3 +6,4 @@ AngularShop/src/environments/
 APIServer/src/main/resources/application.properties
 AngularShop/src/assets/legal/
 AngularShop/src/assets/legal/i18n/
+AngularShop/src/app/model/contact-info.ts
