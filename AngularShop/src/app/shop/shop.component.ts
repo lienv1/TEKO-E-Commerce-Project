@@ -17,7 +17,7 @@ import { Filters } from '../model/filters';
 
 export enum Sorter {
   productId = 'Product ID',
-  productName = 'Name',
+  productName = 'Product Name',
   price = 'Price',
   lastModified = 'Date'
 }

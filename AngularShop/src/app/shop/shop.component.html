@@ -18,7 +18,7 @@
 
                 <div class="filter-section border p-3 rounded">
                     <!-- Categories -->
-                    <h5>Category</h5>
+                    <h5>{{'CATEGORIES' | translate}}</h5>
                     <div *ngFor="let productCategory of categories ; let i = index">
                         <hr>
                         <h6 class="toggle-heading" data-bs-toggle="collapse"
@@ -57,7 +57,7 @@
                 <!--FILTER BAR-->
                 <nav class="navbar navbar-expand-lg">
                     <div class="container-fluid">
-                      <span class="navbar-brand">Product Filters</span>
+                      <span class="navbar-brand">{{'PRODUCT FILTER'| translate}}</span>
                       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarFilterContent" aria-controls="navbarFilterContent" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                       </button>
@@ -66,7 +66,7 @@
                           <!-- Brand filter dropdown -->
                           <li class="nav-item dropdown">
                             <button class="nav-link dropdown-toggle" id="navbarBrandDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                              Brand
+                              {{'BRAND'| translate}}
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="navbarBrandDropdown">
                               <!-- Wrap checkboxes in div and stop propagation to keep the dropdown open when clicking inside -->
@@ -81,7 +81,7 @@
                           <!-- Origin filter dropdown -->
                           <li class="nav-item dropdown">
                             <button class="nav-link dropdown-toggle" id="navbarOriginDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                              Country
+                              {{'COUNTRY OF ORIGIN' | translate}}
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="navbarOriginDropdown">
                               <!-- Wrap checkboxes in div and stop propagation to keep the dropdown open when clicking inside -->
@@ -95,20 +95,20 @@
                           </li>
                           <li class="nav-item dropdown">
                             <button class="nav-link dropdown-toggle" id="navbarSortDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                              Sort By
+                              {{'SORT BY' | translate}}
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="navbarSortDropdown">
                               <div *ngFor="let option of sortOptions" onclick="event.stopPropagation();">
                                 <div onclick="event.stopPropagation();">
                                   <label class="dropdown-item">
                                     <input class="form-check-input me-1" type="radio" name="sortOptions" [value]="option.key" #sortByOption (click)="onSortChange($event,true)">
-                                    <a> {{option.value}}</a>  <i class="bi bi-arrow-up-short"></i>
+                                    <a> {{option.value.toUpperCase() | translate}}</a>  <i class="bi bi-arrow-up-short"></i>
                                   </label>
                                 </div>
                                 <div onclick="event.stopPropagation();">
                                   <label class="dropdown-item">
                                     <input class="form-check-input me-1" type="radio" name="sortOptions" [value]="option.key" #sortByOption (click)="onSortChange($event,false)">
-                                   <a> {{option.value}} </a> <i class="bi bi-arrow-down-short"></i>
+                                   <a> {{option.value.toUpperCase() | translate}} </a> <i class="bi bi-arrow-down-short"></i>
                                   </label>
                                 </div>
                               </div>

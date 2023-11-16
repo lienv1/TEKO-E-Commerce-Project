@@ -10,22 +10,22 @@
                 <h5 class="text-uppercase text-light">{{'CONTACT' | translate}}</h5>
                 <ul class="list-unstyled mb-0">
                     <li>
-                        <div class="text-light">Company name</div>
+                        <div class="text-light">{{contactInfo.companyName}}</div>
                     </li>
                     <li>
-                        <div class="text-light">Street</div>
+                        <div class="text-light">{{contactInfo.street}}</div>
                     </li>
                     <li>
-                        <div class="text-light">ZIP City</div>
+                        <div class="text-light">{{contactInfo.zipCity}}</div>
                     </li>
                     <li>
-                        <div class="text-light">Country</div>
+                        <div class="text-light">{{contactInfo.country}}</div>
                     </li>
                     <li>
-                        <div class="text-light">123456789</div>
+                        <div class="text-light">{{contactInfo.phoneNumber}}</div>
                     </li>
                     <li>
-                        <div class="text-light"><a href="mailto:info@mail.com">company mail</a></div>
+                        <div class="text-light"><a href="mailto:{{contactInfo.email}}">{{contactInfo.email}}</a></div>
                     </li>
                 </ul>
             </div>

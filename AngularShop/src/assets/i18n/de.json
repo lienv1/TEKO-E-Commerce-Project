@@ -83,6 +83,7 @@
     "PACKAGING SIZE": "Verpackungsgrösse",
     "STOCK": "Lagerbestand",
     "PRICE PER UNIT": "Preis pro Einheit",
+	"PRICE":"Preis",
     "CHOOSE QUANTITY TYPE": "Wählen Sie den Mengentyp",
     "UNIT": "Stück",
     "CARTON": "Karton",
@@ -93,8 +94,10 @@
     "FAVOURITES": "Favoriten",
     "PRODUCT DETAILS": "Produktdetails",
     "FILTERS": "Filter",
+	"PRODUCT FILTER": "Produktfilter",
     "BRANDS": "Marken",
     "APPLY FILTERS": "Filter anwenden",
+	"SORT BY": "Sortieren nach",
     "LOGIN WITH OAUTH": "Login",
     "REGISTER": "Registrieren",
     "REGISTER TO OAUTH": "Registrieren",
@@ -113,5 +116,5 @@
     "ADMIN MENU": "Admin-Menü",
     "SEARCH CUSTOMER": "Kunden suchen",
     "SEARCH BY USERNAME": "Suche nach Benutzername",
-    "DARKMODE" : "Nachtmodus",
+    "DARK MODE" : "Nachtmodus"
 }
