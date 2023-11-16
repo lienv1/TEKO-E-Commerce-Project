@@ -106,7 +106,7 @@ public class ProductController {
 
 	@GetMapping("/filter")
 	public ResponseEntity<Page<Product>> getProductsByFilter(
-			@PageableDefault(size = MAXITEM, sort = "lastModified") Pageable pageable,
+			@PageableDefault(size = MAXITEM) Pageable pageable,
 			@RequestParam(value = "brand", required = false) List<String> brands,
 			@RequestParam(value = "origin", required = false) List<String> origins,
 			@RequestParam(value = "category", required = false) String category,
@@ -128,7 +128,7 @@ public class ProductController {
 	@GetMapping("/favorite/username/{username}")
 	@PreAuthorize("hasRole('ADMIN') or #username ==  authentication.name")
 	public ResponseEntity<Page<Product>> getProductsByFavorite(
-			@PageableDefault(size = MAXITEM, sort = "lastModified") Pageable pageable,
+			@PageableDefault(size = MAXITEM) Pageable pageable,
 			@PathVariable("username") String username
  			) {
 		Page<Product> list = productService.getProductsByFavorite(username,pageable);
