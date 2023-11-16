@@ -284,10 +284,15 @@ export class ShopComponent implements OnInit {
     return this.originSet.has(origin);
   }
 
-  onSortChange(event:Event){
-    this.sortBy = (event.target as HTMLInputElement).value;
+  onSortChange(event:Event,orderByAsc:boolean){
+    let orderBy : string = orderByAsc ? 'asc' : 'desc';
+    console.log(orderByAsc+ " " + orderBy)
+    this.sortBy = (event.target as HTMLInputElement).value + ","+ orderBy;
+    console.log(this.sortBy);
     this.router.navigate([], {
-      queryParams: { sort: this.sortBy },
+      queryParams: { 
+        sort: this.sortBy
+       },
       queryParamsHandling: 'merge'
     })
   }

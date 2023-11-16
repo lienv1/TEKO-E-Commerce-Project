@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class CustomStringToListConverter implements Converter<String, List<String>> {
     private final String delimiter;
-
+    
     public CustomStringToListConverter(@Value("${custom.request.param.delimiter:¿}") String delimiter) {
         this.delimiter = delimiter;
     }

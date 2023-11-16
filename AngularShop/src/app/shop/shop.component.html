@@ -94,10 +94,18 @@
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="navbarSortDropdown">
                               <div *ngFor="let option of sortOptions" onclick="event.stopPropagation();">
-                                <label class="dropdown-item">
-                                  <input class="form-check-input me-1" type="radio" name="sortOptions" [value]="option.key" #sortByOption (click)="onSortChange($event)">
-                                  {{option.value}}
-                                </label>
+                                <div onclick="event.stopPropagation();">
+                                  <label class="dropdown-item">
+                                    <input class="form-check-input me-1" type="radio" name="sortOptions" [value]="option.key" #sortByOption (click)="onSortChange($event,true)">
+                                    <a> {{option.value}}</a>  <i class="bi bi-arrow-up-short"></i>
+                                  </label>
+                                </div>
+                                <div onclick="event.stopPropagation();">
+                                  <label class="dropdown-item">
+                                    <input class="form-check-input me-1" type="radio" name="sortOptions" [value]="option.key" #sortByOption (click)="onSortChange($event,false)">
+                                   <a> {{option.value}} </a> <i class="bi bi-arrow-down-short"></i>
+                                  </label>
+                                </div>
                               </div>
                             </ul>
                           </li>
