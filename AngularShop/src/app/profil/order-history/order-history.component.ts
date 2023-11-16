@@ -1,6 +1,7 @@
 import { DatePipe } from '@angular/common';
+import { HttpParams } from '@angular/common/http';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateService } from '@ngx-translate/core';
 import { KeycloakService } from 'keycloak-angular';
@@ -20,61 +21,84 @@ import { ShoppingCart } from 'src/app/service/shoppingCart';
 export class OrderHistoryComponent implements OnInit {
 
   @ViewChild("CustomModalComponent") customModalComponent !: CustomModalComponent
-  orders:Order[] = []
+  orders: Order[] = []
 
   username !: string;
-  page = 1;
 
-  constructor(private translateService:TranslateService, private keycloakService:KeycloakService, private orderService:OrderService, private cart:ShoppingCart,private router:Router, private modalService:NgbModal, private datePipe: DatePipe){}
+  //page variables
+  page: number = 1;
+  maxItems: number = 1;
+
+  constructor(private route: ActivatedRoute, private translateService: TranslateService, private keycloakService: KeycloakService, private orderService: OrderService, private cart: ShoppingCart, private router: Router, private modalService: NgbModal, private datePipe: DatePipe) { }
 
   ngOnInit(): void {
     this.initUser();
   }
 
-  initUser(){
+  initParam() {
+    this.route.queryParamMap.subscribe(queryParams => {
+      const pageParam = queryParams.get('page');
+      if (pageParam && pageParam !== "1"){
+        this.page = Number.parseInt(pageParam);
+      }
+      else
+        this.page=1;
+    });
+  }
+
+  initUser() {
     this.keycloakService.loadUserProfile().then(
-      (user) => { let username = user.username; if (username) this.initOrder(username)}
+      (user) => { let username = user.username; if (username) this.initOrder(username) }
     )
   }
 
-  initOrder(username:string){
-    this.orderService.getAllOrdersByUsername(username).subscribe({
-      next: (response) => this.orders = response,
+  initOrder(username: string) {
+    let params = new HttpParams();
+    params = this.appendPageParam(params);
+    this.orderService.getAllOrdersByUsername(username,params).subscribe({
+      next: (response) => this.orders = response.content,
       error: (error) => alert(error.message)
     })
   }
 
-  public loadItemsToCart(order:Order){
+  appendPageParam(params : HttpParams){
+    if (this.page !== 1){
+      params = params.append("page", this.page-1);
+    }
+    return params;
+  }
 
-    if (!this.cart.hasItems()){
+  public loadItemsToCart(order: Order) {
+
+    if (!this.cart.hasItems()) {
       this.loadItemsFunction(order);
       return;
     }
 
-    let foo : () => void = () => this.loadItemsFunction(order);
-    let functionModel :FunctionModel = {
+    let foo: () => void = () => this.loadItemsFunction(order);
+    let functionModel: FunctionModel = {
       buttonText: this.translateService.instant("REPLACE"),
-      foo:foo
+      foo: foo
     }
     let message = this.translateService.instant("CART REPLACEMENT MESSAGE");
     let title = this.translateService.instant("WARNING");
-    this.functionModal(message,title,functionModel)
+    this.functionModal(message, title, functionModel)
 
   }
 
-  public loadItemsFunction(order:Order){
+  public loadItemsFunction(order: Order) {
     this.cart.clearCart();
-    for (let i = 0; i< order.orderDetails.length ; i++){
-      let orderProduct : OrderDetail = order.orderDetails[i];
+    for (let i = 0; i < order.orderDetails.length; i++) {
+      let orderProduct: OrderDetail = order.orderDetails[i];
 
       let product = orderProduct.product;
       let quantity = orderProduct.quantity;
-      if (product == null){
+      if (product == null) {
         continue;
       }
-      let cartItem :CartItem = {
-       product:product,
-       quantity:quantity
+      let cartItem: CartItem = {
+        product: product,
+        quantity: quantity
       }
       this.cart.addItem(cartItem);
     }
@@ -86,44 +110,53 @@ export class OrderHistoryComponent implements OnInit {
     el.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
-  public getTranslation(str:string){
+  public getTranslation(str: string) {
     return this.translateService.instant(str)
   }
 
-  public convertTimestampToDate(timestamp ?: Date){
-    if (timestamp == null){
+  public convertTimestampToDate(timestamp?: Date) {
+    if (timestamp == null) {
       return "";
     }
     return this.datePipe.transform(timestamp, 'yyyy-MM-dd');
   }
 
-    //Popup section
-    public functionModal(message:string, title:string, foo: FunctionModel){
-      let modal = this.customModalComponent;
-      modal.functionModels = [foo];
-      modal.message = message;
-      modal.title = title;
-      modal.colorTitle = "red";
-      this.openModal(modal,false);
+  //Popup section
+  public functionModal(message: string, title: string, foo: FunctionModel) {
+    let modal = this.customModalComponent;
+    modal.functionModels = [foo];
+    modal.message = message;
+    modal.title = title;
+    modal.colorTitle = "red";
+    this.openModal(modal, false);
+  }
+
+  //modal section
+  public popupModal(message: string, title: string) {
+    let modal = this.customModalComponent;
+    modal.message = message;
+    modal.title = title;
+    this.openModal(modal, false)
+  }
+
+  public openModal(modal: any, autoclose: boolean) {
+    let modalRef = this.modalService.open(modal.myModal);
+    if (autoclose) {
+      setTimeout(() => {
+        modalRef.dismiss();
+      }, 3000);
     }
-  
-    //modal section
-    public popupModal(message:string,title:string){
-      let modal = this.customModalComponent;
-      modal.message = message;
-      modal.title = title;
-      this.openModal(modal,false)
-    }
-  
-    public openModal(modal: any, autoclose: boolean) {
-      let modalRef = this.modalService.open(modal.myModal);
-      if (autoclose) {
-        setTimeout(() => {
-          modalRef.dismiss();
-        }, 3000);
-      }
-    }
-    //modal section ends
-    //Popup section end
+  }
+  //modal section ends
+  //Popup section end
+
+  //PAGE SECTION
+  public setPageParam() {
+    this.router.navigate([], {
+      queryParams: { page: this.page },
+      queryParamsHandling: 'merge'
+    })
+  }
+  //PAGE SECTION ENDS
 
 }

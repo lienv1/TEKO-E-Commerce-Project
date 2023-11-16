@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { KeycloakService } from 'keycloak-angular';
 import { Observable } from 'rxjs';
@@ -16,8 +16,8 @@ export class OrderService {
 
   constructor(private http: HttpClient) { }
 
-  getAllOrdersByUsername(username:string):Observable<Order[]>{
-    return this.http.get<Order[]>(`${this.backendAPI}/order/username/${username}`)
+  getAllOrdersByUsername(username:string,param:HttpParams):Observable<any>{
+    return this.http.get<any>(`${this.backendAPI}/order/username/${username}`, {params:param})
   }
 
   postOrder(order:Order,username:string){

@@ -7,7 +7,7 @@
     <div class="accordion" id="orderHistoryAccordion">
 
 
-        <div *ngFor="let order of orders | paginate: { itemsPerPage: 12, currentPage: page }" class="accordion-item" >
+        <div *ngFor="let order of orders | paginate: { itemsPerPage: 12, currentPage: page, totalItems:maxItems }" class="accordion-item" >
             <h2 class="accordion-header" id="headingOne">
                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                     [attr.data-bs-target]="'#order_'+order.orderId" aria-expanded="false" [attr.aria-controls]="'#'+order.orderId">
@@ -39,7 +39,7 @@
             </div>
         </div>
 
-        <pagination-controls (pageChange)="page = $event" (click)="scroll(title)"
+        <pagination-controls (pageChange)="page = $event" (click)="scroll(title); setPageParam()"
         [nextLabel]="getTranslation('NEXT')"
         [previousLabel]="getTranslation('PREVIOUS')"></pagination-controls>
          
