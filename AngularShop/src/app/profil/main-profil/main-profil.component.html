@@ -4,25 +4,19 @@
             <!-- Menu Sidebar -->
             <div class="col-md-3 col-lg-2 d-md-block sidebar collapse">
                 <div class="list-group">
-                    <a class="list-group-item list-group-item-action" (click)="selectComponent('subcomponent1')">PROFIL
-                        EDIT</a>
-                    <a class="list-group-item list-group-item-action" (click)="selectComponent('subcomponent2')">ORDER
-                        HISTORY</a>
+
+                    <a class="list-group-item list-group-item-action" routerLink="/profil/edit">{{'PROFILE EDIT' | translate}}</a>
+                    <a class="list-group-item list-group-item-action" routerLink="/profil/history">{{'ORDER HISTORY' | translate}}</a>
                     <a type="button" [target]="'_blank'" [href]="[profilpage]"
                         class="list-group-item list-group-item-action">
-                        {{'ACCOUNT SETTING' | translate}}
+                        {{'PROFILE SETTINGS' | translate}}
                     </a>
                 </div>
             </div>
 
             <!-- Content Area -->
             <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-                <ng-container *ngIf="selectedComponent === 'subcomponent1'">
-                    <app-profil-edit></app-profil-edit>
-                </ng-container>
-                <ng-container *ngIf="selectedComponent === 'subcomponent2'">
-                    <app-order-history></app-order-history>
-                </ng-container>
+                <router-outlet></router-outlet> <!-- This will load the subcomponent -->
             </div>
         </div>
     </div>

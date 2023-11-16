@@ -1,4 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Title } from '@angular/platform-browser';
+import { ActivatedRoute, ParamMap } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -6,11 +9,16 @@ import { environment } from 'src/environments/environment';
   templateUrl: './main-profil.component.html',
   styleUrls: ['./main-profil.component.scss']
 })
-export class MainProfilComponent {
-  selectedComponent: string = "subcomponent1";
+export class MainProfilComponent implements OnInit{
+  
+
   public profilpage = environment.keycloakAPI +'/realms/'+environment.keycloakRealm+'/account/'
 
-  selectComponent(componentName: string) {
-    this.selectedComponent = componentName;
+  constructor(private title:Title, private translator:TranslateService ){title.setTitle(translator.instant('PROFILE'))}
+
+  ngOnInit(): void {
+  
   }
+
+
 }

@@ -9,6 +9,8 @@ import { ShopComponent } from './shop/shop.component';
 import { ThankYouPageComponent } from './thank-you-page/thank-you-page.component';
 import { ProductPageComponent } from './product-page/product-page.component';
 import { MainProfilComponent } from './profil/main-profil/main-profil.component';
+import { OrderHistoryComponent } from './profil/order-history/order-history.component';
+import { ProfilEditComponent } from './profil/profil-edit/profil-edit.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -19,7 +21,14 @@ const routes: Routes = [
   { path: 'shop/favourite', component: ShopComponent },
   { path: 'cart', component: CartComponent },
   { path: 'login', component: LoginComponent },
-  { path: 'profil', component: MainProfilComponent },
+  {
+    path: 'profil',
+    component: MainProfilComponent,
+    children: [
+      { path: 'edit', component: ProfilEditComponent },
+      { path: 'history', component: OrderHistoryComponent }
+    ]
+  },
   { path: 'checkout', component: CheckoutComponent},
   { path: 'product/:id',component:ProductPageComponent},
   { path: 'confirmation', component:ThankYouPageComponent},

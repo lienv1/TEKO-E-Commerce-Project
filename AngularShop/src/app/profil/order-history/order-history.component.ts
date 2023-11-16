@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { HttpParams } from '@angular/common/http';
+import { HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -26,13 +26,16 @@ export class OrderHistoryComponent implements OnInit {
   username !: string;
 
   //page variables
+  //Will be set by API
   page: number = 1;
   maxItems: number = 1;
+  //Customizable
+  maxOrdersPerPage = 10; 
 
   constructor(private route: ActivatedRoute, private translateService: TranslateService, private keycloakService: KeycloakService, private orderService: OrderService, private cart: ShoppingCart, private router: Router, private modalService: NgbModal, private datePipe: DatePipe) { }
 
   ngOnInit(): void {
-    this.initUser();
+    this.initParam();
   }
 
   initParam() {
@@ -43,6 +46,7 @@ export class OrderHistoryComponent implements OnInit {
       }
       else
         this.page=1;
+      this.initUser();
     });
   }
 
@@ -55,18 +59,36 @@ export class OrderHistoryComponent implements OnInit {
   initOrder(username: string) {
     let params = new HttpParams();
     params = this.appendPageParam(params);
+    params = this.appendMaxOrderParam(params);
     this.orderService.getAllOrdersByUsername(username,params).subscribe({
-      next: (response) => this.orders = response.content,
-      error: (error) => alert(error.message)
+      next: (response) => this.handleResponse(response),
+      error: (error) => this.handleError(error)
     })
   }
 
+  //API SECTION
   appendPageParam(params : HttpParams){
     if (this.page !== 1){
       params = params.append("page", this.page-1);
     }
     return params;
   }
+
+  appendMaxOrderParam(params : HttpParams){
+    params = params.append("size", this.maxOrdersPerPage);
+    return params;
+  }
+
+  handleResponse(response:any){
+    this.orders = response.content;
+    this.maxItems = response.totalElements;
+    console.log(this.maxItems);
+  }
+  handleError(error:HttpErrorResponse){
+    this.popupModal("ERROR", error.message,"red");
+  }
+
+  //API SECTION END
 
   public loadItemsToCart(order: Order) {
 
@@ -132,10 +154,11 @@ export class OrderHistoryComponent implements OnInit {
   }
 
   //modal section
-  public popupModal(message: string, title: string) {
+  public popupModal(message: string, title: string,color:string) {
     let modal = this.customModalComponent;
     modal.message = message;
     modal.title = title;
+    modal.colorTitle = color;
     this.openModal(modal, false)
   }
 

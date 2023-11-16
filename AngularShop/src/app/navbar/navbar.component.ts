@@ -12,8 +12,10 @@ import { KeycloakService } from 'keycloak-angular';
 export class NavbarComponent {
 
   public isCollapsed = true;
-  public isLogged = false;
   public isAdmin = false;
+
+  public isLogged = false;
+  public existInAPI = false;
 
   @ViewChild('languageSelector')
   languageSelector !: ElementRef<HTMLSelectElement>
@@ -26,8 +28,7 @@ export class NavbarComponent {
   constructor(private cart: ShoppingCart,
     private keycloakService: KeycloakService,
     private translate: TranslateService,
-    private route: ActivatedRoute,
-    private router: Router) {
+    ) {
     translate.addLangs(['en', 'de', 'fr', 'zh', 'vn']);
   }
 
