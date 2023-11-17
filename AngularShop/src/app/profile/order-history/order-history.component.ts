@@ -85,6 +85,10 @@ export class OrderHistoryComponent implements OnInit {
     console.log(this.maxItems);
   }
   handleError(error:HttpErrorResponse){
+    if (error.status === 404){
+      this.redirectToProfilEdit();
+      return;
+    }
     this.popupModal("ERROR", error.message,"red");
   }
 
@@ -169,6 +173,14 @@ export class OrderHistoryComponent implements OnInit {
         modalRef.dismiss();
       }, 3000);
     }
+  }
+  public redirectToProfilEdit(){
+    this.router.navigateByUrl("/profile/edit");
+    let modal = this.customModalComponent;
+    modal.message = "Please setup your profile first";
+    modal.title = "Profile unfinished";
+    modal.colorTitle = "black";
+    this.openModal(modal,false);
   }
   //modal section ends
   //Popup section end

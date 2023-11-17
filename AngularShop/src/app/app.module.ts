@@ -24,9 +24,10 @@ import { ThankYouPageComponent } from './thank-you-page/thank-you-page.component
 import { ShopComponent } from './shop/shop.component';
 import { AdminPageComponent } from './admin-page/admin-page.component';
 import { CustomModalComponent } from './modal/custom-modal/custom-modal.component';
-import { MainProfilComponent } from './profil/main-profil/main-profil.component';
-import { ProfilEditComponent } from './profil/profil-edit/profil-edit.component';
-import { OrderHistoryComponent } from './profil/order-history/order-history.component';
+import { MainProfileComponent } from './profile/main-profile/main-profile.component';
+import { OrderHistoryComponent } from './profile/order-history/order-history.component';
+import { ProfileEditComponent } from './profile/profile-edit/profile-edit.component';
+
 
 // Factory function required during AOT compilation
 export function httpTranslateLoaderFactory(http: HttpClient) {
@@ -64,8 +65,8 @@ function initializeKeycloak(keycloak: KeycloakService) {
     ShopComponent,
     AdminPageComponent,
     CustomModalComponent,
-    MainProfilComponent,
-    ProfilEditComponent,
+    MainProfileComponent,
+    ProfileEditComponent,
     OrderHistoryComponent
   ],
   imports: [

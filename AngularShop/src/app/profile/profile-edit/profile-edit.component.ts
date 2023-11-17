@@ -13,11 +13,11 @@ import { UserService } from 'src/app/service/user.service';
 
 
 @Component({
-  selector: 'app-profil-edit',
-  templateUrl: './profil-edit.component.html',
-  styleUrls: ['./profil-edit.component.scss']
+  selector: 'app-profile-edit',
+  templateUrl: './profile-edit.component.html',
+  styleUrls: ['./profile-edit.component.scss']
 })
-export class ProfilEditComponent implements OnInit {
+export class ProfileEditComponent implements OnInit {
 
   @ViewChild("CustomModalComponent") customModalComponent !: CustomModalComponent
 

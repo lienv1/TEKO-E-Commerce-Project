@@ -146,7 +146,7 @@ export class CheckoutComponent {
   public loadUser(username:string) {
     this.userService.getUserdata(username).subscribe({
       next: (response) => {this.fillFormBackend(response); if(response.userId) this.userId = response.userId},
-      error: (error) => this.popupModal(error.message, "Error", "Red")
+      error: (error) => {if(error.status === 404) this.redirectToProfilEdit(); else this.popupModal(error.message, "Error " + error.status, "Red");}
     })
   }
 
@@ -338,6 +338,14 @@ export class CheckoutComponent {
         modalRef.dismiss();
       }, 1000);
     }
+  }
+  public redirectToProfilEdit(){
+    this.router.navigateByUrl("/profile/edit");
+    let modal = this.customeModalComponent;
+    modal.message = "Please setup your profile first";
+    modal.title = "Profile unfinished";
+    modal.colorTitle = "black";
+    this.openModal(modal,false);
   }
   //modal section ends
 

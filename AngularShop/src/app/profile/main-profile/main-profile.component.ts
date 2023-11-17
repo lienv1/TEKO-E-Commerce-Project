@@ -5,11 +5,11 @@ import { TranslateService } from '@ngx-translate/core';
 import { environment } from 'src/environments/environment';
 
 @Component({
-  selector: 'app-main-profil',
-  templateUrl: './main-profil.component.html',
-  styleUrls: ['./main-profil.component.scss']
+  selector: 'app-main-profile',
+  templateUrl: './main-profile.component.html',
+  styleUrls: ['./main-profile.component.scss']
 })
-export class MainProfilComponent implements OnInit{
+export class MainProfileComponent implements OnInit{
   
 
   public profilpage = environment.keycloakAPI +'/realms/'+environment.keycloakRealm+'/account/'

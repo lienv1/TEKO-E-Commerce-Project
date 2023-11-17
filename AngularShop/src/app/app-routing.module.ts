@@ -8,9 +8,9 @@ import { CheckoutComponent } from './checkout/checkout.component';
 import { ShopComponent } from './shop/shop.component';
 import { ThankYouPageComponent } from './thank-you-page/thank-you-page.component';
 import { ProductPageComponent } from './product-page/product-page.component';
-import { MainProfilComponent } from './profil/main-profil/main-profil.component';
-import { OrderHistoryComponent } from './profil/order-history/order-history.component';
-import { ProfilEditComponent } from './profil/profil-edit/profil-edit.component';
+import { MainProfileComponent } from './profile/main-profile/main-profile.component';
+import { OrderHistoryComponent } from './profile/order-history/order-history.component';
+import { ProfileEditComponent } from './profile/profile-edit/profile-edit.component';
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -23,9 +23,9 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   {
     path: 'profile',
-    component: MainProfilComponent,
+    component: MainProfileComponent,
     children: [
-      { path: 'edit', component: ProfilEditComponent },
+      { path: 'edit', component: ProfileEditComponent },
       { path: 'history', component: OrderHistoryComponent }
     ]
   },
