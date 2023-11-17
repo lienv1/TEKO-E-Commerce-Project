@@ -38,7 +38,7 @@ export class ShopComponent implements OnInit {
 
   //page variables
   page: number = 1;
-  maxItems : number = 1;
+  maxItems: number = 1;
 
   //Param
   searchParam !: string;
@@ -49,18 +49,18 @@ export class ShopComponent implements OnInit {
   favoriteParam !: string;
 
   //Filter
-  sortBy : string = "lastModified"
-  filters ?: Filters
+  sortBy: string = "lastModified"
+  filters?: Filters
   brandSet = new Set();
   originSet = new Set();
   sortOptions = Object.entries(Sorter).map(([key, value]) => ({ key, value }));
 
   //Category
-  public categories : ProductCategory[] = [];
+  public categories: ProductCategory[] = [];
 
   //Favourite
   logged = false;
-  username ?: string;
+  username?: string;
 
   //Products
   public allProducts: Product[] = []
@@ -70,17 +70,17 @@ export class ShopComponent implements OnInit {
   fallbackImageLoaded = false; //Prevent infinite loop
 
   constructor(
-    private title:Title,
-    private route: ActivatedRoute, 
-    private router: Router, 
-    private translate: TranslateService, 
-    private productService: ProductService, 
+    private title: Title,
+    private route: ActivatedRoute,
+    private router: Router,
+    private translate: TranslateService,
+    private productService: ProductService,
     private shoppingCart: ShoppingCart,
     private keycloakService: KeycloakService,
-    private modalService: NgbModal) { this.title.setTitle("Shop")}
+    private modalService: NgbModal) { this.title.setTitle("Shop") }
 
   ngOnInit(): void {
-    this.isLogged().then( () =>
+    this.isLogged().then(() =>
       this.initParam()
     );
     this.initCategories();
@@ -93,7 +93,7 @@ export class ShopComponent implements OnInit {
   }
 
   //INIT
-  public initParam(){
+  public initParam() {
     this.route.queryParamMap.subscribe(queryParams => {
       const searchParam = queryParams.get('search');
       const favoriteParam = queryParams.get('favorite');
@@ -104,18 +104,18 @@ export class ShopComponent implements OnInit {
       const pageParam = queryParams.get('page');
       const sortParam = queryParams.get('sort');
 
-      if (pageParam && pageParam !== "1"){
+      if (pageParam && pageParam !== "1") {
         this.page = Number.parseInt(pageParam);
       }
       else
-        this.page=1;
+        this.page = 1;
 
-      if (searchParam){
+      if (searchParam) {
         this.searchParam = searchParam
         this.initSearch();
       }
 
-      else if (favoriteParam){
+      else if (favoriteParam) {
         this.favoriteParam = favoriteParam;
         this.initFavorite();
       }
@@ -129,8 +129,6 @@ export class ShopComponent implements OnInit {
       }
 
       this.sortBy = sortParam === null ? "" : sortParam;
-
-      this.initFilterBar();
     });
   }
 
@@ -139,11 +137,11 @@ export class ShopComponent implements OnInit {
     params = this.appendPageParam(params);
     this.productService.getProducts(params).subscribe({
       next: (response) => this.handleResponse(response),
-      error: (error:HttpErrorResponse) => this.handleError(error)
+      error: (error: HttpErrorResponse) => this.handleError(error)
     });
   }
 
-  public initSearch(){
+  public initSearch() {
     let params = new HttpParams();
     params = params.append("keywords", this.searchParam);
     console.log(this.searchParam)
@@ -151,86 +149,83 @@ export class ShopComponent implements OnInit {
     params = this.appendSortParam(params);
     this.productService.getProductBySearch(params).subscribe({
       next: (response) => this.handleResponse(response),
-      error : (error:HttpErrorResponse) => this.handleError(error)
+      error: (error: HttpErrorResponse) => this.handleError(error)
     })
+    this.initFilterBySearch();
   }
 
-  public initFavorite(){
+  public initFavorite() {
     let params = new HttpParams();
     //params = params.append("favorite", this.favoriteParam);
+    params = this.appendFilterParam(params);
     params = this.appendPageParam(params);
     params = this.appendSortParam(params);
-    if(this.username)
+    if (this.username) {
       this.productService.getFavourites(this.username, params).subscribe({
         next: (response) => this.handleResponse(response),
-        error : (error:HttpErrorResponse) => this.handleError(error)
-      })
+        error: (error: HttpErrorResponse) => this.handleError(error)
+      });
+    }
     else console.log("username is null")
   }
 
-  public initFilteringProduct(){
+  public initFilteringProduct() {
     let params = new HttpParams();
-    if (this.categoryParam)
-      params = params.append("category", this.categoryParam);
-    if (this.subcategoryParam)
-      params = params.append("subcategory", this.subcategoryParam);
-    if (this.brandParam)
-      params = params.append("brand", this.brandParam);
-    if (this.originParam)
-      params = params.append("origin", this.originParam);
-
+    params = this.appendFilterParam(params);
     params = this.appendPageParam(params);
     params = this.appendSortParam(params);
     this.productService.getProductByFilter(params).subscribe({
       next: (response) => this.handleResponse(response),
-      error: (error:HttpErrorResponse) => this.handleError(error)
+      error: (error: HttpErrorResponse) => this.handleError(error)
     })
+    this.initFilterBarByCategory();
   }
 
   public initCategories() {
-    this.productService.getCategories().subscribe ({
-      next: (response:ProductCategory[]) => this.categories = response,
-      error : (error:HttpErrorResponse) => this.handleError(error)
+    this.productService.getCategories().subscribe({
+      next: (response: ProductCategory[]) => this.categories = response,
+      error: (error: HttpErrorResponse) => this.handleError(error)
     })
   }
 
-  public initFilterBar(){
+  public initFilterBarByCategory() {
     let params = new HttpParams();
 
-    if (this.searchParam){
-      params = params.append('keywords',this.searchParam )
-      this.productService.getFiltersBySearch(params).subscribe({
-        next: (response) => this.filters = response,
-        error: (error:HttpErrorResponse) => this.popup("Error "+error.status, error.message, "Red")
-      })
-      return;
-    }
-
     if (this.categoryParam)
-      params = params.append("category",this.categoryParam);
+      params = params.append("category", this.categoryParam);
     if (this.subcategoryParam)
       params = params.append("subcategory", this.subcategoryParam);
 
     this.productService.getFiltersByCategory(params).subscribe({
       next: (response) => this.filters = response,
-      error: (error:HttpErrorResponse) => this.handleError(error)
+      error: (error: HttpErrorResponse) => this.handleError(error)
     })
   }
-  
 
-  isLogged() : Promise<void>{
+  public initFilterBySearch() {
+    let params = new HttpParams();
+    params = params.append('keywords', this.searchParam)
+    this.productService.getFiltersBySearch(params).subscribe({
+      next: (response) => this.filters = response,
+      error: (error: HttpErrorResponse) => this.popup("Error " + error.status, error.message, "Red")
+    })
+    return;
+
+  }
+
+  isLogged(): Promise<void> {
     return this.keycloakService.isLoggedIn().then(
       (logged) => {
         this.logged = logged
         if (logged)
-        return this.keycloakService.loadUserProfile().then(
-          (user) => {
-            this.username = user.username;
-          }
-        )
+          return this.keycloakService.loadUserProfile().then(
+            (user) => {
+              this.username = user.username;
+            }
+          )
         else return
       },
-      () => {return }
+      () => { return }
     )
   }
 
@@ -264,13 +259,12 @@ export class ShopComponent implements OnInit {
     this.appendBrandParam();
   }
 
-  appendBrandParam(){
-    if (!this.brandSet || this.brandSet.size<1)
-      {
-        this.removeQueryParam("brand");
-        this.brandParam = "";
-        return;
-      }
+  appendBrandParam() {
+    if (!this.brandSet || this.brandSet.size < 1) {
+      this.removeQueryParam("brand");
+      this.brandParam = "";
+      return;
+    }
     this.brandParam = Array.from(this.brandSet).join("¿");
     this.router.navigate([], {
       queryParams: { brand: this.brandParam },
@@ -278,13 +272,12 @@ export class ShopComponent implements OnInit {
     })
   }
 
-  appendOriginParam(){
-    if (!this.originSet || this.originSet.size<1)
-      {
-        this.removeQueryParam("origin");
-        this.originParam = "";
-        return;
-      }
+  appendOriginParam() {
+    if (!this.originSet || this.originSet.size < 1) {
+      this.removeQueryParam("origin");
+      this.originParam = "";
+      return;
+    }
     this.originParam = Array.from(this.originSet).join("¿");
     this.router.navigate([], {
       queryParams: { origin: this.originParam },
@@ -292,7 +285,7 @@ export class ShopComponent implements OnInit {
     })
   }
 
-  
+
   removeQueryParam(paramKey: string) {
     this.router.navigate([], {
       queryParams: { [paramKey]: null },
@@ -300,57 +293,69 @@ export class ShopComponent implements OnInit {
     })
   }
 
-  brandIsChecked(brand:string){
-    if(!this.brandParam)
+  brandIsChecked(brand: string) {
+    if (!this.brandParam)
       return false;
-    this.brandSet = new Set (this.brandParam.split('¿'));
+    this.brandSet = new Set(this.brandParam.split('¿'));
     return this.brandSet.has(brand)
   }
 
-  originIsChecked(origin:string){
-    if(!this.originParam)
+  originIsChecked(origin: string) {
+    if (!this.originParam)
       return false;
-    this.originSet = new Set (this.originParam.split('¿'));
+    this.originSet = new Set(this.originParam.split('¿'));
     return this.originSet.has(origin);
   }
 
-  onSortChange(event:Event,orderByAsc:boolean){
-    let orderBy : string = orderByAsc ? 'asc' : 'desc';
-    console.log(orderByAsc+ " " + orderBy)
-    this.sortBy = (event.target as HTMLInputElement).value + ","+ orderBy;
+  onSortChange(event: Event, orderByAsc: boolean) {
+    let orderBy: string = orderByAsc ? 'asc' : 'desc';
+    console.log(orderByAsc + " " + orderBy)
+    this.sortBy = (event.target as HTMLInputElement).value + "," + orderBy;
     this.router.navigate([], {
-      queryParams: { 
+      queryParams: {
         sort: this.sortBy
-       },
+      },
       queryParamsHandling: 'merge'
     })
   }
 
   //FILTER BAR SECTION END
 
-  appendPageParam(params : HttpParams){
-    if (this.page !== 1){
-      params = params.append("page", this.page-1);
+  appendPageParam(params: HttpParams) {
+    if (this.page !== 1) {
+      params = params.append("page", this.page - 1);
     }
     return params;
   }
 
-  appendSortParam(params : HttpParams){
+  appendSortParam(params: HttpParams) {
     if (this.sortBy)
       params = params.append("sort", this.sortBy)
-      return params;
+    return params;
   }
 
-  handleResponse(response:any){
+  appendFilterParam(params: HttpParams) {
+    if (this.categoryParam)
+      params = params.append("category", this.categoryParam);
+    if (this.subcategoryParam)
+      params = params.append("subcategory", this.subcategoryParam);
+    if (this.brandParam)
+      params = params.append("brand", this.brandParam);
+    if (this.originParam)
+      params = params.append("origin", this.originParam);
+    return params
+  }
+
+  handleResponse(response: any) {
     this.currentProducts = response.content;
     this.maxItems = response.totalElements;
   }
-  handleError(error:HttpErrorResponse){
-    if (error.status === 404){
+  handleError(error: HttpErrorResponse) {
+    if (error.status === 404) {
       this.redirectToProfilEdit();
       return;
     }
-    this.popup("ERROR", error.message,"red");
+    this.popup("ERROR", error.message, "red");
   }
 
   //SEARCH SECTION
@@ -365,7 +370,7 @@ export class ShopComponent implements OnInit {
   }
 
   public searchIt(keywords: string) {
-    
+
   }
 
   //FAVOURITE SECTION
@@ -436,7 +441,7 @@ export class ShopComponent implements OnInit {
     return value === null || value === ""
   }
 
-  public hasCarton(product:Product): boolean {
+  public hasCarton(product: Product): boolean {
     return product?.pack !== 1
   }
 
@@ -469,7 +474,7 @@ export class ShopComponent implements OnInit {
 
   //CART SECTION
 
-  public addItemToCart(product: Product, quantityInput:HTMLInputElement, quantitySelector:HTMLSelectElement) {
+  public addItemToCart(product: Product, quantityInput: HTMLInputElement, quantitySelector: HTMLSelectElement) {
     let quantity = parseFloat(quantityInput.value)
     if (quantity < 1) {
       return
@@ -550,21 +555,21 @@ export class ShopComponent implements OnInit {
   //CART SECTION END
 
   //POPUP SECTION
-  public popup(title:string, message:string, color:string){
+  public popup(title: string, message: string, color: string) {
     let modal = this.customModalComponent;
     modal.message = message;
     modal.title = title;
     modal.colorTitle = color;
-    this.openModal(modal,false);
+    this.openModal(modal, false);
   }
 
-  public redirectToProfilEdit(){
+  public redirectToProfilEdit() {
     this.router.navigateByUrl("/profile/edit");
     let modal = this.customModalComponent;
     modal.message = "Please setup your profile first";
     modal.title = "Profile unfinished";
     modal.colorTitle = "black";
-    this.openModal(modal,false);
+    this.openModal(modal, false);
   }
 
   public openModal(modal: any, autoclose: boolean) {
@@ -578,13 +583,13 @@ export class ShopComponent implements OnInit {
   //POPUP SECTION END
 
   //THEME SECTION
-  public isDarkMode(){
+  public isDarkMode() {
     const theme = localStorage.getItem("Theme");
     return theme === "dark"
   }
   //THEME SECTION END
 
-  handleEmptySpaces(str:string){
+  handleEmptySpaces(str: string) {
     return str.replace(/\s+/g, '-');
   }
 
