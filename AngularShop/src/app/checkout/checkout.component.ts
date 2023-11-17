@@ -45,7 +45,7 @@ export class CheckoutComponent {
   deliveryAddress !: FormGroup;
   //ADMIN variable
   public isAdmin: boolean = false;
-  public users: any[] = [];
+  public users: User[] = [];
   @ViewChild('customerSelect', { static: false }) customerSelectElement!: ElementRef;
   //ADMIN variable end
 
@@ -75,7 +75,6 @@ export class CheckoutComponent {
   ngAfterViewInit() {
     this.scroll(this.container.nativeElement);
   }
-
 
   initAddressForm() {
     this.billingAddress = new FormGroup({
@@ -231,10 +230,7 @@ export class CheckoutComponent {
     return user;
   }
 
-
-
   //Form section end
-
   toggleInput(event: Event): void {
     const checkbox = event.target as HTMLInputElement;
     this.isSameAddress = checkbox.checked;
@@ -244,13 +240,12 @@ export class CheckoutComponent {
     }
     this.deliveryAddress.enable();
   }
-
   //Submit section
   onSubmit() {
     this.disableSubmit();
 
     if (this.addressForm.invalid) {
-      alert("FORM NOT VALID");
+      this.popupModal("FORM NOT VALID","WARNING","red");
       this.enableSubmit();
       return;
     }
@@ -304,7 +299,6 @@ export class CheckoutComponent {
       orderDate: deliveryDate
       
     }
-    console.log(order);
     this.orderService.postOrder(order,this.username).subscribe({
       next: (response) => {this.processingCompletedOrder()},
       error: (error:HttpErrorResponse) => {alert(error.message)}
@@ -360,7 +354,7 @@ export class CheckoutComponent {
     }
   }
 
-  public getUsers(keyword: string) {/*
+  public getUsers(keyword: string) {
     if (keyword == null || keyword.length < 3) {
       this.popupModal("Please type at least 3 characters", "WARNING", "red");
       return;
@@ -369,24 +363,18 @@ export class CheckoutComponent {
 
     this.userService.getUsersByKeyword(keyword).subscribe(
       (response) => {
-        let data = response;
-        for (let i = 0; i < data.length; i++) {
-
-          let searchIndex = data[i].username + " " + data[i].attributes.company.toString();
-          if (!this.stringContainAllOfArray(searchIndex, keyword.split(" "))) {
-            continue;
-          }
-          this.users.push(data[i]);
-        }
+        this.users = response;
         if (this.users.length > 0) {
           this.fillFormBackend(this.users[0]);
           if (this.users[0].username != null){
             this.username = this.users[0].username;
+            let userId = this.users[0].userId;
+            if (userId)
+              this.userId = userId;
           }
         }
       }
-      
-    );*/
+    );
   }
 
   public stringContainAllOfArray(str: string, keywords: string[]) {
@@ -404,16 +392,19 @@ export class CheckoutComponent {
       if (this.users[i].username === username) {
         this.fillFormBackend(this.users[i])
         this.username = this.users[i].username;
+        let userid = this.users[i].userId;
+        if (userid)
+          this.userId=userid
         return;
       }
     }
   }
 
+  //ADMIN SECTION END
+
   public getTranslation(str:string){
     return this.translateService.instant(str)
   }
-
-  //ADMIN SECTION END
 
   processingCompletedOrder() {
     let modal = this.customeModalComponent;

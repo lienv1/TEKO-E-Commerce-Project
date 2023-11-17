@@ -7,16 +7,16 @@
       <div class="col-md-12">
         <div class="card">
           <div class="card-header bg-dark text-white">
-            <h3>Edit Profile Information</h3>
+            <h3>{{'PROFILE INFORMATION' | translate}}</h3>
           </div>
           <div class="card-body">
             <form [formGroup]="addressForm" (ngSubmit)="updateProfil()">
 
               <!-- Personal Information -->
-              <h4>Personal Information</h4>
+              <h4>{{'PERSONAL INFORMATION'| translate}}</h4>
             
               <div class="mb-3">
-                <label for="companyInput" class="form-label">Company</label>
+                <label for="companyInput" class="form-label">{{'COMPANY' | translate}}</label>
                 <input type="text" class="form-control" id="companyInput" placeholder="Company" formControlName="companyInput">
               </div>
             
@@ -33,39 +33,39 @@
             
               <!-- Email -->
               <div class="mb-3">
-                <label for="emailInput" class="form-label">Email Address</label>
+                <label for="emailInput" class="form-label">{{'EMAIL ADDRESS' | translate}}</label>
                 <input type="email" class="form-control" id="emailInput" placeholder="name@example.com" formControlName="emailInput" required>
               </div>
             
               <!-- Phone -->
               <div class="mb-3">
-                <label for="phoneInput" class="form-label">Phone Number</label>
+                <label for="phoneInput" class="form-label">{{'PHONE' | translate}}</label>
                 <input type="tel" class="form-control" id="phoneInput" placeholder="+1234567890" formControlName="phoneInput" required>
               </div>
             
               <hr class="my-4">
         
               <!-- Billing Address -->
-              <h4>Billing Address</h4>
+              <h4>{{'BILLING ADDRESS' | translate}}</h4>
               <div formGroupName="billingAddress">
                 <div class="mb-3">
-                  <label for="billingStreetInput" class="form-label">Address Line</label>
+                  <label for="billingStreetInput" class="form-label">{{'STREET' | translate}}</label>
                   <input type="text" class="form-control" id="billingStreetInput" placeholder="1234 Main St" formControlName="billingStreetInput" required>
                 </div>
                 <div class="mb-3">
-                  <label for="billingCityInput" class="form-label">City</label>
-                  <input type="text" class="form-control" id="billingCityInput" formControlName="billingCityInput" required>
-                </div>
-                <div class="mb-3">
-                  <label for="billingStateInput" class="form-label">State</label>
-                  <input type="text" class="form-control" id="billingStateInput" formControlName="billingStateInput" required>
-                </div>
-                <div class="mb-3">
-                  <label for="billingZipInput" class="form-label">Zip Code</label>
+                  <label for="billingZipInput" class="form-label">{{'ZIP CODE' | translate}}</label>
                   <input type="text" class="form-control" id="billingZipInput" formControlName="billingZipInput" required>
                 </div>
                 <div class="mb-3">
-                  <label for="billingCountryInput" class="form-label">Country</label>
+                  <label for="billingStateInput" class="form-label">{{'STATE' | translate}}</label>
+                  <input type="text" class="form-control" id="billingStateInput" formControlName="billingStateInput" required>
+                </div>
+                <div class="mb-3">
+                  <label for="billingCityInput" class="form-label">{{'CITY' | translate}}</label>
+                  <input type="text" class="form-control" id="billingCityInput" formControlName="billingCityInput" required>
+                </div>
+                <div class="mb-3">
+                  <label for="billingCountryInput" class="form-label">{{'COUNTRY'|translate}}</label>
                   <input type="text" class="form-control" id="billingCountryInput" formControlName="billingCountryInput" required>
                 </div>
               </div>
@@ -73,39 +73,39 @@
               <hr class="my-4">
             
               <!-- Delivery Address -->
-              <h4>Delivery Address</h4>
+              <h4>{{'DELIVERY ADDRESS' | translate}}</h4>
               <div class="form-check">
                 <input class="form-check-input" type="checkbox" id="sameAddressCheck" (change)="toggleInput($event)">
                 <label class="form-check-label" for="sameAddressCheck">
-                  Same as billing address
+                  {{'SAME AS BILLING ADDRESS' | translate}}
                 </label>
               </div>
 
               <div formGroupName="deliveryAddress">
                 <div class="mb-3">
-                  <label for="deliveryStreetInput" class="form-label">Address Line</label>
+                  <label for="deliveryStreetInput" class="form-label">{{'STREET' | translate}}</label>
                   <input type="text" class="form-control" id="deliveryStreetInput" placeholder="1234 Main St" formControlName="deliveryStreetInput">
                 </div>
                 <div class="mb-3">
-                  <label for="deliveryCityInput" class="form-label">City</label>
-                  <input type="text" class="form-control" id="deliveryCityInput" formControlName="deliveryCityInput">
-                </div>
-                <div class="mb-3">
-                  <label for="deliveryStateInput" class="form-label">State</label>
-                  <input type="text" class="form-control" id="deliveryStateInput" formControlName="deliveryStateInput">
-                </div>
-                <div class="mb-3">
-                  <label for="deliveryZipInput" class="form-label">Zip Code</label>
+                  <label for="deliveryZipInput" class="form-label">{{'ZIP CODE' | translate}}</label>
                   <input type="text" class="form-control" id="deliveryZipInput" formControlName="deliveryZipInput">
                 </div>
                 <div class="mb-3">
-                  <label for="deliveryCountryInput" class="form-label">Country</label>
+                  <label for="deliveryStateInput" class="form-label">{{'STATE' | translate}}</label>
+                  <input type="text" class="form-control" id="deliveryStateInput" formControlName="deliveryStateInput">
+                </div>
+                <div class="mb-3">
+                  <label for="deliveryCityInput" class="form-label">{{'CITY' | translate}}</label>
+                  <input type="text" class="form-control" id="deliveryCityInput" formControlName="deliveryCityInput">
+                </div>
+                <div class="mb-3">
+                  <label for="deliveryCountryInput" class="form-label">{{'COUNTRY'|translate}}</label>
                   <input type="text" class="form-control" id="deliveryCountryInput" formControlName="deliveryCountryInput">
                 </div>
               </div>
           
               <!-- Submit Button -->
-              <button type="submit" class="btn btn-dark border border-light">Update Profile</button>
+              <button type="submit" class="btn btn-dark border border-light">{{'UPDATE' | translate}}</button>
             
             </form>
 

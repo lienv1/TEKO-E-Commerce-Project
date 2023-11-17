@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
@@ -15,6 +15,7 @@ import { CustomModalComponent } from '../modal/custom-modal/custom-modal.compone
 import { UserService } from '../service/user.service';
 import { FunctionModel } from '../model/functionModel';
 import { OrderDetail } from '../model/orderDetail';
+import { OrderService } from '../service/order.service';
 
 @Component({
   selector: 'app-admin-page',
@@ -34,24 +35,28 @@ export class AdminPageComponent implements OnInit {
   public users: User[] = [];
   public selectedUser !: User;
 
-  //Page
-  public page = 1;
-  public currentPage = 1;
+  //page variables
+  //Will be set by API
+  page: number = 1;
+  maxItems: number = 1;
+  //Customizable
+  maxOrdersPerPage = 2;
 
   constructor(   
     private title : Title,
     private cart:ShoppingCart, 
     private datePipe: DatePipe, 
     private userService: UserService, 
+    private orderService : OrderService,
     private keycloakService: KeycloakService, 
     private router: Router,
     private modalService : NgbModal,
-    private translateService:TranslateService) { }
+    private translateService:TranslateService) {this.title.setTitle(translateService.instant('ADMIN MENU')) }
 
   ngOnInit(): void {
 
   }
-/*
+
   public searchUsername(keyword:string){
     this.users = [];
     this.orders = [];
@@ -59,17 +64,11 @@ export class AdminPageComponent implements OnInit {
       this.popupModal("Please type at least 3 characters","WARNING","red");
       return;
     }
-    this.userService.getUsersByUsername(keyword).subscribe (
+    this.userService.getUsersByKeyword(keyword).subscribe (
       (response) => {
-        for (let i = 0; i <response.length;i++){
-          const username = response[i].username;
-          const company = response[i].attributes.company != null ? response[i].attributes.company.toString() : "";
-          this.users.push(
-            {username:username,company:company}
-          );
-        }
-        if (this.users.length>0 && this.users[0] != null){
-          this.loadUserOrders(this.users[0].username);
+        this.users = response;
+        if(this.users.length>0){
+          this.loadUserOrders(this.users[0].username)
         }
       },
       (error:HttpErrorResponse) => {
@@ -79,21 +78,29 @@ export class AdminPageComponent implements OnInit {
   }
 
   onOptionSelected(){
+    if (!this.selectUserElement)
+      return;
     const username = this.selectUserElement.nativeElement.value;
     this.loadUserOrders(username)
   }
 
   loadUserOrders(username ?: string){
-    if (username == null)
+    if (!username)
       return;
-    this.userService.getOrdersByUsername(username).subscribe(
+    this.orderService.getAllOrdersByUsername(username,this.getParam()).subscribe(
       (response) => {
-        this.orders = response;
+        this.orders = response.content;
+        this.maxItems = response.totalElements;
       },
       (error:HttpErrorResponse) => {
         this.popupModal(error.message,"Error!","red");
       }
     )
+  }
+
+  getParam(){
+    let param = new HttpParams();
+    return param;
   }
 
   scroll(el: HTMLElement) {
@@ -116,7 +123,7 @@ export class AdminPageComponent implements OnInit {
 
     let foo : () => void = () => this.loadItemsFunction(order);
     let functionModel :FunctionModel = {
-      message: this.translateService.instant("REPLACE"),
+      buttonText: this.translateService.instant("REPLACE"),
       foo:foo
     }
     let message = this.translateService.instant("CART REPLACEMENT MESSAGE");
@@ -176,5 +183,5 @@ export class AdminPageComponent implements OnInit {
 
   public getTranslation(str:string){
     return this.translateService.instant(str)
-  }*/
+  }
 }

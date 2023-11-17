@@ -22,20 +22,9 @@ export class UserService {
   }
 
   public getUsersByKeyword(keyword:string): Observable<User[]> {
-    const param = new HttpParams();
-    param.append('keyword',keyword);
+    let param = new HttpParams();
+    param = param.append('keyword',keyword);
     return this.http.get<User[]>(`${this.backendAPI}/user/search`, { params:param });
-  }
-
-  public getOrdersByUsername(username:string):Observable<Order[]>{
-    return from(this.keycloakService.getToken()).pipe(
-      switchMap((token: string) => {
-        const headers = new HttpHeaders({
-          Authorization: `Bearer ${token}`,
-        });
-        return this.http.get<Order[]>(`${this.backendAPI}/order/user/${username}`,{ headers});
-      })
-    );
   }
 
   public registerUser(user:User):Observable<User>{
@@ -46,28 +35,6 @@ export class UserService {
     return this.http.put<User>(`${this.backendAPI}/user/update/username/${username}`, user)
   }
 
-  //ADMIN SECTION
-  public getUserByUsername(username:string):Observable<any[]>{
-    return from(this.keycloakService.getToken()).pipe(
-      switchMap((token: string) => {
-        const headers = new HttpHeaders({
-          Authorization: `Bearer ${token}`,
-        });
-        return this.http.get<any>(`${this.keycloakAPI}/admin/realms/${this.keycloakRealm}/users?username=${username}`,{ headers});
-      })
-    );
-  }
-  public getUsersByFullCompanyName(company:string):Observable<any[]>{
-    return from(this.keycloakService.getToken()).pipe(
-      switchMap((token: string) => {
-        const headers = new HttpHeaders({
-          Authorization: `Bearer ${token}`,
-        });
-        return this.http.get<any>(`${this.keycloakAPI}/admin/realms/${this.keycloakRealm}/users?q=company:${company}`,{ headers});
-      })
-    );
-  }
-  //ADMIN SECTION END
 
   getAuthenticatedHeader(){
     const keycloakInstance = this.keycloakService.getKeycloakInstance();

@@ -82,7 +82,6 @@ export class OrderHistoryComponent implements OnInit {
   handleResponse(response:any){
     this.orders = response.content;
     this.maxItems = response.totalElements;
-    console.log(this.maxItems);
   }
   handleError(error:HttpErrorResponse){
     if (error.status === 404){

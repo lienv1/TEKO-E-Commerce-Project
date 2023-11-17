@@ -64,7 +64,7 @@ export class LoginComponent {
 
   keycloakRedirectOption(){
     const keycloakLoginOptions: KeycloakLoginOptions = {
-      redirectUri:  window.location.origin + '/profil/edit'
+      redirectUri:  window.location.origin + '/profile/edit'
     }
     return keycloakLoginOptions;
   }
