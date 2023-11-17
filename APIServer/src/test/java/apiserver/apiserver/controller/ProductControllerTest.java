@@ -2,6 +2,7 @@ package apiserver.apiserver.controller;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.hamcrest.Matchers.is;
@@ -31,6 +32,7 @@ import apiserver.apiserver.exception.ProductNotFoundException;
 import apiserver.apiserver.model.Product;
 import apiserver.apiserver.security.AuthorizationService;
 import apiserver.apiserver.service.ProductService;
+import apiserver.apiserver.service.UserService;
 
 @WebMvcTest(ProductController.class)
 class ProductControllerTest {
@@ -41,6 +43,9 @@ class ProductControllerTest {
 	@MockBean
 	private AuthorizationService authorizationService;
 
+	@MockBean
+	private UserService userService;
+	
 	@Autowired
 	private MockMvc mockMvc;
 
@@ -70,6 +75,7 @@ class ProductControllerTest {
 		products.add(product);
 
 		when(productService.getAllProducts()).thenReturn(products);
+		when(userService.userExistsByUsername(anyString())).thenReturn(true);
 	}
 
 	//Annotation with Keycloak no longer works in Spring Boot 3 like @WithMockUser(username="admin", roles= "{CUSTOMER}")

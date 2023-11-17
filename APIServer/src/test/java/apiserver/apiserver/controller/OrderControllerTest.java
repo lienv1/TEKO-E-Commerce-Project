@@ -38,6 +38,7 @@ import apiserver.apiserver.model.Product;
 import apiserver.apiserver.model.User;
 import apiserver.apiserver.security.AuthorizationService;
 import apiserver.apiserver.service.OrderService;
+import apiserver.apiserver.service.UserService;
 
 @WebMvcTest(OrderController.class)
 class OrderControllerTest {
@@ -47,6 +48,9 @@ class OrderControllerTest {
 	
 	@MockBean
 	private AuthorizationService authorizationService;
+	
+	@MockBean
+	private UserService userService;
 	
 	@Autowired
 	private MockMvc mockMvc;
@@ -77,6 +81,8 @@ class OrderControllerTest {
 		order.addOrderDetail(orderDetail);
 		order.setUser(user);
 		order.setOrderId(100000l);
+		
+		when(userService.userExistsByUsername(anyString())).thenReturn(true);
 	}
 	
 	//Annotation with Keycloak no longer works in Spring Boot 3 like @WithMockUser(username="admin", roles= "{CUSTOMER}")

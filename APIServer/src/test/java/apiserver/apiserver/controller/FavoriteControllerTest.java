@@ -29,12 +29,16 @@ import apiserver.apiserver.model.User;
 import apiserver.apiserver.repo.FavoriteRepo;
 import apiserver.apiserver.security.AuthorizationService;
 import apiserver.apiserver.service.FavoriteService;
+import apiserver.apiserver.service.UserService;
 
 @WebMvcTest(FavoriteController.class)
 class FavoriteControllerTest {
 	
 	@MockBean
 	private FavoriteService favoriteService;
+	
+	@MockBean
+	private UserService userService;
 
 	@MockBean
 	private AuthorizationService authorizationService;
@@ -56,6 +60,8 @@ class FavoriteControllerTest {
 		favorite = new Favorite();
 		favorite.setProduct(product);
 		favorite.setUser(user);
+		
+		when(userService.userExistsByUsername(anyString())).thenReturn(true);
 	}
 	
 	void initProduct() {
