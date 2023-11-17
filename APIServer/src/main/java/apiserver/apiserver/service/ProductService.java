@@ -88,9 +88,10 @@ public class ProductService {
 		}
 		return productRepo.findAll(specification, page);
 	}
-	
-	public Page<Product> getProductsByFavorite(String username, Pageable page, List<String> brands, List<String> origins) {
-		return productRepo.findFavoriteProductsByUserUsername(username,page, brands, origins);
+
+	public Page<Product> getProductsByFavorite(String username, Pageable page, List<String> brands,
+			List<String> origins) {
+		return productRepo.findFavoriteProductsByUserUsername(username, page, brands, origins);
 	}
 
 	public List<CategoryListDTO> getCategoryList() {
@@ -126,7 +127,7 @@ public class ProductService {
 		filter.setOrigins(origins);
 		return filter;
 	}
-	
+
 	public FilterDTO getFiltersBySearch(List<String> keywords) {
 		FilterDTO filter = new FilterDTO();
 		Specification<Product> spec = Specification.where(null);
@@ -139,5 +140,13 @@ public class ProductService {
 		return filter;
 	}
 
+	public FilterDTO getFiltersByFavorite(String username) {
+		FilterDTO filter = new FilterDTO();
+		Set<String> brands = productRepo.findFavoriteBrands(username);
+		Set<String> origins = productRepo.findFavoriteOrigins(username);
+		filter.setBrands(brands);
+		filter.setOrigins(origins);
+		return filter;
+	}
 
 }

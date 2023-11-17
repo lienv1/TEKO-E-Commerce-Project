@@ -48,6 +48,9 @@ export class ProductService {
     return this.http.get<Filters>(`${this.backendAPI}/product/searchfilters`, {params:params})
   }
 
+  public getFiltersByFavorite(username:string):Observable<Filters>{
+    return this.http.get<Filters>(`${this.backendAPI}/product/favoritefilters/username/${username}`)
+  }
 
   //Favourite functions
   public isFavourite(username:string, id:string): Observable<boolean> {

@@ -167,6 +167,7 @@ export class ShopComponent implements OnInit {
       });
     }
     else console.log("username is null")
+    this.initFilterByFavorite();
   }
 
   public initFilteringProduct() {
@@ -210,7 +211,15 @@ export class ShopComponent implements OnInit {
       error: (error: HttpErrorResponse) => this.popup("Error " + error.status, error.message, "Red")
     })
     return;
+  }
 
+  public initFilterByFavorite() {
+    if (this.username)
+      this.productService.getFiltersByFavorite(this.username).subscribe({
+        next: (response) => this.filters = response,
+        error: (error: HttpErrorResponse) => this.popup("Error " + error.status, error.message, "Red")
+      })
+    return;
   }
 
   isLogged(): Promise<void> {

@@ -152,7 +152,7 @@ public class ProductController {
 	}
 	
 	@GetMapping("/filters")
-	public ResponseEntity<FilterDTO> getBrandsByFilter(
+	public ResponseEntity<FilterDTO> getFilterByCategory(
 			@RequestParam(value = "category", required = false) List<String> category,
 			@RequestParam(value = "subcategory", required = false) List<String> subCategory ){
 		FilterDTO filters = productService.getFiltersByCategory(category, subCategory);
@@ -160,9 +160,22 @@ public class ProductController {
 	}
 	
 	@GetMapping("/searchfilters")
-	public ResponseEntity<FilterDTO> getBrandsByFilter(
+	public ResponseEntity<FilterDTO> getFilterBySearch(
 			@RequestParam(value = "keywords", required = false) List<String> keywords ){
 		FilterDTO filters = productService.getFiltersBySearch(keywords);
+		return new ResponseEntity<FilterDTO>(filters,HttpStatus.OK);	
+	}
+	
+	@GetMapping("/favoritefilters/username/{username}")
+	@PreAuthorize("hasRole('ADMIN') or #username ==  authentication.name")
+	public ResponseEntity<FilterDTO> getFilterByFavorite(
+			@PathVariable("username") String username
+			){
+		
+		boolean userExist = userService.userExistsByUsername(username);
+		if (!userExist) return ResponseEntity.notFound().build();	
+		
+		FilterDTO filters = productService.getFiltersByFavorite(username);
 		return new ResponseEntity<FilterDTO>(filters,HttpStatus.OK);	
 	}
 
