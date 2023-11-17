@@ -150,9 +150,17 @@ public class ProductController {
 	}
 	
 	@GetMapping("/filters")
-	public ResponseEntity<FilterDTO> getBrandsByFilter(@RequestParam(value = "category", required = false) List<String> category,
+	public ResponseEntity<FilterDTO> getBrandsByFilter(
+			@RequestParam(value = "category", required = false) List<String> category,
 			@RequestParam(value = "subcategory", required = false) List<String> subCategory ){
-		FilterDTO filters = productService.getFilters(category, subCategory);
+		FilterDTO filters = productService.getFiltersByCategory(category, subCategory);
+		return new ResponseEntity<FilterDTO>(filters,HttpStatus.OK);	
+	}
+	
+	@GetMapping("/searchfilters")
+	public ResponseEntity<FilterDTO> getBrandsByFilter(
+			@RequestParam(value = "keywords", required = false) List<String> keywords ){
+		FilterDTO filters = productService.getFiltersBySearch(keywords);
 		return new ResponseEntity<FilterDTO>(filters,HttpStatus.OK);	
 	}
 

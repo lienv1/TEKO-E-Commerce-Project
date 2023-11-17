@@ -118,7 +118,7 @@ public class ProductService {
 		return categoryListDTOs;
 	}
 
-	public FilterDTO getFilters(List<String> category, List<String> subCategory) {
+	public FilterDTO getFiltersByCategory(List<String> category, List<String> subCategory) {
 		FilterDTO filter = new FilterDTO();
 		Set<String> brands = productRepo.findDistinctBrands(category, subCategory);
 		Set<String> origins = productRepo.findDistinctOrigins(category, subCategory);
@@ -126,5 +126,18 @@ public class ProductService {
 		filter.setOrigins(origins);
 		return filter;
 	}
+	
+	public FilterDTO getFiltersBySearch(List<String> keywords) {
+		FilterDTO filter = new FilterDTO();
+		Specification<Product> spec = Specification.where(null);
+		spec = spec.and(ProductSpecifications.hasSearchIndex(keywords));
+		List<Product> products = productRepo.findAll(spec);
+		Set<String> brands = new HashSet<String>(products.stream().map(element -> element.getBrand()).toList());
+		Set<String> origins = new HashSet<String>(products.stream().map(element -> element.getOrigin()).toList());
+		filter.setBrands(brands);
+		filter.setOrigins(origins);
+		return filter;
+	}
+
 
 }

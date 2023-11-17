@@ -5,6 +5,7 @@ import java.util.Set;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
@@ -23,7 +24,7 @@ public interface ProductRepo extends JpaRepository<Product, Long>, JpaSpecificat
 	Product updateDeletedStatus(Long productId, boolean deleted);
     
     @Query("SELECT p.category AS category, p.subCategory AS subCategory FROM Product p")
-    List<String[]> findCategoriesAndSubcategories();
+    List<String[]> findCategoriesAndSubcategories();	
        
     
     @Query("SELECT DISTINCT p.brand FROM Product p WHERE (:category IS NULL OR p.category IN :category) AND (:subCategory IS NULL OR p.subCategory IN :subCategory)")
@@ -34,4 +35,6 @@ public interface ProductRepo extends JpaRepository<Product, Long>, JpaSpecificat
     
     @Query("SELECT DISTINCT p FROM Product p WHERE EXISTS (SELECT f FROM Favorite f WHERE f.product = p AND f.user.username = :username)")
     Page<Product> findFavoriteProductsByUserUsername(String username, Pageable pageable);
+   
+    
 }
