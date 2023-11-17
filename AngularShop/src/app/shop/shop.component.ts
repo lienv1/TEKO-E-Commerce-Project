@@ -49,7 +49,6 @@ export class ShopComponent implements OnInit {
   favoriteParam !: string;
 
   //Filter
-  searchKeywords : string [] = [];
   sortBy : string = "lastModified"
   filters ?: Filters
   brandSet = new Set();
@@ -116,7 +115,7 @@ export class ShopComponent implements OnInit {
         this.initSearch();
       }
 
-      if(favoriteParam){
+      else if (favoriteParam){
         this.favoriteParam = favoriteParam;
         this.initFavorite();
       }
@@ -147,6 +146,7 @@ export class ShopComponent implements OnInit {
   public initSearch(){
     let params = new HttpParams();
     params = params.append("keywords", this.searchParam);
+    console.log(this.searchParam)
     params = this.appendPageParam(params);
     params = this.appendSortParam(params);
     this.productService.getProductBySearch(params).subscribe({
@@ -196,12 +196,22 @@ export class ShopComponent implements OnInit {
 
   public initFilterBar(){
     let params = new HttpParams();
+
+    if (this.searchParam){
+      params = params.append('keywords',this.searchParam )
+      this.productService.getFiltersBySearch(params).subscribe({
+        next: (response) => this.filters = response,
+        error: (error:HttpErrorResponse) => this.popup("Error "+error.status, error.message, "Red")
+      })
+      return;
+    }
+
     if (this.categoryParam)
       params = params.append("category",this.categoryParam);
     if (this.subcategoryParam)
       params = params.append("subcategory", this.subcategoryParam);
-    
-    this.productService.getFilters(params).subscribe({
+
+    this.productService.getFiltersByCategory(params).subscribe({
       next: (response) => this.filters = response,
       error: (error:HttpErrorResponse) => this.handleError(error)
     })
