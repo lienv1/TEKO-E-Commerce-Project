@@ -337,7 +337,7 @@ export class ShopComponent implements OnInit {
   }
   handleError(error:HttpErrorResponse){
     if (error.status === 404){
-      
+      this.redirectToProfilEdit();
       return;
     }
     this.popup("ERROR", error.message,"red");
@@ -549,7 +549,12 @@ export class ShopComponent implements OnInit {
   }
 
   public redirectToProfilEdit(){
-    //TODO!
+    this.router.navigateByUrl("/profile/edit");
+    let modal = this.customModalComponent;
+    modal.message = "Please setup your profile first";
+    modal.title = "Profile unfinished";
+    modal.colorTitle = "black";
+    this.openModal(modal,false);
   }
 
   public openModal(modal: any, autoclose: boolean) {

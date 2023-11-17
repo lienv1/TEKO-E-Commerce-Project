@@ -2,7 +2,7 @@ import { CurrencyPipe } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateService } from '@ngx-translate/core';
 import { KeycloakService } from 'keycloak-angular';
@@ -37,6 +37,7 @@ export class ProductPageComponent {
   constructor(
     private title : Title,
     private route: ActivatedRoute, 
+    private router : Router,
     private translateService: TranslateService, 
     private productService: ProductService, 
     private keycloakService: KeycloakService, 
@@ -62,6 +63,7 @@ export class ProductPageComponent {
     el.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
+  //IAM SECTION
   isLoggedInAndLoadUser() {
     this.keycloakService.isLoggedIn().then(
       (logged) => {
@@ -72,7 +74,9 @@ export class ProductPageComponent {
       }
     )
   }
+  //IAM SECTION END
 
+  //API SECTION
   getProduct() {
     if (this.productId == null || this.productId == "")
       return
@@ -85,10 +89,6 @@ export class ProductPageComponent {
         alert(error.message)
       }
     )
-  }
-
-  public hasCarton(): boolean {
-    return this.product?.pack !== 1
   }
 
   loadUser() {
@@ -111,7 +111,7 @@ export class ProductPageComponent {
         this.favourite = response
       },
       error : (error: HttpErrorResponse) => {
-        alert(error.message);
+        if (error.status !== 404) this.popup("ERROR " + error.status, error.message, "red")
       }
     })
   }
@@ -126,7 +126,7 @@ export class ProductPageComponent {
         this.favourite = true;
       },
       (error: HttpErrorResponse) => {
-        alert(error);
+        this.handleError(error);
       }
     )
   }
@@ -141,27 +141,20 @@ export class ProductPageComponent {
         this.favourite = false;
       },
       (error: HttpErrorResponse) => {
-        alert(error);
+        this.handleError(error)
       }
     )
   }
 
-  public formatPrice(priceNumber ?: number): string {
+  handleError(error: HttpErrorResponse){
+    if (error.status !== 404) this.popup("ERROR " + error.status, error.message, "red")
+    else {this.router.navigateByUrl("/profile/edit"); this.popup("Profile unfinished", "Please setup your profile first", "black")}
+  }
 
-    if (priceNumber == null){
-      return "";
-    }
-   
-    // Format the price as Swiss Franc (CHF)
-    let formattedPrice = this.currencyPipe.transform(priceNumber, 'CHF');
-  
-  if (formattedPrice != null)
-    formattedPrice = formattedPrice?.replace('CHF','CHF ')
+  //API SECTION END
 
-  // Return the formatted price
-  return formattedPrice || '';
-}
 
+  //CART SECTION
   public addToCart() {
     if (this.product == null) {
       console.log("Error, no productId")
@@ -248,6 +241,9 @@ export class ProductPageComponent {
     }
   }
 
+  //CART SECTION END
+
+  //MODAL SECTION
   public openModal(modal: any, autoclose: boolean) {
     let modalRef = this.modalService.open(modal.myModal);
     if (autoclose) {
@@ -256,5 +252,34 @@ export class ProductPageComponent {
       }, 3000);
     }
   }
+
+  public popup(title:string, message:string, color:string){
+    let modal = this.customModalComponent;
+    modal.message = message;
+    modal.title = title;
+    modal.colorTitle = color;
+    this.openModal(modal,false);
+  }
+  //MODAL SECTION END
+
+  public hasCarton(): boolean {
+    return this.product?.pack !== 1
+  }
+
+  public formatPrice(priceNumber ?: number): string {
+
+    if (priceNumber == null){
+      return "";
+    }
+   
+    // Format the price as Swiss Franc (CHF)
+    let formattedPrice = this.currencyPipe.transform(priceNumber, 'CHF');
+  
+  if (formattedPrice != null)
+    formattedPrice = formattedPrice?.replace('CHF','CHF ')
+
+  // Return the formatted price
+  return formattedPrice || '';
+}
 
 }
