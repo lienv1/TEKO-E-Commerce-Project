@@ -134,12 +134,14 @@ public class ProductController {
 	@PreAuthorize("hasRole('ADMIN') or #username ==  authentication.name")
 	public ResponseEntity<Page<Product>> getProductsByFavorite(
 			@PageableDefault(size = MAXITEM) Pageable pageable,
+			@RequestParam(value = "brand", required = false) List<String> brands,
+			@RequestParam(value = "origin", required = false) List<String> origins,
 			@PathVariable("username") String username
  			) {
 		boolean userExist = userService.userExistsByUsername(username);
 		if (!userExist) return ResponseEntity.notFound().build();		
 		
-		Page<Product> list = productService.getProductsByFavorite(username,pageable);
+		Page<Product> list = productService.getProductsByFavorite(username,pageable, brands, origins);
 		return new ResponseEntity<Page<Product>>(list, HttpStatus.OK);
 	}
 	

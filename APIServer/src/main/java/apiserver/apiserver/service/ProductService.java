@@ -89,8 +89,8 @@ public class ProductService {
 		return productRepo.findAll(specification, page);
 	}
 	
-	public Page<Product> getProductsByFavorite(String username, Pageable page) {
-		return productRepo.findFavoriteProductsByUserUsername(username,page);
+	public Page<Product> getProductsByFavorite(String username, Pageable page, List<String> brands, List<String> origins) {
+		return productRepo.findFavoriteProductsByUserUsername(username,page, brands, origins);
 	}
 
 	public List<CategoryListDTO> getCategoryList() {
