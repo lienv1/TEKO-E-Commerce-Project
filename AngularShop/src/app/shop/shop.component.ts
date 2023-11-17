@@ -336,6 +336,10 @@ export class ShopComponent implements OnInit {
     this.maxItems = response.totalElements;
   }
   handleError(error:HttpErrorResponse){
+    if (error.status === 404){
+      
+      return;
+    }
     this.popup("ERROR", error.message,"red");
   }
 
@@ -542,6 +546,10 @@ export class ShopComponent implements OnInit {
     modal.title = title;
     modal.colorTitle = color;
     this.openModal(modal,false);
+  }
+
+  public redirectToProfilEdit(){
+    //TODO!
   }
 
   public openModal(modal: any, autoclose: boolean) {
