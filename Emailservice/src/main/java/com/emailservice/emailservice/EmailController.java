@@ -25,7 +25,7 @@ public class EmailController {
 		this.emailService = emailService;
 	}
 
-	@PostMapping("/send")
+	@PostMapping("/send/confirmation")
 	public ResponseEntity<?> sendEmail(HttpServletRequest request, @RequestBody Order order) {
 		String apikey = request.getHeader("X-API-KEY");
 		if (!emailService.apikeyIsValid(apikey)) {
