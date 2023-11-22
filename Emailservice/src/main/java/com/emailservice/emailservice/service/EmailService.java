@@ -1,4 +1,4 @@
-package com.emailservice.emailservice;
+package com.emailservice.emailservice.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
@@ -10,7 +10,7 @@ import com.emailservice.emailservice.model.Order;
 @Service
 public class EmailService {
 
-	private String apikey;
+	
 	
 	@Autowired
 	private JavaMailSender mailSender;
@@ -19,17 +19,7 @@ public class EmailService {
 		
 	}
 	
-	public void setApiKey(String apikey) {
-		this.apikey = apikey;
-	}
-	
-	public boolean apikeyIsEmpty() {
-		return apikey == null;
-	}
-	
-	public boolean apikeyIsValid(String apikey) {
-		return this.apikey.equals(apikey);
-	}
+
 	
 	public boolean sendConfirmation(Order order) {
 

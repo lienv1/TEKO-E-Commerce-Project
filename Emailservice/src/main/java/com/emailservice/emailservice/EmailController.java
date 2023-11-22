@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.emailservice.emailservice.model.Order;
+import com.emailservice.emailservice.service.EmailService;
+import com.emailservice.emailservice.service.SecurityService;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -21,17 +23,19 @@ public class EmailController {
 	@Autowired
 	private EmailService emailService;
 	
-	public EmailController(EmailService emailService) {
+	@Autowired SecurityService securityService;
+	
+	public EmailController(EmailService emailService, SecurityService securityService) {
 		this.emailService = emailService;
+		this.securityService = securityService;
 	}
 
 	@PostMapping("/send/confirmation")
 	public ResponseEntity<?> sendEmail(HttpServletRequest request, @RequestBody Order order) {
 		String apikey = request.getHeader("X-API-KEY");
-		if (!emailService.apikeyIsValid(apikey)) {
+		if (!securityService.apikeyIsValid(apikey)) 
 			return new ResponseEntity<String>("Invalid Api Key", HttpStatus.BAD_REQUEST);
-		}
-		
+		this.emailService.sendConfirmation(order);
 		return ResponseEntity.ok().build();
 	}
 	
@@ -39,9 +43,9 @@ public class EmailController {
 	public ResponseEntity<?> receiveAPIKey(@PathVariable("apikey") String apikey){
 		if (apikey == null || apikey == "") 
 			return ResponseEntity.badRequest().build();
-		if (!this.emailService.apikeyIsEmpty())
+		if (!this.securityService.apikeyIsEmpty())
 			return new ResponseEntity<String>("API Key already set", HttpStatus.BAD_REQUEST);
-		this.emailService.setApiKey(apikey);
+		this.securityService.setApiKey(apikey);
 		return ResponseEntity.ok().build();
 	}
 	
