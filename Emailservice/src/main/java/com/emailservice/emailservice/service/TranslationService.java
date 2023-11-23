@@ -41,210 +41,210 @@ public class TranslationService {
 	public String getThanks() {
 		switch (language) {
 		case DE:
-			return "";
+			return "Vielen Dank für Ihre Bestellung!";
 		case FR:
-			return "";
+			return "Merci pour votre commande !";
 		case VI:
-			return "";
+			return "Cảm ơn bạn đã đặt hàng!";
 		case ZH:
-			return "";
+			return "感谢您的订单！";
 		default:
-			return "";
+			return "Thank you for your order!";
 		}
 	}
 
 	public String getConfirmation() {
 		switch (language) {
 		case DE:
-			return "";
+			return "Bestellbestätigung";
 		case FR:
-			return "";
+			return "Confirmation de commande";
 		case VI:
-			return "";
+			return "Xác nhận đơn hàng";
 		case ZH:
-			return "";
+			return "订单确认";
 		default:
-			return "";
+			return "Order confirmation";
 		}
 	}
 
 	public String getCompany() {
 		switch (language) {
 		case DE:
-			return "";
+			return "Firma";
 		case FR:
-			return "";
+			return "Entreprise";
 		case VI:
-			return "";
+			return "Công ty";
 		case ZH:
-			return "";
+			return "公司";
 		default:
-			return "";
+			return "Company";
 		}
 	}
 
 	public String getName() {
 		switch (language) {
 		case DE:
-			return "";
+			return "Name";
 		case FR:
-			return "";
+			return "Nom";
 		case VI:
-			return "";
+			return "Họ tên đầy đủ";
 		case ZH:
-			return "";
+			return "全名";
 		default:
-			return "";
+			return "Name";
 		}
 	}
 
 	public String getStreet() {
 		switch (language) {
 		case DE:
-			return "";
+			return "Strasse";
 		case FR:
-			return "";
+			return "Rue";
 		case VI:
-			return "";
+			return "Đường";
 		case ZH:
-			return "";
+			return "街道";
 		default:
-			return "";
+			return "Street";
 		}
 	}
 
 	public String getState() {
 		switch (language) {
 		case DE:
-			return "";
+			return "Ort";
 		case FR:
-			return "";
+			return "État";
 		case VI:
-			return "";
+			return "Tiểu bang";
 		case ZH:
-			return "";
+			return "州";
 		default:
-			return "";
+			return "State";
 		}
 	}
 
 	public String getZip() {
 		switch (language) {
 		case DE:
-			return "";
+			return "Postleitzahl";
 		case FR:
-			return "";
+			return "Code Postal";
 		case VI:
-			return "";
+			return "Mã bưu điện";
 		case ZH:
-			return "";
+			return "邮政编码";
 		default:
-			return "";
+			return "ZIP";
 		}
 	}
 
 	public String getCountry() {
 		switch (language) {
 		case DE:
-			return "";
+			return "Land";
 		case FR:
-			return "";
+			return "Pays";
 		case VI:
-			return "";
+			return "Quốc gia";
 		case ZH:
-			return "";
+			return "国家";
 		default:
-			return "";
+			return "Country";
 		}
 	}
 
 	public String getEmail() {
 		switch (language) {
 		case DE:
-			return "";
+			return "E-Mail";
 		case FR:
-			return "";
+			return "E-Mail";
 		case VI:
-			return "";
+			return "E-Mail";
 		case ZH:
-			return "";
+			return "电子邮件地址";
 		default:
-			return "";
+			return "E-Mail";
 		}
 	}
 
 	public String getPhone() {
 		switch (language) {
 		case DE:
-			return "";
+			return "Telefon";
 		case FR:
-			return "";
+			return "Téléphone";
 		case VI:
-			return "";
+			return "Điện thoại";
 		case ZH:
-			return "";
+			return "电话";
 		default:
-			return "";
+			return "Phone";
 		}
 	}
 
 	public String getDeliveryDate() {
 		switch (language) {
 		case DE:
-			return "";
+			return "Lieferdatum";
 		case FR:
-			return "";
+			return "Date de Livraison";
 		case VI:
-			return "";
+			return "Ngày giao hàng";
 		case ZH:
-			return "";
+			return "送货日期";
 		default:
-			return "";
+			return "Delivery Date";
 		}
 	}
 
 	public String getComment() {
 		switch (language) {
 		case DE:
-			return "";
+			return "Kommentar";
 		case FR:
-			return "";
+			return "Commentaire";
 		case VI:
-			return "";
+			return "Bình luận";
 		case ZH:
-			return "";
+			return "备注";
 		default:
-			return "";
+			return "Comment";
 		}
 	}
 
 	public String getQuantity() {
 		switch (language) {
 		case DE:
-			return "";
+			return "Menge";
 		case FR:
-			return "";
+			return "Quantité";
 		case VI:
-			return "";
+			return "Số lượng";
 		case ZH:
-			return "";
+			return "数量";
 		default:
-			return "";
+			return "Quantity";
 		}
 	}
 
 	public String getGreeting() {
 		switch (language) {
 		case DE:
-			return "";
+			return "Freundliche Grüsse";
 		case FR:
-			return "";
+			return "Cordialement";
 		case VI:
-			return "";
+			return "Trân trọng";
 		case ZH:
-			return "";
+			return "致以亲切的问候";
 		default:
-			return "";
+			return "Kind regards";
 		}
 	}
 
