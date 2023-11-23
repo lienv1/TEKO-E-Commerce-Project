@@ -16,6 +16,7 @@ public class CompanyProperties {
 	private String mobile;
 	private String email;
 	private String web;
+	
 	public String getCompany() {
 		return company;
 	}

@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.util.Properties;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,8 @@ import org.springframework.stereotype.Service;
 import com.emailservice.emailservice.environment.CompanyProperties;
 import com.emailservice.emailservice.model.Order;
 import com.emailservice.emailservice.model.OrderDetail;
+import com.emailservice.emailservice.model.User;
+
 import jakarta.mail.BodyPart;
 import jakarta.mail.Message;
 import jakarta.mail.MessagingException;
@@ -34,27 +37,32 @@ public class EmailService {
 	
 	@Autowired
 	private CompanyProperties companyProperties;
+	
+	
+	@Value("${spring.mail.host}")
+    private String mailHost;
+
+    @Value("${spring.mail.port}")
+    private int mailPort;
+
+    @Value("${spring.mail.username}")
+    private String mailUsername;
+
+    @Value("${spring.mail.password}")
+    private String mailPassword;
+
+	
 
 	public EmailService(JavaMailSender mailSender, TranslationService translator, CompanyProperties companyProperties) {
-		super();
 		this.mailSender = mailSender;
 		this.translator = translator;
 		this.companyProperties = companyProperties;
 	}
 
-
-
-
 	public boolean sendConfirmation(Order order) {
-		String text = "";	
-		SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(order.getUser().getEmail());
-        message.setSubject("Confirmation mail");
-        message.setText(text);
-        mailSender.send(message);
-		
         try {
-
+        	
+        	User user = order.getUser();
 			// Message part
 			BodyPart messageBodyPart = new MimeBodyPart();
 			String htmlText = "<H1>Vielen Dank für Ihre Bestellung!</H1><br/>";
@@ -64,14 +72,14 @@ public class EmailService {
 						+ orderDetail.getQuantity() + " <br>";
 			}
 
-			htmlText += "<br> Firma: " + user.getCompany() + "<br> Name: " + user.getLastname() + "<br> Vorname:"
-					+ user.getFirstname() + "<br> Strasse: " + user.getStreet() + "<br> Ort: " + user.getPostalCode()
-					+ "<br> Tel.:" + user.getPhone() + "<br> Email: " + user.getEmail() + "<br> Kommentar: "
-					+ order.getComment() + "<br> Lieferdatum: " + order.getDate().toString().split(" ")[0];
+			htmlText += "<br> "+translator.getCompany()+": " + user.getCompany() + "<br> "+translator.getName()+": " + user.getLastname() + " "
+					+ user.getFirstname() + "<br> "+translator.getStreet()+": " + user.getDeliveryAddress().getStreet()+ "<br> "+translator.getState()+": " + user.getDeliveryAddress().getPostalCode() + " " + user.getDeliveryAddress().getState()
+					+ "<br> "+translator.getPhone()+":" + user.getPhone() + "<br> "+translator.getEmail()+": " + user.getEmail() + "<br> "+translator.getComment()+": "
+					+ order.getComment() + "<br> "+translator.getDeliveryDate()+": " + order.getOrderDate().toString().split(" ")[0];
 
 			htmlText += "<br><br> <hr> <br>";
 
-			htmlText += "<div>Freundliche Grüsse</div> <br>";
+			htmlText += "<div>"+translator.getGreeting()+"</div> <br>";
 
 			htmlText += "<table class=\"MsoNormalTable\" style=\"width:306.9pt\" width=\"409\"><tbody><tr style=\"\"><td rowspan=\"2\" style=\"width:127.6pt; border:none; border-right:solid #D00909 1.0pt; padding:0cm 7.5pt 0cm 0cm\" width=\"170\" valign=\"top\"><p class=\"MsoNormal\" style=\"margin-top: 0px; margin-bottom: 0px;margin:0cm 0cm 8pt; font-size:11pt; font-family:&quot;Calibri&quot;,sans-serif; margin-bottom:0cm; text-align:center\" align=\"center\"><span style=\"font-size:10.0pt; font-family:&quot;Arial&quot;,sans-serif; color:#595959\">&nbsp;</span></p><p class=\"MsoNormal\" style=\"margin-top: 0px; margin-bottom: 0px;margin:0cm 0cm 8pt; font-size:11pt; font-family:&quot;Calibri&quot;,sans-serif; margin-bottom:0cm; text-align:center\" align=\"center\"><span style=\"font-size:10.0pt; font-family:&quot;Arial&quot;,sans-serif; color:#595959\"><span style=\"\">&nbsp;</span><span style=\"\"></span><br><br></span><b><span style=\"font-size:10.0pt; font-family:&quot;Arial&quot;,sans-serif\">"+companyProperties.getStreet()+"&nbsp;</span></b></p>\r\n"
 					+ "\r\n"
@@ -99,32 +107,32 @@ public class EmailService {
 
 			properties.put("mail.smtp.auth", "true");
 			properties.put("mail.smtp.starttls.enable", "true");
-			properties.put("mail.smtp.host", host);
-			properties.put("mail.smtp.port", port); // 465 require ssl for more security
-			properties.put("mail.smtp.ssl.enable", "true"); // ssl
+			properties.put("mail.smtp.host", mailHost);
+			properties.put("mail.smtp.port", mailPort);
+			properties.put("mail.smtp.ssl.enable", "true");
 
 			Session session = Session.getInstance(properties, new jakarta.mail.Authenticator() {
 				protected PasswordAuthentication getPasswordAuthentication() {
-					return new PasswordAuthentication(from, password);
+					return new PasswordAuthentication(mailUsername, mailPassword);
 				}
 			});
 
 			MimeMessage message = new MimeMessage(session);
-			message.setFrom(new InternetAddress(from));
+			message.setFrom(new InternetAddress(mailUsername));
 			message.addRecipient(Message.RecipientType.TO, new InternetAddress(user.getEmail()));
-			message.setSubject("Bestellbestätigung " + order.getOrderId());
+			message.setSubject(translator.getConfirmation() + " " + order.getOrderId());
 			message.setContent(multipart, "UTF-8");
 			// message.setText("success"); only text!
 			Transport.send(message);
 
 			// Copy for order
-			if (testmode) {
-				return true;
-			}
+//			if (testmode) {
+//				return true;
+//			}
 			MimeMessage message2 = new MimeMessage(session);
-			message2.setFrom(new InternetAddress(from));
-			message2.addRecipient(Message.RecipientType.TO, new InternetAddress(from));
-			message2.setSubject(user.getCompany() + " - Bestellbestätigung " + order.getOrderId());
+			message2.setFrom(new InternetAddress());
+			message2.addRecipient(Message.RecipientType.TO, new InternetAddress(mailUsername));
+			message2.setSubject(user.getCompany() + " - " + translator.getConfirmation() + " " + order.getOrderId());
 			message2.setContent(multipart, "UTF-8");
 			Transport.send(message2);
 
@@ -137,7 +145,5 @@ public class EmailService {
 			e.printStackTrace();
 			return false;
 		}
-        
-		return false;
 	}
 }

@@ -1,5 +1,6 @@
 package com.emailservice.emailservice.model;
 
+
 public class User {
 
 	private Long userId;
@@ -9,6 +10,8 @@ public class User {
 	private String lastname;
 	private String phone;
 	private String email;
+	private Address deliveryAddress;
+	private Address billingAddress;
 
 	public User() {
 
@@ -60,6 +63,22 @@ public class User {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public Address getDeliveryAddress() {
+		return deliveryAddress;
+	}
+
+	public Address getBillingAddress() {
+		return billingAddress;
+	}
+
+	public void setDeliveryAddress(Address deliveryAddress) {
+		this.deliveryAddress = deliveryAddress;
+	}
+
+	public void setBillingAddress(Address billingAddress) {
+		this.billingAddress = billingAddress;
 	}
 
 }

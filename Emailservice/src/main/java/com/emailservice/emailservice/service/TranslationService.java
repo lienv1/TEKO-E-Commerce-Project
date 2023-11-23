@@ -15,6 +15,8 @@ public class TranslationService {
 	private String state = "";
 	private String zip = "";
 	private String country = "";
+	private String email = "";
+	private String phone = "";
 	private String deliveryDate = "";
 	private String comment = "";
 	private String quantity = "";
@@ -142,6 +144,36 @@ public class TranslationService {
 	}
 
 	public String getCountry() {
+		switch (language) {
+		case DE:
+			return "";
+		case FR:
+			return "";
+		case VI:
+			return "";
+		case ZH:
+			return "";
+		default:
+			return "";
+		}
+	}
+
+	public String getEmail() {
+		switch (language) {
+		case DE:
+			return "";
+		case FR:
+			return "";
+		case VI:
+			return "";
+		case ZH:
+			return "";
+		default:
+			return "";
+		}
+	}
+
+	public String getPhone() {
 		switch (language) {
 		case DE:
 			return "";
