@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import apiserver.apiserver.exception.OrderNotFoundException;
 import apiserver.apiserver.model.Order;
 import apiserver.apiserver.security.AuthorizationService;
+import apiserver.apiserver.service.EmailService;
 import apiserver.apiserver.service.OrderService;
 import apiserver.apiserver.service.UserService;
 
@@ -34,10 +35,14 @@ public class OrderController {
 	@Autowired
 	private UserService userService;
 	
-	public OrderController(OrderService orderService, AuthorizationService authorizationService, UserService userService) {
+	@Autowired
+	private EmailService emailService;
+	
+	public OrderController(OrderService orderService, AuthorizationService authorizationService, UserService userService, EmailService emailService) {
 		this.orderService = orderService;
 		this.authorizationService = authorizationService;
 		this.userService = userService;
+		this.emailService = emailService;
 	}
 
 	@GetMapping("/id/{id}")
@@ -91,6 +96,10 @@ public class OrderController {
 		try {
 			System.out.println("Trying to add order");
 			Order addedOrder = orderService.addOrder(order);
+			System.out.println("Sending email...");
+			boolean emailSuccess = emailService.sendingOrderConfirmation(addedOrder);
+			System.out.println("Success: " + emailSuccess);
+			
 			return new ResponseEntity<Order>(addedOrder, HttpStatus.OK);
 		} catch (DataIntegrityViolationException e) {
 			e.printStackTrace();

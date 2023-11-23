@@ -43,7 +43,7 @@ public class EmailService {
     private String mailHost;
 
     @Value("${spring.mail.port}")
-    private int mailPort;
+    private String mailPort;
 
     @Value("${spring.mail.username}")
     private String mailUsername;
@@ -123,7 +123,8 @@ public class EmailService {
 			message.setSubject(translator.getConfirmation() + " " + order.getOrderId());
 			message.setContent(multipart, "UTF-8");
 			// message.setText("success"); only text!
-			Transport.send(message);
+			//Transport.send(message);
+			mailSender.send(message);
 
 			// Copy for order
 //			if (testmode) {
@@ -134,7 +135,8 @@ public class EmailService {
 			message2.addRecipient(Message.RecipientType.TO, new InternetAddress(mailUsername));
 			message2.setSubject(user.getCompany() + " - " + translator.getConfirmation() + " " + order.getOrderId());
 			message2.setContent(multipart, "UTF-8");
-			Transport.send(message2);
+//			Transport.send(message2);
+			mailSender.send(message2);
 
 			return true;
 		} catch (MessagingException e) {

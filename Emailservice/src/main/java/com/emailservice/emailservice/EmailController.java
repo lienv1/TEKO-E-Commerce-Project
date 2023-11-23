@@ -1,6 +1,7 @@
 package com.emailservice.emailservice;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,14 +21,18 @@ import jakarta.servlet.http.HttpServletRequest;
 @RequestMapping("/email")
 public class EmailController {
 	
+	private String preSharedKey;
+	
 	@Autowired
 	private EmailService emailService;
 	
-	@Autowired SecurityService securityService;
+	@Autowired
+	SecurityService securityService;
 	
-	public EmailController(EmailService emailService, SecurityService securityService) {
+	public EmailController(EmailService emailService, SecurityService securityService, @Value("${custom.property.presharedkey}") String preSharedKey) {
 		this.emailService = emailService;
 		this.securityService = securityService;
+		this.preSharedKey = preSharedKey;
 	}
 
 	@PostMapping("/send/confirmation")
@@ -40,11 +45,15 @@ public class EmailController {
 	}
 	
 	@PostMapping("/apikey/{apikey}")
-	public ResponseEntity<?> receiveAPIKey(@PathVariable("apikey") String apikey){
+	public ResponseEntity<?> receiveAPIKey(@PathVariable("apikey") String apikey, HttpServletRequest request){
 		if (apikey == null || apikey == "") 
 			return ResponseEntity.badRequest().build();
-		if (!this.securityService.apikeyIsEmpty())
-			return new ResponseEntity<String>("API Key already set", HttpStatus.BAD_REQUEST);
+		String preSharedKey = request.getHeader("Authorization");
+		System.out.println();
+		System.out.println("received preSharedKey " + preSharedKey);
+		if (!preSharedKey.equals(this.preSharedKey)) 
+			return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+		System.out.println("Setup apikey " + apikey);
 		this.securityService.setApiKey(apikey);
 		return ResponseEntity.ok().build();
 	}
