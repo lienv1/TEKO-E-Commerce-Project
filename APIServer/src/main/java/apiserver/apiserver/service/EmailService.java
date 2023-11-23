@@ -28,7 +28,7 @@ public class EmailService {
 		this.setupEmailAPIKey(preSharedKey);
 	}
 
-	public boolean sendingOrderConfirmation(Order order) {
+	public boolean sendingOrderConfirmation(Order order, String language) {
 
 		RestTemplate restTemplate = new RestTemplate();
 
@@ -37,7 +37,8 @@ public class EmailService {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		headers.set("X-API-KEY", apiKeyGenerator.getApiKey());
-		ResponseEntity<String> response = restTemplate.postForEntity(url, order, String.class);
+		headers.set("lang", language == null ? "EN" : language);
+		ResponseEntity<String> response = restTemplate.postForEntity(url, new HttpEntity<>(order,headers), String.class);
 		if (response.getStatusCode().is2xxSuccessful()) {
 //			String responseBody = response.getBody();
 			return true;

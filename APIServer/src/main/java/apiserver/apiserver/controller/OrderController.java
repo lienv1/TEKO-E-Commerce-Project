@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import apiserver.apiserver.exception.OrderNotFoundException;
@@ -83,7 +84,7 @@ public class OrderController {
 
 	@PostMapping("/username/{username}")
 	@PreAuthorize(value = "hasAnyRole('ADMIN','CUSTOMER')")
-	public ResponseEntity<Order> addOrder(@PathVariable("username") String username, @RequestBody Order order,
+	public ResponseEntity<Order> addOrder(@PathVariable("username") String username, @RequestBody Order order, @RequestParam("lang") String language,
 			Principal principal) {
 		boolean isAuthenticated = authorizationService.isAuthenticatedByPrincipal(principal, username);
 		if (!isAuthenticated) {
@@ -97,7 +98,7 @@ public class OrderController {
 			System.out.println("Trying to add order");
 			Order addedOrder = orderService.addOrder(order);
 			System.out.println("Sending email...");
-			boolean emailSuccess = emailService.sendingOrderConfirmation(addedOrder);
+			boolean emailSuccess = emailService.sendingOrderConfirmation(addedOrder,language);
 			System.out.println("Success: " + emailSuccess);
 			
 			return new ResponseEntity<Order>(addedOrder, HttpStatus.OK);

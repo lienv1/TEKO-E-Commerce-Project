@@ -33,6 +33,17 @@ public class TranslationService {
 	public void setLanguage(Language language) {
 		this.language = language;
 	}
+	
+	public void setLanguage(String language) {
+		switch (language) {
+			case "DE": setLanguage(Language.DE); break;
+			case "FR": setLanguage(Language.FR); break;
+			case "VI": setLanguage(Language.VI); break;
+			case "ZH": setLanguage(Language.ZH); break;
+			default: setLanguage(Language.EN); break; 
+		}
+		
+	}
 
 	public Language getLanguage() {
 		return language;

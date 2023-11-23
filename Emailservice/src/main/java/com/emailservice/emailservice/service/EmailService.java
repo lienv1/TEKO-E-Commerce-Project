@@ -13,6 +13,7 @@ import com.emailservice.emailservice.environment.CompanyProperties;
 import com.emailservice.emailservice.model.Order;
 import com.emailservice.emailservice.model.OrderDetail;
 import com.emailservice.emailservice.model.User;
+import com.emailservice.emailservice.service.TranslationService.Language;
 
 import jakarta.mail.BodyPart;
 import jakarta.mail.Message;
@@ -59,8 +60,11 @@ public class EmailService {
 		this.companyProperties = companyProperties;
 	}
 
-	public boolean sendConfirmation(Order order) {
+	public boolean sendConfirmation(Order order, String language) {
         try {
+        	
+        	language = language == null ? "EN" : language;
+        	this.translator.setLanguage(language);
         	
         	User user = order.getUser();
 			// Message part

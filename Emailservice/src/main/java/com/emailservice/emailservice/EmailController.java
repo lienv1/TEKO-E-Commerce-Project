@@ -38,9 +38,11 @@ public class EmailController {
 	@PostMapping("/send/confirmation")
 	public ResponseEntity<?> sendEmail(HttpServletRequest request, @RequestBody Order order) {
 		String apikey = request.getHeader("X-API-KEY");
+		String language = request.getHeader("lang");
+		
 		if (!securityService.apikeyIsValid(apikey)) 
 			return new ResponseEntity<String>("Invalid Api Key", HttpStatus.BAD_REQUEST);
-		this.emailService.sendConfirmation(order);
+		this.emailService.sendConfirmation(order,language);
 		return ResponseEntity.ok().build();
 	}
 	
