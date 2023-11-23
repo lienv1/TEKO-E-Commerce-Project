@@ -20,8 +20,10 @@ export class OrderService {
     return this.http.get<any>(`${this.backendAPI}/order/username/${username}`, {params:param})
   }
 
-  postOrder(order:Order,username:string){
-    return this.http.post<Order>(`${this.backendAPI}/order/username/${username}`, order);
+  postOrder(order:Order,username:string, lang:string){
+    let params = new HttpParams();
+    params.append('lang',lang);
+    return this.http.post<Order>(`${this.backendAPI}/order/username/${username}`, order, {params:params});
   }
 
 }

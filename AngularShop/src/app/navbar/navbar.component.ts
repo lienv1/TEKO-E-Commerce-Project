@@ -33,7 +33,7 @@ export class NavbarComponent {
   }
 
   ngOnInit(): void {
-
+    
   }
 
   ngAfterViewInit(): void {
@@ -125,4 +125,5 @@ export class NavbarComponent {
     location.reload();
   }
   //THEME SECTION END
+
 }

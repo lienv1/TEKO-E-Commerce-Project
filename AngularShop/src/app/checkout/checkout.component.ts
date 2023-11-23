@@ -297,9 +297,12 @@ export class CheckoutComponent {
       orderDetails: orderedProducts,
       comment: comment,
       orderDate: deliveryDate
-      
     }
-    this.orderService.postOrder(order,this.username).subscribe({
+
+    //Get current language
+    let currentLang = this.translateService.currentLang.toUpperCase();
+
+    this.orderService.postOrder(order,this.username,currentLang).subscribe({
       next: (response) => {this.processingCompletedOrder()},
       error: (error:HttpErrorResponse) => {alert(error.message)}
     })
