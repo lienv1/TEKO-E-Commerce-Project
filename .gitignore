@@ -8,3 +8,5 @@ AngularShop/src/assets/legal/
 AngularShop/src/assets/legal/i18n/
 AngularShop/src/app/model/contact-info.ts
 Emailservice/src/main/resources/application.properties
+APIServer/src/main/resources/signatur.png
+Emailservice/src/main/resources/company.properties
