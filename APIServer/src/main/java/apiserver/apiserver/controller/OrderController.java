@@ -84,7 +84,10 @@ public class OrderController {
 
 	@PostMapping("/username/{username}")
 	@PreAuthorize(value = "hasAnyRole('ADMIN','CUSTOMER')")
-	public ResponseEntity<Order> addOrder(@PathVariable("username") String username, @RequestBody Order order, @RequestParam("lang") String language,
+	public ResponseEntity<Order> addOrder(
+			@PathVariable("username") String username, 
+			@RequestBody Order order, 
+			@RequestParam(value="lang", required = false) String language,
 			Principal principal) {
 		boolean isAuthenticated = authorizationService.isAuthenticatedByPrincipal(principal, username);
 		if (!isAuthenticated) {

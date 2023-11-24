@@ -27,7 +27,6 @@ export class ProductService {
   }
 
   public getProductByFilter(params:HttpParams):Observable<any>{
-    console.log(params)
     return this.http.get<any>(`${this.backendAPI}/product/filter`, {params:params})
   }
 

@@ -39,6 +39,7 @@ export class NavbarComponent {
   ngAfterViewInit(): void {
     this.setLanguageFromStorage();
     this.isLoggedIn();
+    this.getLanguage();
   }
 
   //On load
@@ -125,5 +126,10 @@ export class NavbarComponent {
     location.reload();
   }
   //THEME SECTION END
+
+  getLanguage(){
+    let lang = this.translate.currentLang;
+    console.log(lang);
+  }
 
 }

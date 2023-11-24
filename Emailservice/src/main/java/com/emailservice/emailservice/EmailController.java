@@ -2,6 +2,7 @@ package com.emailservice.emailservice;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,7 +28,7 @@ public class EmailController {
 	private EmailService emailService;
 	
 	@Autowired
-	SecurityService securityService;
+	private SecurityService securityService;
 	
 	public EmailController(EmailService emailService, SecurityService securityService, @Value("${custom.property.presharedkey}") String preSharedKey) {
 		this.emailService = emailService;
@@ -51,14 +52,19 @@ public class EmailController {
 		if (apikey == null || apikey == "") 
 			return ResponseEntity.badRequest().build();
 		String preSharedKey = request.getHeader("Authorization");
-		System.out.println();
-		System.out.println("received preSharedKey " + preSharedKey);
 		if (!preSharedKey.equals(this.preSharedKey)) 
 			return new ResponseEntity(HttpStatus.UNAUTHORIZED);
-		System.out.println("Setup apikey " + apikey);
 		this.securityService.setApiKey(apikey);
+		System.out.println("apikey: "+apikey);
+		System.out.println("presharedkey: "+preSharedKey);
 		return ResponseEntity.ok().build();
 	}
+	
+//	@GetMapping("/testmail")
+//	public ResponseEntity<?> testing(){
+//		boolean success = emailService.sendTest();
+//		return new ResponseEntity<Boolean>(success,HttpStatus.OK);
+//	}
 	
 	
 }

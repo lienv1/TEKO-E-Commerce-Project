@@ -27,7 +27,7 @@ public class TranslationService {
 	}
 
 	public enum Language {
-		EN, DE, FR, VI, ZH
+		EN, DE, FR, VN, ZH
 	}
 
 	public void setLanguage(Language language) {
@@ -38,7 +38,7 @@ public class TranslationService {
 		switch (language) {
 			case "DE": setLanguage(Language.DE); break;
 			case "FR": setLanguage(Language.FR); break;
-			case "VI": setLanguage(Language.VI); break;
+			case "VN": setLanguage(Language.VN); break;
 			case "ZH": setLanguage(Language.ZH); break;
 			default: setLanguage(Language.EN); break; 
 		}
@@ -55,7 +55,7 @@ public class TranslationService {
 			return "Vielen Dank für Ihre Bestellung!";
 		case FR:
 			return "Merci pour votre commande !";
-		case VI:
+		case VN:
 			return "Cảm ơn bạn đã đặt hàng!";
 		case ZH:
 			return "感谢您的订单！";
@@ -70,7 +70,7 @@ public class TranslationService {
 			return "Bestellbestätigung";
 		case FR:
 			return "Confirmation de commande";
-		case VI:
+		case VN:
 			return "Xác nhận đơn hàng";
 		case ZH:
 			return "订单确认";
@@ -85,7 +85,7 @@ public class TranslationService {
 			return "Firma";
 		case FR:
 			return "Entreprise";
-		case VI:
+		case VN:
 			return "Công ty";
 		case ZH:
 			return "公司";
@@ -100,7 +100,7 @@ public class TranslationService {
 			return "Name";
 		case FR:
 			return "Nom";
-		case VI:
+		case VN:
 			return "Họ tên đầy đủ";
 		case ZH:
 			return "全名";
@@ -115,7 +115,7 @@ public class TranslationService {
 			return "Strasse";
 		case FR:
 			return "Rue";
-		case VI:
+		case VN:
 			return "Đường";
 		case ZH:
 			return "街道";
@@ -130,7 +130,7 @@ public class TranslationService {
 			return "Ort";
 		case FR:
 			return "État";
-		case VI:
+		case VN:
 			return "Tiểu bang";
 		case ZH:
 			return "州";
@@ -145,7 +145,7 @@ public class TranslationService {
 			return "Postleitzahl";
 		case FR:
 			return "Code Postal";
-		case VI:
+		case VN:
 			return "Mã bưu điện";
 		case ZH:
 			return "邮政编码";
@@ -160,7 +160,7 @@ public class TranslationService {
 			return "Land";
 		case FR:
 			return "Pays";
-		case VI:
+		case VN:
 			return "Quốc gia";
 		case ZH:
 			return "国家";
@@ -175,7 +175,7 @@ public class TranslationService {
 			return "E-Mail";
 		case FR:
 			return "E-Mail";
-		case VI:
+		case VN:
 			return "E-Mail";
 		case ZH:
 			return "电子邮件地址";
@@ -190,7 +190,7 @@ public class TranslationService {
 			return "Telefon";
 		case FR:
 			return "Téléphone";
-		case VI:
+		case VN:
 			return "Điện thoại";
 		case ZH:
 			return "电话";
@@ -205,7 +205,7 @@ public class TranslationService {
 			return "Lieferdatum";
 		case FR:
 			return "Date de Livraison";
-		case VI:
+		case VN:
 			return "Ngày giao hàng";
 		case ZH:
 			return "送货日期";
@@ -220,7 +220,7 @@ public class TranslationService {
 			return "Kommentar";
 		case FR:
 			return "Commentaire";
-		case VI:
+		case VN:
 			return "Bình luận";
 		case ZH:
 			return "备注";
@@ -235,7 +235,7 @@ public class TranslationService {
 			return "Menge";
 		case FR:
 			return "Quantité";
-		case VI:
+		case VN:
 			return "Số lượng";
 		case ZH:
 			return "数量";
@@ -250,7 +250,7 @@ public class TranslationService {
 			return "Freundliche Grüsse";
 		case FR:
 			return "Cordialement";
-		case VI:
+		case VN:
 			return "Trân trọng";
 		case ZH:
 			return "致以亲切的问候";

@@ -60,7 +60,7 @@ public class EmailService {
 			System.out.println("Pre shared key: " + preSharedKey);
 			System.out.println("api key: "+apikey);
 			
-			HttpEntity<String> requestEntity = new HttpEntity<>(headers);
+			HttpEntity<String> requestEntity = new HttpEntity<>("",headers);
 			
 			ResponseEntity<String> response = restTemplate.postForEntity(url, requestEntity, String.class);
 			if (response.getStatusCode().is2xxSuccessful()) {

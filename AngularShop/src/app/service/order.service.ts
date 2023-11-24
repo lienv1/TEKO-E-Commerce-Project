@@ -22,7 +22,7 @@ export class OrderService {
 
   postOrder(order:Order,username:string, lang:string){
     let params = new HttpParams();
-    params.append('lang',lang);
+    params = params.append('lang',lang);
     return this.http.post<Order>(`${this.backendAPI}/order/username/${username}`, order, {params:params});
   }
 
