@@ -14,7 +14,7 @@ public class ApiKeyGenerator {
 		
 	}
 	
-	public static String generateApiKey() {
+	public String generateApiKey() {
 		SecureRandom random = new SecureRandom();
 		byte[] bytes = new byte[32];
 		random.nextBytes(bytes);

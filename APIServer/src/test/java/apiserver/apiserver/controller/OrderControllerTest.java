@@ -89,7 +89,7 @@ class OrderControllerTest {
 		order.setOrderId(100000l);
 		
 		when(userService.userExistsByUsername(anyString())).thenReturn(true);
-		emailservice.setupEmailAPIKey("my-secret-pw");
+//		emailservice.setupEmailAPIKey("my-secret-pw");
 	}
 	
 	//Annotation with Keycloak no longer works in Spring Boot 3 like @WithMockUser(username="admin", roles= "{CUSTOMER}")

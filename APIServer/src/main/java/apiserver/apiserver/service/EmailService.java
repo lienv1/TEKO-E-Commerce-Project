@@ -18,14 +18,13 @@ public class EmailService {
 	private String host;
 
 	@Autowired
-	private ApiKeyGenerator apiKeyGenerator;
+	private ConfigurationService configurationService;
 
 	
-	public EmailService(ApiKeyGenerator apiKeyGenerator, @Value("${custom.property.host}") String host,
+	public EmailService(ConfigurationService configurationService, @Value("${custom.property.host}") String host,
 			@Value("${custom.property.presharedkey}") String preSharedKey) {
-		this.apiKeyGenerator = apiKeyGenerator;
+		this.configurationService = configurationService;
 		this.host = "http://" + host;
-		this.setupEmailAPIKey(preSharedKey);
 	}
 
 	public boolean sendingOrderConfirmation(Order order, String language) {
@@ -36,7 +35,7 @@ public class EmailService {
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
-		headers.set("X-API-KEY", apiKeyGenerator.getApiKey());
+		headers.set("X-API-KEY", configurationService.getApiKey());
 		headers.set("lang", language == null ? "EN" : language);
 		ResponseEntity<String> response = restTemplate.postForEntity(url, new HttpEntity<>(order,headers), String.class);
 		if (response.getStatusCode().is2xxSuccessful()) {
@@ -46,7 +45,7 @@ public class EmailService {
 			return false;
 	}
 
-	public boolean setupEmailAPIKey(String preSharedKey) {
+	/*public boolean setupEmailAPIKey(String preSharedKey) {
 		try {
 			RestTemplate restTemplate = new RestTemplate();
 
@@ -72,6 +71,6 @@ public class EmailService {
 			e.printStackTrace();
 			return false;
 		}
-	}
+	}*/
 
 }

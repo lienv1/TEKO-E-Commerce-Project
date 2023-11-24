@@ -55,8 +55,6 @@ public class EmailService {
     @Value("${spring.mail.password}")
     private String mailPassword;
 
-	
-
 	public EmailService(JavaMailSenderImpl  mailSender, TranslationService translator, CompanyProperties companyProperties) {
 		this.mailSender = mailSender;
 		this.translator = translator;

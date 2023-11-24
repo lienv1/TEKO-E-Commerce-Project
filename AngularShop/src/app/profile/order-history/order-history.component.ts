@@ -60,6 +60,7 @@ export class OrderHistoryComponent implements OnInit {
     let params = new HttpParams();
     params = this.appendPageParam(params);
     params = this.appendMaxOrderParam(params);
+    params = this.appendSortParam(params);
     this.orderService.getAllOrdersByUsername(username,params).subscribe({
       next: (response) => this.handleResponse(response),
       error: (error) => this.handleError(error)
@@ -76,6 +77,11 @@ export class OrderHistoryComponent implements OnInit {
 
   appendMaxOrderParam(params : HttpParams){
     params = params.append("size", this.maxOrdersPerPage);
+    return params;
+  }
+
+  appendSortParam(params: HttpParams) {
+      params = params.append("sort", "orderId" + ",desc");
     return params;
   }
 
