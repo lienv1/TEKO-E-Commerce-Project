@@ -20,6 +20,10 @@ export class OrderService {
     return this.http.get<any>(`${this.backendAPI}/order/username/${username}`, {params:param})
   }
 
+  getAllOrdersByUserId(userid:number,param:HttpParams):Observable<any>{
+    return this.http.get<any>(`${this.backendAPI}/order/userid/${userid}`, {params:param})
+  }
+
   postOrder(order:Order,username:string, lang:string){
     let params = new HttpParams();
     params = params.append('lang',lang);

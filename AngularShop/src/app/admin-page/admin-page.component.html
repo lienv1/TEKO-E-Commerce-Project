@@ -15,7 +15,7 @@
       </div>
       <label for="selectUser">Select:</label>
       <select class="form-select mb-3" id="selectUser" #selectUser (change)="onOptionSelected()">
-        <option *ngFor="let user of users" value="{{user.username}}">{{user.username}} - {{user.company}}</option>
+        <option *ngFor="let user of users" value="{{user.userId}}">{{user.username}} - {{user.company}}</option>
       </select>
     </div>
     <!-- Center section with title and table -->

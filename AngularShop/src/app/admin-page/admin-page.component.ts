@@ -35,13 +35,14 @@ export class AdminPageComponent implements OnInit {
   public users: User[] = [];
   public selectedUser !: User;
   public selectedUsername !: string;
+  userid !: number
 
   //page variables
   //Will be set by API
   page: number = 1;
   maxItems: number = 1;
   //Customizable
-  maxOrdersPerPage = 2;
+  maxOrdersPerPage = 10;
 
   constructor(   
     private title : Title,
@@ -57,7 +58,8 @@ export class AdminPageComponent implements OnInit {
     ) {this.title.setTitle(translateService.instant('ADMIN MENU')) }
 
   ngOnInit(): void {
-
+    //this.loadUserOrders();
+    this.initParam();
   }
 
   //PARAM SECTION
@@ -69,8 +71,15 @@ export class AdminPageComponent implements OnInit {
       }
       else
         this.page=1;
+      const userIdParam = queryParams.get('userid');
+      if (!userIdParam)
+        return
+      
+      this.userid = Number.parseInt(userIdParam);
+      this.loadUserOrders();
     });
   }
+
 
   setUserIdParam(userid ?: number){
     if (userid)
@@ -106,14 +115,19 @@ export class AdminPageComponent implements OnInit {
   onOptionSelected(){
     if (!this.selectUserElement)
       return;
-    const username = this.selectUserElement.nativeElement.value;
-    this.loadUserOrders(username)
+    const userid = this.selectUserElement.nativeElement.value;
+    if (!userid)
+      return;  
+    this.userid = Number.parseInt(userid)
+    this.setUserIdParam(this.userid);
+    this.loadUserOrders()
   }
 
-  loadUserOrders(username ?: string){
-    if (!username)
+  loadUserOrders(){
+    if (!this.userid)
       return;
-    this.orderService.getAllOrdersByUsername(username,this.getParam()).subscribe(
+    
+    this.orderService.getAllOrdersByUserId(this.userid,this.getParam()).subscribe(
       (response) => {
         this.orders = response.content;
         this.maxItems = response.totalElements;
@@ -126,6 +140,9 @@ export class AdminPageComponent implements OnInit {
 
   getParam(){
     let params = new HttpParams();
+    if (this.page)
+      params = params.append("page", this.page-1);
+    params = params.append("size",this.maxOrdersPerPage);
     params = params.append("sort", "orderId" + ",desc");
     return params;
   }
