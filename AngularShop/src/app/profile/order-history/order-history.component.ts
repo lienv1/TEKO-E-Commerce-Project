@@ -1,6 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateService } from '@ngx-translate/core';
@@ -32,7 +33,7 @@ export class OrderHistoryComponent implements OnInit {
   //Customizable
   maxOrdersPerPage = 10; 
 
-  constructor(private route: ActivatedRoute, private translateService: TranslateService, private keycloakService: KeycloakService, private orderService: OrderService, private cart: ShoppingCart, private router: Router, private modalService: NgbModal, private datePipe: DatePipe) { }
+  constructor( private route: ActivatedRoute, private translateService: TranslateService, private keycloakService: KeycloakService, private orderService: OrderService, private cart: ShoppingCart, private router: Router, private modalService: NgbModal, private datePipe: DatePipe, private title:Title) {title.setTitle(translateService.instant('ORDER HISTORY')) }
 
   ngOnInit(): void {
     this.initParam();

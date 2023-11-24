@@ -77,7 +77,7 @@ export class ShopComponent implements OnInit {
     private productService: ProductService,
     private shoppingCart: ShoppingCart,
     private keycloakService: KeycloakService,
-    private modalService: NgbModal) { this.title.setTitle("Shop") }
+    private modalService: NgbModal) {this.title.setTitle(this.translate.instant('SHOP'));}
 
   ngOnInit(): void {
     this.isLogged().then(() =>

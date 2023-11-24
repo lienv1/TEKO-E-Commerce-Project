@@ -17,7 +17,7 @@ export class MainProfileComponent implements OnInit{
   constructor(private title:Title, private translator:TranslateService ){title.setTitle(translator.instant('PROFILE'))}
 
   ngOnInit(): void {
-  
+    
   }
 
 

@@ -1,8 +1,10 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { TranslateService } from '@ngx-translate/core';
 import { KeycloakService } from 'keycloak-angular';
 import { KeycloakProfile } from 'keycloak-js';
 import { CustomModalComponent } from 'src/app/modal/custom-modal/custom-modal.component';
@@ -29,7 +31,7 @@ export class ProfileEditComponent implements OnInit {
   username !: string
   newlyRegistered: boolean = false;
 
-  constructor(private keycloakService: KeycloakService, private userService: UserService, private modalService: NgbModal, private router: Router) {
+  constructor(private keycloakService: KeycloakService, private userService: UserService, private modalService: NgbModal, private router: Router, private title:Title, private translationService:TranslateService) {this.title.setTitle(this.translationService.instant('PROFILE EDIT'))
   }
 
   ngOnInit(): void {

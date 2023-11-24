@@ -35,11 +35,10 @@ export class CartComponent {
     private translate:TranslateService,
     private modalService: NgbModal,
     private keycloakService : KeycloakService
-    ) { }
+    ) {this.title.setTitle(this.translate.instant('CART')); }
 
   ngOnInit(): void {
     this.initCartItems();
-    this.title.setTitle("Cart");
   }
 
   ngAfterViewInit(){

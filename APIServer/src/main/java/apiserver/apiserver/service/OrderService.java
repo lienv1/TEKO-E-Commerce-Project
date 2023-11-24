@@ -55,7 +55,7 @@ public class OrderService {
 	}
 	
 	public Page<Order> getAllOrdersByUserid(long userid, Pageable page){
-		return orderRepo.findAll(page);
+		return orderRepo.findByUserUserId(userid, page);
 	}
 
 }

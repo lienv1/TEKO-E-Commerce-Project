@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Title } from '@angular/platform-browser';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-home',
@@ -8,10 +9,8 @@ import { Title } from '@angular/platform-browser';
 })
 export class HomeComponent {
 
-  title = "Home"
-
-  constructor(private titleSerice : Title) { 
-    this.titleSerice.setTitle(`${this.title}`);
+  constructor(private titleSerice : Title, private translationService:TranslateService ) { 
+    this.titleSerice.setTitle(this.translationService.instant('HOME'));
   }
 
   ngOnInit(): void {

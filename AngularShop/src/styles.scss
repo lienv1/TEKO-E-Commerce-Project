@@ -16,3 +16,8 @@ a {
 .lightModeText {
 color: #095779;
 }
+
+input:disabled{
+  color: gray;
+  background-color: lightgray !important;
+}

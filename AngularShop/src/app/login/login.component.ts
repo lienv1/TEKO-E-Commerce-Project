@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import { KeycloakService } from 'keycloak-angular';
 import { KeycloakLoginOptions } from 'keycloak-js';
 
@@ -17,10 +18,11 @@ export class LoginComponent {
   constructor(
     private title:Title,
     private keycloakService: KeycloakService, 
-    private router: Router) { }
+    private translate:TranslateService,
+    private router: Router) {this.title.setTitle(this.translate.instant('LOGIN'));}
 
   ngOnInit(): void {
-    this.title.setTitle("Login");
+    
   }
 
   ngAfterViewInit(): void {

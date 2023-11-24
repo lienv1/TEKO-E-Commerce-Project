@@ -92,6 +92,7 @@ export class AdminPageComponent implements OnInit {
   //PARAM SECTION END
 
   public searchUsername(keyword:string){
+    this.setPageParamManually(1);
     this.users = [];
     this.orders = [];
     if (keyword.length<3){
@@ -121,12 +122,13 @@ export class AdminPageComponent implements OnInit {
     this.userid = Number.parseInt(userid)
     this.setUserIdParam(this.userid);
     this.loadUserOrders()
+    this.setPageParamManually(1);
   }
 
   loadUserOrders(){
     if (!this.userid)
       return;
-    
+    console.log(this.userid);
     this.orderService.getAllOrdersByUserId(this.userid,this.getParam()).subscribe(
       (response) => {
         this.orders = response.content;
@@ -142,7 +144,7 @@ export class AdminPageComponent implements OnInit {
     let params = new HttpParams();
     if (this.page)
       params = params.append("page", this.page-1);
-    params = params.append("size",this.maxOrdersPerPage);
+    params = params.append("size",this.maxOrdersPerPage); 
     params = params.append("sort", "orderId" + ",desc");
     return params;
   }
@@ -229,6 +231,12 @@ export class AdminPageComponent implements OnInit {
     public setPageParam() {
       this.router.navigate([], {
         queryParams: { page: this.page },
+        queryParamsHandling: 'merge'
+      })
+    }
+    public setPageParamManually(page:number) {
+      this.router.navigate([], {
+        queryParams: { page: page },
         queryParamsHandling: 'merge'
       })
     }
