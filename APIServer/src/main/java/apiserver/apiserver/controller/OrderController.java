@@ -81,6 +81,20 @@ public class OrderController {
 		Page<Order> orders = orderService.getAllOrdersByUsername(username,page);
 		return new ResponseEntity<Page<Order>>(orders, HttpStatus.OK);
 	}
+	
+	@GetMapping("/userid/{userid}")
+	@PreAuthorize(value = "hasRole('ADMIN')")
+	public ResponseEntity<Page<Order>> getOrdersByUserId(@PathVariable("userid") int userid,
+			Principal principal,
+			Pageable page
+			) {
+
+		boolean userExist = userService.userExistByUserId(userid);
+		if (!userExist) return ResponseEntity.notFound().build();		
+
+		Page<Order> orders = orderService.getAllOrdersByUserid(userid,page);
+		return new ResponseEntity<Page<Order>>(orders, HttpStatus.OK);
+	}
 
 	@PostMapping("/username/{username}")
 	@PreAuthorize(value = "hasAnyRole('ADMIN','CUSTOMER')")

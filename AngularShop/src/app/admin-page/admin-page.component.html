@@ -56,7 +56,7 @@
           </div>
       </div>
 
-        <pagination-controls (pageChange)="page = $event" (click)="scroll(title)" [nextLabel]="getTranslation('NEXT')"
+        <pagination-controls (pageChange)="page = $event" (click)="scroll(title); setPageParam();" [nextLabel]="getTranslation('NEXT')"
           [previousLabel]="getTranslation('PREVIOUS')"></pagination-controls>
 
       </div>

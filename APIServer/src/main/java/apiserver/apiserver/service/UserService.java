@@ -84,4 +84,8 @@ public class UserService {
 		return userRepo.existsByUsername(username);
 	}
 	
+	public boolean userExistByUserId(long userid) {
+		return userRepo.existsById(userid);
+	}
+	
 }

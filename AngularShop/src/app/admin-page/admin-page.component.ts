@@ -2,7 +2,7 @@ import { DatePipe } from '@angular/common';
 import { HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateService } from '@ngx-translate/core';
 import { KeycloakService } from 'keycloak-angular';
@@ -34,6 +34,7 @@ export class AdminPageComponent implements OnInit {
   //Admin privilege
   public users: User[] = [];
   public selectedUser !: User;
+  public selectedUsername !: string;
 
   //page variables
   //Will be set by API
@@ -51,11 +52,35 @@ export class AdminPageComponent implements OnInit {
     private keycloakService: KeycloakService, 
     private router: Router,
     private modalService : NgbModal,
-    private translateService:TranslateService) {this.title.setTitle(translateService.instant('ADMIN MENU')) }
+    private translateService:TranslateService,
+    private route : ActivatedRoute
+    ) {this.title.setTitle(translateService.instant('ADMIN MENU')) }
 
   ngOnInit(): void {
 
   }
+
+  //PARAM SECTION
+  initParam() {
+    this.route.queryParamMap.subscribe(queryParams => {
+      const pageParam = queryParams.get('page');
+      if (pageParam && pageParam !== "1"){
+        this.page = Number.parseInt(pageParam);
+      }
+      else
+        this.page=1;
+    });
+  }
+
+  setUserIdParam(userid ?: number){
+    if (userid)
+      this.router.navigate([], {
+        queryParams: { userid: userid },
+        queryParamsHandling: 'merge'
+      });
+  }
+
+  //PARAM SECTION END
 
   public searchUsername(keyword:string){
     this.users = [];
@@ -68,7 +93,8 @@ export class AdminPageComponent implements OnInit {
       (response) => {
         this.users = response;
         if(this.users.length>0){
-          this.loadUserOrders(this.users[0].username)
+          //this.loadUserOrders(this.users[0].username) dont load here, just set the userid in parameter
+          this.setUserIdParam(this.users[0].userId)
         }
       },
       (error:HttpErrorResponse) => {
@@ -99,8 +125,9 @@ export class AdminPageComponent implements OnInit {
   }
 
   getParam(){
-    let param = new HttpParams();
-    return param;
+    let params = new HttpParams();
+    params = params.append("sort", "orderId" + ",desc");
+    return params;
   }
 
   scroll(el: HTMLElement) {
@@ -180,6 +207,16 @@ export class AdminPageComponent implements OnInit {
   }
   //modal section ends
   //Popup section end
+
+    //PAGE SECTION
+    public setPageParam() {
+      this.router.navigate([], {
+        queryParams: { page: this.page },
+        queryParamsHandling: 'merge'
+      })
+    }
+    //PAGE SECTION ENDS
+  
 
   public getTranslation(str:string){
     return this.translateService.instant(str)
