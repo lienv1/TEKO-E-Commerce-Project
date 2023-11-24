@@ -47,19 +47,6 @@ public class EmailController {
 		return ResponseEntity.ok().build();
 	}
 	
-	@PostMapping("/apikey/{apikey}")
-	public ResponseEntity<?> receiveAPIKey(@PathVariable("apikey") String apikey, HttpServletRequest request){
-		if (apikey == null || apikey == "") 
-			return ResponseEntity.badRequest().build();
-		String preSharedKey = request.getHeader("Authorization");
-		if (!preSharedKey.equals(this.preSharedKey)) 
-			return new ResponseEntity(HttpStatus.UNAUTHORIZED);
-		this.securityService.setApiKey(apikey);
-		System.out.println("apikey: "+apikey);
-		System.out.println("presharedkey: "+preSharedKey);
-		return ResponseEntity.ok().build();
-	}
-	
 //	@GetMapping("/testmail")
 //	public ResponseEntity<?> testing(){
 //		boolean success = emailService.sendTest();

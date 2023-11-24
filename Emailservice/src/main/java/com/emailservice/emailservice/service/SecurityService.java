@@ -13,7 +13,6 @@ import org.springframework.web.client.RestTemplate;
 public class SecurityService {
 	
 	private String apikey;
-	
 	private String preSharedKey;
 	private String host;
 	
@@ -22,11 +21,7 @@ public class SecurityService {
 		this.host = "http://"+ host;
 		setupAPIKey();
 	}
-	
-	public void setApiKey(String apikey) {
-		this.apikey = apikey;
-	}
-	
+
 	public boolean setupAPIKey() {
 		try {
 			RestTemplate restTemplate = new RestTemplate();
