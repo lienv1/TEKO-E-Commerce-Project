@@ -18,7 +18,7 @@ export class UserService {
   constructor(private http: HttpClient, private keycloakService: KeycloakService) { }
 
   public getUserdata(username:string): Observable<User> {
-    return this.http.get<User>(`${this.backendAPI}/user/username/${username}`, { withCredentials: true });
+    return this.http.get<User>(`${this.backendAPI}/user/username/${username}`);
   }
 
   public getUsersByKeyword(keyword:string): Observable<User[]> {
