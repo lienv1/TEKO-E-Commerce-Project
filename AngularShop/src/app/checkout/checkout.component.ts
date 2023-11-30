@@ -145,7 +145,7 @@ export class CheckoutComponent {
   public loadUser(username:string) {
     this.userService.getUserdata(username).subscribe({
       next: (response) => {this.fillFormBackend(response); if(response.userId) this.userId = response.userId},
-      error: (error) => {if(error.status === 404) this.redirectToProfilEdit(); else this.popupModal(error.message, "Error " + error.status, "Red");}
+      error: (error:HttpErrorResponse) => {if(error.status === 404) this.redirectToProfilEdit(); else this.popupModal(error.message, "Error " + error.status, "Red");}
     })
   }
 
