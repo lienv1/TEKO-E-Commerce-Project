@@ -36,9 +36,7 @@ export class LoginComponent {
     ).catch ((error) => {
       console.log("Error in keycloakService.isLoggedIn(): " + error)
     })
-
   }
-
 
   login() {
     this.keycloakService.login(this.keycloakRedirectOption());

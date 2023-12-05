@@ -69,7 +69,6 @@ public class ProductController {
 	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<Product> addProduct(@RequestBody Product product, Principal principal) {
 		String username = principal.getName();
-		System.out.println(username);
 		if (!authorizationService.isAuthenticatedByPrincipal(principal, username))
 			return new ResponseEntity(HttpStatus.UNAUTHORIZED);
 		Product newProduct = productService.addProduct(product);

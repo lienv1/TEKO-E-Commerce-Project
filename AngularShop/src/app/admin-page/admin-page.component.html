@@ -21,7 +21,7 @@
     <!-- Center section with title and table -->
     <div class="col-md-9">
       <h2 class="mb-4" #title>{{"ORDER HISTORY" | translate}}</h2>
-      <div class="accordion" id="orderHistoryAccordion">
+      <div class="accordion mb-4" id="orderHistoryAccordion">
 
 
         <div *ngFor="let order of orders | paginate: { itemsPerPage: maxOrdersPerPage, currentPage: page, totalItems:maxItems }" class="accordion-item" >
@@ -56,11 +56,13 @@
           </div>
       </div>
 
-        <pagination-controls (pageChange)="page = $event" (click)="scroll(title); setPageParam();" [nextLabel]="getTranslation('NEXT')"
-          [previousLabel]="getTranslation('PREVIOUS')"></pagination-controls>
-
       </div>
+      <pagination-controls (pageChange)="page = $event" (click)="scroll(title); setPageParam();" [nextLabel]="getTranslation('NEXT')"
+    [previousLabel]="getTranslation('PREVIOUS')"></pagination-controls>
     </div>
+
+    
+
   </div>
 </div>
 <br>

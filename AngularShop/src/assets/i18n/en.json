@@ -125,5 +125,7 @@
     "ADMIN MENU": "Admin Menu",
     "SEARCH CUSTOMER": "Search Customer",
     "SEARCH BY USERNAME": "Search by Username",
-    "DARK MODE" : "Dark Mode"
+    "DARK MODE" : "Dark Mode",
+    "COMPLETE PROFILE":"Please complete your profile details first",
+    "PROFILE UNFINISHED":"Profile unfinished"
 }

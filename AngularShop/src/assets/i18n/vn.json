@@ -125,5 +125,7 @@
     "ADMIN MENU": "Menu quản trị",
     "SEARCH CUSTOMER": "Tìm kiếm khách hàng",
     "SEARCH BY USERNAME": "Tìm kiếm theo tên người dùng",
-    "DARK MODE" : "Chế độ tối"
+    "DARK MODE" : "Chế độ tối",
+    "COMPLETE PROFILE": "Vui lòng hoàn thiện thông tin hồ sơ của bạn trước",
+    "PROFILE UNFINISHED": "Hồ sơ chưa hoàn thành"
 }

@@ -339,8 +339,8 @@ export class CheckoutComponent {
   public redirectToProfilEdit(){
     this.router.navigateByUrl("/profile/edit");
     let modal = this.customeModalComponent;
-    modal.message = "Please setup your profile first";
-    modal.title = "Profile unfinished";
+    modal.message = this.translateService.instant('COMPLETE PROFILE');
+    modal.title = this.translateService.instant('PROFILE UNFINISHED');
     modal.colorTitle = "black";
     this.openModal(modal,false);
   }

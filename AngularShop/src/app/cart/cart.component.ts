@@ -9,6 +9,7 @@ import { FunctionModel } from '../model/functionModel';
 import { Product } from '../model/product';
 import { ShoppingCart } from '../service/shoppingCart';
 import { CustomModalComponent } from '../modal/custom-modal/custom-modal.component';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-cart',
@@ -23,6 +24,7 @@ export class CartComponent {
   public cartItems: CartItem[] = [];
   public page : number = 1;
   public logged = false;
+  public fileServer = environment.fileServerAPI;
 
   showAlert = false;
 

@@ -125,5 +125,7 @@
     "ADMIN MENU": "管理员菜单",
     "SEARCH CUSTOMER": "搜索客户",
     "SEARCH BY USERNAME": "按用户名搜索",
-    "DARK MODE" : "暗模式"
+    "DARK MODE" : "暗模式",
+    "COMPLETE PROFILE": "请先完成您的个人资料",
+    "PROFILE UNFINISHED": "个人资料未完成"
 }

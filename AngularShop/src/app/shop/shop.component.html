@@ -68,13 +68,13 @@
                             <button class="nav-link dropdown-toggle" id="navbarBrandDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                               {{'BRAND'| translate}}
                             </button>
-                            <ul class="dropdown-menu" aria-labelledby="navbarBrandDropdown">
+                            <ul class="dropdown-menu scrollable-dropdown" aria-labelledby="navbarBrandDropdown">
                               <!-- Wrap checkboxes in div and stop propagation to keep the dropdown open when clicking inside -->
-                              <div *ngFor="let brand of filters?.brands" onclick="event.stopPropagation();">
-                                <label class="dropdown-item">
-                                  <input class="form-check-input me-1" type="checkbox" value="Brand1" id="brand_{{handleEmptySpaces(brand)}}" (change)="onBrandChange($event, brand)" [checked]="brandIsChecked(brand)">
-                                    {{brand}}
-                                </label>
+                                <div *ngFor="let brand of filters?.brands" onclick="event.stopPropagation();">
+                                  <label class="dropdown-item">
+                                    <input class="form-check-input me-1" type="checkbox" value="Brand1" id="brand_{{handleEmptySpaces(brand)}}" (change)="onBrandChange($event, brand)" [checked]="brandIsChecked(brand)">
+                                      {{brand}}
+                                  </label>
                               </div>
                             </ul>
                           </li>
@@ -83,7 +83,7 @@
                             <button class="nav-link dropdown-toggle" id="navbarOriginDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                               {{'COUNTRY OF ORIGIN' | translate}}
                             </button>
-                            <ul class="dropdown-menu" aria-labelledby="navbarOriginDropdown">
+                            <ul class="dropdown-menu scrollable-dropdown" aria-labelledby="navbarOriginDropdown">
                               <!-- Wrap checkboxes in div and stop propagation to keep the dropdown open when clicking inside -->
                               <div *ngFor="let origin of filters?.origins" onclick="event.stopPropagation();">
                                 <label class="dropdown-item">
@@ -97,7 +97,7 @@
                             <button class="nav-link dropdown-toggle" id="navbarSortDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                               {{'SORT BY' | translate}}
                             </button>
-                            <ul class="dropdown-menu" aria-labelledby="navbarSortDropdown">
+                            <ul class="dropdown-menu scrollable-dropdown" aria-labelledby="navbarSortDropdown">
                               <div *ngFor="let option of sortOptions" onclick="event.stopPropagation();">
                                 <div onclick="event.stopPropagation();">
                                   <label class="dropdown-item">
@@ -131,7 +131,7 @@
                         <a class="d-flex justify-content-center align-items-center"
                             [routerLink]="['/product/'+product.productId]"> <img class="card-img-top"
                                 style="max-height: 15em; width: auto; max-width: 17em;"
-                                src ="{{fileServer}}/images/products/{{product.productId}}.png"
+                                src ="{{fileServer}}/images/products_tn/tn_{{product.productId}}.jpg"
                                 onerror="this.onerror=null; this.src='assets/NotFound.png'"
                                 alt = "Product image" 
                                 /></a>

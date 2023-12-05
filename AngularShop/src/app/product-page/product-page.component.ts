@@ -12,6 +12,7 @@ import { Product } from '../model/product';
 import { ProductService } from '../service/product.service';
 import { ShoppingCart } from '../service/shoppingCart';
 import { CustomModalComponent } from '../modal/custom-modal/custom-modal.component';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-product-page',
@@ -28,6 +29,8 @@ export class ProductPageComponent {
   public logged: boolean = false
   public cartMessage: string = "";
   username?: string;
+
+  public fileServer: string = environment.fileServerAPI;
 
   @ViewChild("quantityOption") quantityOption !: ElementRef<HTMLSelectElement>
   @ViewChild("quantityInput") quantityInput !: ElementRef<HTMLInputElement>
