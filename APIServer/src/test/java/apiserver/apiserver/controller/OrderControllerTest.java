@@ -22,11 +22,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -59,14 +64,13 @@ class OrderControllerTest {
 	@Autowired
 	private MockMvc mockMvc;
 	
-	
-	
 	@Autowired
 	private ObjectMapper objectMapper;
 	
 	private User user;
 	private Product product;
 	private Order order;
+	private Pageable pageable;
 	
 	@BeforeEach
 	void init() {
@@ -88,6 +92,8 @@ class OrderControllerTest {
 		order.setUser(user);
 		order.setOrderId(100000l);
 		
+		pageable = PageRequest.of(0, 10);
+		
 		when(userService.userExistsByUsername(anyString())).thenReturn(true);
 //		emailservice.setupEmailAPIKey("my-secret-pw");
 	}
@@ -103,6 +109,7 @@ class OrderControllerTest {
 	
 	void isAuthenticatedByPrincipal(boolean authenticated) {
 		when(authorizationService.isAuthenticatedByPrincipal(any(Principal.class), anyString())).thenReturn(authenticated);
+	
 	}
 	
 	@Test
@@ -122,7 +129,7 @@ class OrderControllerTest {
 		when(orderService.getOrderById(order.getOrderId())).thenReturn(order);
 		mockMvc.perform(get("/order/id/"+order.getOrderId())
 				.with(csrf()))
-		.andExpect(status().isUnauthorized()).andDo(print());
+		.andExpect(status().isUnauthorized());
 	}
 	
 	@Test
@@ -139,68 +146,65 @@ class OrderControllerTest {
 	@Test
 	@WithMockUser
 	void getOrdersByUsername() throws Exception{
-//		isAuthenticatedByPrincipal(true);
-//		List <Order> orders = new ArrayList<Order>();
-//		orders.add(order);
-//		when(orderService.getAllOrdersByUsername(user.getUsername())).thenReturn(orders);
-//		mockMvc.perform(get("/order/username/"+user.getUsername())
-//				.with(csrf()))
-//		.andExpect(status().isOk())
-//		.andExpect(jsonPath("$", hasSize(1)));
+		isAuthenticatedByPrincipal(true);
+		List <Order> orders = new ArrayList<Order>();
+		orders.add(order);
+		Page<Order> orderPage = new PageImpl<>(orders, pageable, orders.size());
+		when(orderService.getAllOrdersByUsername(anyString(), any(Pageable.class))).thenReturn(orderPage);
+		/*MvcResult result =*/ mockMvc.perform(get("/order/username/" + user.getUsername())
+	            .with(csrf()))
+	        .andExpect(status().isOk())
+	        .andExpect(jsonPath("$.content", hasSize(1))).andReturn();
 	}
 	
 	@Test
 	@WithMockUser
-	@Deprecated
 	void getOrdersByUsernameFail() throws Exception{
-//		isAuthenticatedByPrincipal(false);
-//		List <Order> orders = new ArrayList<Order>();
-//		orders.add(order);
-//		when(orderService.getAllOrdersByUsername(user.getUsername())).thenReturn(orders);
-//		mockMvc.perform(get("/order/username/"+user.getUsername())
-//				.with(csrf()))
-//		.andExpect(status().isUnauthorized());
+		List <Order> orders = new ArrayList<Order>();
+		orders.add(order);
+		Page<Order> orderPage = new PageImpl<>(orders, pageable, orders.size());
+		when(userService.userExistsByUsername(anyString())).thenReturn(false);
+		when(orderService.getAllOrdersByUsername(anyString(),any(Pageable.class))).thenReturn(orderPage);
+		mockMvc.perform(get("/order/username/"+user.getUsername())
+				.with(csrf()))
+		.andExpect(status().isNotFound());
 	}
 	
 	@Test
 	@WithMockUser
-	@Deprecated
 	void addOrder() throws Exception {
-//		isAuthenticatedByPrincipal(true);
-//		when(orderService.addOrder(any(Order.class))).thenReturn(order);
-//		mockMvc.perform(post("/order/username/"+user.getUsername())
-//				.with(csrf())
-//				.contentType(MediaType.APPLICATION_JSON)
-//				.content(objectMapper.writeValueAsString(order)))
-//		.andExpect(status().isOk())
-//		.andExpect(jsonPath("$.orderId", is(order.getOrderId()), Long.class));
+		isAuthenticatedByPrincipal(true);
+		when(orderService.addOrder(any(Order.class))).thenReturn(order);
+		mockMvc.perform(post("/order/username/"+user.getUsername())
+				.with(csrf())
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(order)))
+		.andExpect(status().isOk())
+		.andExpect(jsonPath("$.orderId", is(order.getOrderId()), Long.class));
 	}
 	
 	@Test
 	@WithMockUser
-	@Deprecated
 	void addOrderFail() throws Exception {
-//		isAuthenticatedByPrincipal(true);
-//		String nonExistent = "non-existent";
-//		when(orderService.addOrder(any(Order.class))).thenThrow(new DataIntegrityViolationException("User doesn't exist"));
-//		mockMvc.perform(post("/order/username/"+nonExistent)
-//				.with(csrf())
-//				.contentType(MediaType.APPLICATION_JSON)
-//				.content(objectMapper.writeValueAsString(order)))
-//		.andExpect(status().isNotFound());
+		String nonExistent = "non-existent";
+		when(orderService.addOrder(any(Order.class))).thenThrow(new DataIntegrityViolationException("User doesn't exist"));
+		mockMvc.perform(post("/order/username/"+nonExistent)
+				.with(csrf())
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(order)))
+		.andExpect(status().isNotFound());
 	}
 	
 	@Test
 	@WithMockUser
-	@Deprecated
 	void addOrderFail2() throws Exception {
-//		isAuthenticatedByPrincipal(false);
-//		String nonExistent = "non-existent";
-//		mockMvc.perform(post("/order/username/"+nonExistent)
-//				.with(csrf())
-//				.contentType(MediaType.APPLICATION_JSON)
-//				.content(objectMapper.writeValueAsString(order)))
-//		.andExpect(status().isUnauthorized());
+		when(userService.userExistsByUsername(anyString())).thenReturn(false);
+		String nonExistent = "non-existent";
+		mockMvc.perform(post("/order/username/"+nonExistent)
+				.with(csrf())
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(order)))
+		.andExpect(status().isNotFound());
 	}
 
 }

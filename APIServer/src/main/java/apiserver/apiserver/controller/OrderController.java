@@ -68,7 +68,7 @@ public class OrderController {
 			) {
 		boolean userExist = userService.userExistsByUsername(username);
 		if (!userExist) return ResponseEntity.notFound().build();		
-
+		
 		Page<Order> orders = orderService.getAllOrdersByUsername(username,page);
 		return new ResponseEntity<Page<Order>>(orders, HttpStatus.OK);
 	}
@@ -106,7 +106,6 @@ public class OrderController {
 			
 			return new ResponseEntity<Order>(addedOrder, HttpStatus.OK);
 		} catch (DataIntegrityViolationException e) {
-			e.printStackTrace();
 			return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
 		}
 	}
