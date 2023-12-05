@@ -124,7 +124,7 @@ class FavoriteControllerTest {
 	
 	@Test
 	@WithMockUser
-	@Deprecated //FavoriteRepo no longer returns a value
+	@Deprecated //FavoriteRepo.addFavoriteByUsernameAndProductId() no longer returns a value
 	void addFavoriteTest() throws Exception {
 //		isAuthenticatedByPrincipal(true);
 //		when(favoriteService.addFavoriteByUsernameAndProductId(user.getUsername(),product.getProductId())).thenReturn(favorite);
