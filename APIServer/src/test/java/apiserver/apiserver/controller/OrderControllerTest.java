@@ -119,7 +119,6 @@ class OrderControllerTest {
 	@Test
 	@WithMockUser
 	void getOrderByIdTestFail() throws Exception {
-		isAuthenticatedByPrincipal(false);	
 		when(orderService.getOrderById(order.getOrderId())).thenReturn(order);
 		mockMvc.perform(get("/order/id/"+order.getOrderId())
 				.with(csrf()))
@@ -139,7 +138,6 @@ class OrderControllerTest {
 	
 	@Test
 	@WithMockUser
-	@Deprecated
 	void getOrdersByUsername() throws Exception{
 //		isAuthenticatedByPrincipal(true);
 //		List <Order> orders = new ArrayList<Order>();

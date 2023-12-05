@@ -49,14 +49,11 @@ public class OrderController {
 	@GetMapping("/id/{id}")
 	@PreAuthorize(value = "hasAnyRole('ADMIN','CUSTOMER')")
 	public ResponseEntity<Order> getOrderById(@PathVariable("id") Long id, Principal principal) {
-		boolean isAuthenticated = authorizationService.isAuthenticatedByPrincipal(principal, principal.getName());
-
-		if (!isAuthenticated) {
-			return new ResponseEntity(HttpStatus.UNAUTHORIZED);
-		}
-	
 		try {
 			Order order = orderService.getOrderById(id);
+			boolean isAuthenticated = authorizationService.isAuthenticatedByPrincipal(principal, order.getUser().getUsername());
+			if (!isAuthenticated)
+				return new ResponseEntity(HttpStatus.UNAUTHORIZED);
 			return new ResponseEntity<Order>(order, HttpStatus.OK);
 		} catch (OrderNotFoundException e) {
 			return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
@@ -64,17 +61,11 @@ public class OrderController {
 	}
 
 	@GetMapping("/username/{username}")
-	@PreAuthorize(value = "hasAnyRole('ADMIN','CUSTOMER')")
+	@PreAuthorize("hasRole('ADMIN') or #username ==  authentication.name")
 	public ResponseEntity<Page<Order>> getOrdersByUsername(@PathVariable("username") String username,
 			Principal principal,
 			Pageable page
 			) {
-		boolean isAuthenticated = authorizationService.isAuthenticatedByPrincipal(principal, username);
-
-		if (!isAuthenticated) {
-			return new ResponseEntity(HttpStatus.UNAUTHORIZED);
-		}
-		
 		boolean userExist = userService.userExistsByUsername(username);
 		if (!userExist) return ResponseEntity.notFound().build();		
 
@@ -88,7 +79,6 @@ public class OrderController {
 			Principal principal,
 			Pageable page
 			) {
-
 		boolean userExist = userService.userExistByUserId(userid);
 		if (!userExist) return ResponseEntity.notFound().build();		
 
@@ -97,16 +87,12 @@ public class OrderController {
 	}
 
 	@PostMapping("/username/{username}")
-	@PreAuthorize(value = "hasAnyRole('ADMIN','CUSTOMER')")
+	@PreAuthorize("hasRole('ADMIN') or #username ==  authentication.name")
 	public ResponseEntity<Order> addOrder(
 			@PathVariable("username") String username, 
 			@RequestBody Order order, 
 			@RequestParam(value="lang", required = false) String language,
-			Principal principal) {
-		boolean isAuthenticated = authorizationService.isAuthenticatedByPrincipal(principal, username);
-		if (!isAuthenticated) {
-			return new ResponseEntity(HttpStatus.UNAUTHORIZED);
-		}
+			Principal principal) {	
 		
 		boolean userExist = userService.userExistsByUsername(username);
 		if (!userExist) return ResponseEntity.notFound().build();		
