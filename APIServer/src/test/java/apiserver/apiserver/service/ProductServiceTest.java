@@ -39,7 +39,7 @@ class ProductServiceTest {
 		product.setProductId(14326l);
 		product.setProductName("Sriracha Hot Chili Sauce");
 		product.setBrand("Huy Fong Foods");
-		product.setWeight(481);
+		product.setWeight("481");
 		product.setCategory("Dry Goods");
 		product.setSubCategory("Sauce");
 		product.setPack(12);

@@ -61,7 +61,7 @@ class ProductControllerTest {
 		product.setProductId(14326l);
 		product.setProductName("Sriracha Hot Chili Sauce");
 		product.setBrand("Huy Fong Foods");
-		product.setWeight(481);
+		product.setWeight("481");
 		product.setCategory("Dry Goods");
 		product.setSubCategory("Sauce");
 		product.setPack(12);
@@ -194,30 +194,32 @@ class ProductControllerTest {
 		.andExpect(status().isUnauthorized());
 	}
 
-	@Test
-	@WithMockUser
-	void testDeleteProduct() throws Exception {
-		when(authorizationService.isAuthenticatedByPrincipal(any(Principal.class), any(String.class))).thenReturn(true);
-		when(productService.deleteProduct(product.getProductId())).thenReturn(product);
-		product.setDeleted(true);
-		mockMvc.perform(delete("/product/id/"+product.getProductId())
-				.with(csrf())
-				)
-		.andExpect(status().isOk())
-		.andExpect(jsonPath("$.deleted", is(true)));
-	}
+//	@Test
+//	@WithMockUser
+//	@Deprecated
+//	void testDeleteProduct() throws Exception {
+//		when(authorizationService.isAuthenticatedByPrincipal(any(Principal.class), any(String.class))).thenReturn(true);
+//		when(productService.deleteProduct(product.getProductId())).thenReturn(product);
+//		product.setDeleted(true);
+//		mockMvc.perform(delete("/product/id/"+product.getProductId())
+//				.with(csrf())
+//				)
+//		.andExpect(status().isOk())
+//		.andExpect(jsonPath("$.deleted", is(true)));
+//	}
 	
-	@Test
-	@WithMockUser
-	void testDeleteProductFail() throws Exception {
-		when(authorizationService.isAuthenticatedByPrincipal(any(Principal.class), any(String.class))).thenReturn(false);
-		when(productService.deleteProduct(product.getProductId())).thenReturn(product);
-		product.setDeleted(true);
-		mockMvc.perform(delete("/product/id/"+product.getProductId())
-				.with(csrf())
-				)
-		.andExpect(status().isUnauthorized());
-	}
+//	@Test
+//	@WithMockUser
+//	@Deprecated
+//	void testDeleteProductFail() throws Exception {
+//		when(authorizationService.isAuthenticatedByPrincipal(any(Principal.class), any(String.class))).thenReturn(false);
+//		when(productService.deleteProduct(product.getProductId())).thenReturn(product);
+//		product.setDeleted(true);
+//		mockMvc.perform(delete("/product/id/"+product.getProductId())
+//				.with(csrf())
+//				)
+//		.andExpect(status().isUnauthorized());
+//	}
 	
 	@Deprecated
 	@Test

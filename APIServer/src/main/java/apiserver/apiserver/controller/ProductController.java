@@ -93,7 +93,7 @@ public class ProductController {
 		}
 	}
 
-	@DeleteMapping("/id/{id}")
+	/*@DeleteMapping("/id/{id}")
 	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<Product> deleteProduct(@PathVariable("id") Long id, Principal principal) {
 
@@ -106,7 +106,7 @@ public class ProductController {
 		} catch (ProductNotFoundException e) {
 			return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
 		}
-	}
+	}*/
 
 	@GetMapping("/filter")
 	public ResponseEntity<Page<Product>> getProductsByFilter(
@@ -176,6 +176,13 @@ public class ProductController {
 		
 		FilterDTO filters = productService.getFiltersByFavorite(username);
 		return new ResponseEntity<FilterDTO>(filters,HttpStatus.OK);	
+	}
+	
+	@DeleteMapping("/products")
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<String> deleteAllProducts(){
+		productService.deleteAllProducts();
+		return ResponseEntity.ok().build();
 	}
 
 }

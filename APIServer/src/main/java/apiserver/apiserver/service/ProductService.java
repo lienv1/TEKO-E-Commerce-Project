@@ -35,7 +35,7 @@ public class ProductService {
 	}
 
 	public Page<Product> getProducts(Pageable pageable) {
-		return productRepo.findAll(pageable);
+		return productRepo.findAllActiveProducts(pageable);
 	}
 
 	public Product getProductById(Long id) throws ProductNotFoundException {
@@ -53,12 +53,12 @@ public class ProductService {
 		return productRepo.save(product);
 	}
 
-	public Product deleteProduct(Long id) throws ProductNotFoundException {
+	/*public Product deleteProduct(Long id) throws ProductNotFoundException {
 		boolean isPresent = productRepo.existsById(id);
 		if (!isPresent)
 			throw new ProductNotFoundException("");
 		return productRepo.updateDeletedStatus(id, true);
-	}
+	}*/
 
 	public Page<Product> getProductsByFilters(List<String> brands, String category, String subCategory,
 			List<String> origins, Pageable page) {
@@ -77,6 +77,7 @@ public class ProductService {
 		if (origins != null && !origins.isEmpty()) {
 			specification = specification.and(ProductSpecifications.hasOrigin(origins));
 		}
+		specification = specification.and(ProductSpecifications.isNotDeleted());
 
 		return productRepo.findAll(specification, page);
 	}
@@ -85,6 +86,7 @@ public class ProductService {
 		Specification<Product> specification = Specification.where(null);
 		if (keywords != null && !keywords.isEmpty()) {
 			specification = specification.and(ProductSpecifications.hasSearchIndex(keywords));
+			specification = specification.and(ProductSpecifications.isNotDeleted());
 		}
 		return productRepo.findAll(specification, page);
 	}
@@ -147,6 +149,10 @@ public class ProductService {
 		filter.setBrands(brands);
 		filter.setOrigins(origins);
 		return filter;
+	}
+	
+	public void deleteAllProducts() {
+		productRepo.updateAllDeletedStatus(true);
 	}
 
 }

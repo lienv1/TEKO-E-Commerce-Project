@@ -33,7 +33,7 @@ class ProductRepoTest {
 		product.setProductId(14326l);
 		product.setProductName("Sriracha Hot Chili Sauce");
 		product.setBrand("Huy Fong Foods");
-		product.setWeight(481);
+		product.setWeight("481");
 		product.setCategory("Dry Goods");
 		product.setSubCategory("Sauce");
 		product.setPack(12);
@@ -58,7 +58,7 @@ class ProductRepoTest {
 		assertNotNull(retrievedProduct.getProductId());
 		assertEquals("Sriracha Hot Chili Sauce", retrievedProduct.getProductName());
 		assertEquals("Huy Fong Foods", retrievedProduct.getBrand());
-		assertEquals(481, retrievedProduct.getWeight());
+		assertEquals("481", retrievedProduct.getWeight());
 		assertEquals("Dry Goods", retrievedProduct.getCategory());
 		assertEquals("Sauce", retrievedProduct.getSubCategory());
 		assertEquals(12, retrievedProduct.getPack());

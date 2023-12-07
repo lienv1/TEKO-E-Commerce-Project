@@ -9,6 +9,10 @@ import apiserver.apiserver.model.Product;
 import jakarta.persistence.criteria.Predicate;
 
 public class ProductSpecifications {
+	
+	  public static Specification<Product> isNotDeleted() {
+	        return (root, query, criteriaBuilder) -> criteriaBuilder.isFalse(root.get("deleted"));
+	    }
 
 	public static Specification<Product> hasBrand(List<String> brands) {
 		return (root, query, criteriaBuilder) -> {
