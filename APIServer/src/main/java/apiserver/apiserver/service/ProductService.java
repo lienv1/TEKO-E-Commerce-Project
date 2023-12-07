@@ -38,6 +38,31 @@ public class ProductService {
 		return productRepo.findAllActiveProducts(pageable);
 	}
 
+	public Page<Product> getProducts2(Pageable pageable, List<String> origins, List<String> brands, String category, String subCategory, List<String> keywords, String username) {
+		Specification<Product> specification = Specification.where(null);
+		specification = specification.and(ProductSpecifications.isNotDeleted());
+		if (origins != null && !origins.isEmpty()) {
+			specification = specification.and(ProductSpecifications.hasOrigin(origins));
+		}
+		if (brands != null && !brands.isEmpty()) {
+			specification = specification.and(ProductSpecifications.hasBrand(brands));
+		}
+		if (category != null && !category.isEmpty()) {
+			specification = specification.and(ProductSpecifications.hasCategory(category));
+		}
+		if (subCategory != null && !subCategory.isEmpty()) {
+			specification = specification.and(ProductSpecifications.hasSubCategory(subCategory));
+		}
+		if (keywords != null && !keywords.isEmpty()) {
+			specification = specification.and(ProductSpecifications.hasSearchIndex(keywords));		
+		}
+		if (username != null && !username.isEmpty()) {
+			specification = specification.and(ProductSpecifications.hasFavoriteForUser(username));		
+		}
+		
+		return productRepo.findAll(specification,pageable);
+	}
+	
 	public Product getProductById(Long id) throws ProductNotFoundException {
 		return productRepo.findById(id).orElseThrow(() -> new ProductNotFoundException("Product doesn't exist"));
 	}

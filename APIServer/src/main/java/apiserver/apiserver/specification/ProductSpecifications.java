@@ -5,8 +5,12 @@ import java.util.List;
 
 import org.springframework.data.jpa.domain.Specification;
 
+import apiserver.apiserver.model.Favorite;
 import apiserver.apiserver.model.Product;
+import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.Subquery;
 
 public class ProductSpecifications {
 	
@@ -67,4 +71,27 @@ public class ProductSpecifications {
 	            return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
 	        };
 	}
+	
+	 public static Specification<Product> hasFavoriteForUser(String username) {
+	        return (root, query, cb) -> {
+	            // Ensure we don't have duplicate products
+	            query.distinct(true);
+
+	            // Subquery to correlate Favorite with Product
+	            Subquery<Favorite> favoriteSubquery = query.subquery(Favorite.class);
+	            Root<Favorite> favoriteRoot = favoriteSubquery.from(Favorite.class);
+	            favoriteSubquery.select(favoriteRoot);
+
+	            // Join Favorite with Product
+	            Predicate productJoin = cb.equal(favoriteRoot.get("product"), root);
+	            // Join Favorite with User and filter by username
+	            Predicate userJoin = cb.equal(favoriteRoot.get("user").get("username"), username);
+
+	            // Combine predicates and add them to the subquery
+	            favoriteSubquery.where(cb.and(productJoin, userJoin));
+
+	            // Final specification condition
+	            return cb.exists(favoriteSubquery);
+	        };
+	    }
 }
