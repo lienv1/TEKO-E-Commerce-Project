@@ -123,9 +123,11 @@ public class ProductController {
 	@GetMapping("/search")
 	public ResponseEntity<Page<Product>> getProductsBySearch(
 			@PageableDefault(size = MAXITEM, sort = "lastModified") Pageable pageable,
-			@RequestParam(value = "keywords", required = false) List<String> keywords
+			@RequestParam(value = "keywords", required = false) List<String> keywords,
+			@RequestParam(value = "brand", required = false) List<String> brands,
+			@RequestParam(value = "origin", required = false) List<String> origins
 			) {
-		Page<Product> list = productService.getProductsBySearch(keywords,pageable);
+		Page<Product> list = productService.getProductsBySearch(keywords,pageable, brands, origins);
 		return new ResponseEntity<Page<Product>>(list, HttpStatus.OK);
 	}
 	

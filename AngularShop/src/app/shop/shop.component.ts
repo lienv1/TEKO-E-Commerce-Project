@@ -110,6 +110,9 @@ export class ShopComponent implements OnInit {
       else
         this.page = 1;
 
+      this.brandParam = brandParam === null ? "" : brandParam;
+      this.originParam = originParam === null ? "" : originParam;
+
       if (searchParam) {
         this.searchParam = searchParam
         this.initSearch();
@@ -123,8 +126,6 @@ export class ShopComponent implements OnInit {
       else {
         this.categoryParam = categoryParam === null ? "" : categoryParam;
         this.subcategoryParam = subcategoryParam === null ? "" : subcategoryParam;
-        this.brandParam = brandParam === null ? "" : brandParam;
-        this.originParam = originParam === null ? "" : originParam;
         this.initFilteringProduct();
       }
 
@@ -144,9 +145,10 @@ export class ShopComponent implements OnInit {
   public initSearch() {
     let params = new HttpParams();
     params = params.append("keywords", this.searchParam);
-    console.log(this.searchParam)
+    params = this.appendFilterParam(params);
     params = this.appendPageParam(params);
     params = this.appendSortParam(params);
+    console.log(params)
     this.productService.getProductBySearch(params).subscribe({
       next: (response) => this.handleResponse(response),
       error: (error: HttpErrorResponse) => this.handleError(error)
@@ -247,10 +249,10 @@ export class ShopComponent implements OnInit {
     // Do something with the checked state and the origin value
     if (isChecked) {
       // Code to handle the checkbox being checked
-      this.originSet.add(origin);
+      this.originSet.add((origin));
     } else {
       // Code to handle the checkbox being unchecked
-      this.originSet.delete(origin);
+      this.originSet.delete((origin));
     }
     this.appendOriginParam();
   }
@@ -260,10 +262,10 @@ export class ShopComponent implements OnInit {
     // Do something with the checked state and the brand value
     if (isChecked) {
       // Code to handle the checkbox being checked
-      this.brandSet.add(brand);
+      this.brandSet.add((brand));
     } else {
       // Code to handle the checkbox being unchecked
-      this.brandSet.delete(brand);
+      this.brandSet.delete((brand));
     }
     this.appendBrandParam();
   }

@@ -4,10 +4,11 @@
 
 <!-- Product Showcase -->
 <div #container class="container my-5">
-    <div class="row">
+    <div *ngIf="product" class="row">
         <div class="col-lg-6">
-            <img src="{{fileServer}}/images/products/{{product?.productId}}.jpg" class="img-fluid" alt="Product Image"
-            onerror="this.onerror=null; this.src='assets/NotFound.png'">
+            <img src ="{{fileServer}}/images/products/{{product.productId}}.jpg"
+            onerror="this.onerror=null; this.src='assets/NotFound.png'"
+            alt = "Product image">
         </div>
         <div class="col-lg-6">
             <h2 class="mb-4">{{ "PRODUCT DETAILS" | translate}}</h2>
@@ -19,27 +20,27 @@
                     </tr>
                     <tr>
                         <th scope="row">{{'GTIN'|translate}}</th>
-                        <td>{{product?.gtinUnit}}</td>
+                        <td>{{product.gtinUnit}}</td>
                     </tr>
                     <tr>
                         <th scope="row">{{'PRODUCT NAME'|translate}}</th>
-                        <td>{{product?.productName}}</td>
+                        <td>{{product.productName}}</td>
                     </tr>
                     <tr>
                         <th scope="row">{{'BRAND'|translate}}</th>
-                        <td>{{product?.brand}}</td>
+                        <td>{{product.brand}}</td>
                     </tr>
                     <tr>
                         <th scope="row">{{'WEIGHT PER UNIT'|translate}}</th>
-                        <td>{{product?.weight}}</td>
+                        <td>{{product.weight}}</td>
                     </tr>
                     <tr>
                         <th scope="row">{{'COUNTRY OF ORIGIN'|translate}}</th>
-                        <td>{{product?.origin}}</td>
+                        <td>{{product.origin}}</td>
                     </tr>
                     <tr>
                         <th scope="row">{{'PACKAGING SIZE'|translate}}</th>
-                        <td>{{product?.pack}}</td>
+                        <td>{{product.pack}}</td>
                     </tr>
                     <!--<tr>
                         <th scope="row">{{'STOCK'|translate}}</th>
@@ -48,12 +49,12 @@
 
                     <tr>
                         <th scope="row">{{'TAX'|translate}}</th>
-                        <td>{{product?.tax}} %</td>
+                        <td>{{product.tax}} %</td>
                     </tr>
 
                     <tr *ngIf="logged">
                         <th scope="row">{{'PRICE PER UNIT'|translate}}</th>
-                        <td>{{formatPrice(product?.price)}}</td>
+                        <td>{{formatPrice(product.price)}}</td>
                     </tr>
                 </tbody>
             </table>

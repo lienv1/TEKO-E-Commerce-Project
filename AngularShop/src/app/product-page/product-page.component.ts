@@ -38,28 +38,28 @@ export class ProductPageComponent {
   @ViewChild("CustomModalComponent") customModalComponent !: CustomModalComponent
 
   constructor(
-    private title : Title,
-    private route: ActivatedRoute, 
-    private router : Router,
-    private translateService: TranslateService, 
-    private productService: ProductService, 
-    private keycloakService: KeycloakService, 
-    private shoppingCart: ShoppingCart, 
+    private title: Title,
+    private route: ActivatedRoute,
+    private router: Router,
+    private translateService: TranslateService,
+    private productService: ProductService,
+    private keycloakService: KeycloakService,
+    private shoppingCart: ShoppingCart,
     private modalService: NgbModal,
     private currencyPipe: CurrencyPipe
-    ) { }
+  ) { }
 
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
       this.productId = params.get('id')?.toString();
-    });
 
+    });
+    this.getProduct();
+    this.isLoggedInAndLoadUser();
   }
 
   ngAfterViewInit() {
-    this.scroll(this.container.nativeElement)
-    this.getProduct();
-    this.isLoggedInAndLoadUser();
+
   }
 
   scroll(el: HTMLElement) {
@@ -83,14 +83,15 @@ export class ProductPageComponent {
   getProduct() {
     if (this.productId == null || this.productId == "")
       return
-    this.productService.getProduct(this.productId).subscribe(
-      (response: Product) => {
+    this.productService.getProduct(this.productId).subscribe({
+      next: (response: Product) => {
         this.product = response;
         this.title.setTitle(this.productId + " - " + this.product?.productName);
       },
-      (error: HttpErrorResponse) => {
+      error: (error: HttpErrorResponse) => {
         alert(error.message)
       }
+    }
     )
   }
 
@@ -110,10 +111,10 @@ export class ProductPageComponent {
       return;
 
     this.productService.isFavourite(this.username, this.productId).subscribe({
-     next : (response: boolean) => {
+      next: (response: boolean) => {
         this.favourite = response
       },
-      error : (error: HttpErrorResponse) => {
+      error: (error: HttpErrorResponse) => {
         if (error.status !== 404) this.popup("ERROR " + error.status, error.message, "red")
       }
     })
@@ -149,9 +150,9 @@ export class ProductPageComponent {
     )
   }
 
-  handleError(error: HttpErrorResponse){
+  handleError(error: HttpErrorResponse) {
     if (error.status !== 404) this.popup("ERROR " + error.status, error.message, "red")
-    else {this.router.navigateByUrl("/profile/edit"); this.popup("Profile unfinished", "Please setup your profile first", "black")}
+    else { this.router.navigateByUrl("/profile/edit"); this.popup("Profile unfinished", "Please setup your profile first", "black") }
   }
 
   //API SECTION END
@@ -174,7 +175,7 @@ export class ProductPageComponent {
       return
     }
     if (option === "carton") {
-      quantity *= (this.product.pack === undefined || this.product.pack == null)  ? 1 : this.product.pack
+      quantity *= (this.product.pack === undefined || this.product.pack == null) ? 1 : this.product.pack
     }
     console.log("option is " + option + ", quantity is " + quantity);
 
@@ -256,12 +257,12 @@ export class ProductPageComponent {
     }
   }
 
-  public popup(title:string, message:string, color:string){
+  public popup(title: string, message: string, color: string) {
     let modal = this.customModalComponent;
     modal.message = message;
     modal.title = title;
     modal.colorTitle = color;
-    this.openModal(modal,false);
+    this.openModal(modal, false);
   }
   //MODAL SECTION END
 
@@ -269,20 +270,20 @@ export class ProductPageComponent {
     return this.product?.pack !== 1
   }
 
-  public formatPrice(priceNumber ?: number): string {
+  public formatPrice(priceNumber?: number): string {
 
-    if (priceNumber == null){
+    if (priceNumber == null) {
       return "";
     }
-   
+
     // Format the price as Swiss Franc (CHF)
     let formattedPrice = this.currencyPipe.transform(priceNumber, 'CHF');
-  
-  if (formattedPrice != null)
-    formattedPrice = formattedPrice?.replace('CHF','CHF ')
 
-  // Return the formatted price
-  return formattedPrice || '';
-}
+    if (formattedPrice != null)
+      formattedPrice = formattedPrice?.replace('CHF', 'CHF ')
+
+    // Return the formatted price
+    return formattedPrice || '';
+  }
 
 }

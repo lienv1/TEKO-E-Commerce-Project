@@ -82,12 +82,18 @@ public class ProductService {
 		return productRepo.findAll(specification, page);
 	}
 
-	public Page<Product> getProductsBySearch(List<String> keywords, Pageable page) {
+	public Page<Product> getProductsBySearch(List<String> keywords, Pageable page, List<String> brands, List<String> origins ) {
 		Specification<Product> specification = Specification.where(null);
 		if (keywords != null && !keywords.isEmpty()) {
-			specification = specification.and(ProductSpecifications.hasSearchIndex(keywords));
-			specification = specification.and(ProductSpecifications.isNotDeleted());
+			specification = specification.and(ProductSpecifications.hasSearchIndex(keywords));		
 		}
+		if (brands != null && !brands.isEmpty()) {
+			specification = specification.and(ProductSpecifications.hasBrand(brands));
+		}
+		if (origins != null && !origins.isEmpty()) {
+			specification = specification.and(ProductSpecifications.hasOrigin(origins));
+		}
+		specification = specification.and(ProductSpecifications.isNotDeleted());
 		return productRepo.findAll(specification, page);
 	}
 
