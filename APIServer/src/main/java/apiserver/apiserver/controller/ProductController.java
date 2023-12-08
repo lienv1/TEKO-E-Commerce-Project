@@ -2,7 +2,7 @@ package apiserver.apiserver.controller;
 
 import java.security.Principal;
 import java.util.List;
-import java.util.Set;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -11,10 +11,8 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.HttpClientErrorException.Unauthorized;
 
 import apiserver.apiserver.dto.CategoryListDTO;
 import apiserver.apiserver.dto.FilterDTO;
@@ -23,7 +21,6 @@ import apiserver.apiserver.model.Product;
 import apiserver.apiserver.security.AuthorizationService;
 import apiserver.apiserver.service.ProductService;
 import apiserver.apiserver.service.UserService;
-import jakarta.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/product")
@@ -53,15 +50,8 @@ public class ProductController {
 		return new ResponseEntity<List<Product>>(allProducts, HttpStatus.OK);
 	}
 
-	@GetMapping("/products")
-	public ResponseEntity<Page<Product>> getProducts(
-			@PageableDefault(size = MAXITEM, sort = "lastModified") Pageable pageable) {
-		Page<Product> productPage = productService.getProducts(pageable);
-		return ResponseEntity.ok(productPage);
-	}
-
 	// Experiment
-	@GetMapping("/products2")
+	@GetMapping("/products")
 	public ResponseEntity<Page<Product>> getProductsByParam(@PageableDefault(size = MAXITEM) Pageable pageable,
 			@RequestParam(value = "brand", required = false) List<String> brands,
 			@RequestParam(value = "origin", required = false) List<String> origins,
@@ -77,12 +67,12 @@ public class ProductController {
 				return new ResponseEntity(HttpStatus.UNAUTHORIZED);
 		}
 
-		Page<Product> list = productService.getProducts2(pageable, origins, brands, category, subCategory, keywords,
+		Page<Product> list = productService.getProducts(pageable, origins, brands, category, subCategory, keywords,
 				username);
 		return new ResponseEntity<Page<Product>>(list, HttpStatus.OK);
 	}
 
-	@GetMapping("/filters2")
+	@GetMapping("/filters")
 	public ResponseEntity<FilterDTO> getFilters(
 			@RequestParam(value = "category", required = false) String category,
 			@RequestParam(value = "subcategory", required = false) String subCategory,
@@ -95,7 +85,7 @@ public class ProductController {
 				return new ResponseEntity(HttpStatus.UNAUTHORIZED);
 		}
 
-		FilterDTO filters = productService.getFilterDTO2(category, subCategory, keywords, username);
+		FilterDTO filters = productService.getFilterDTO(category, subCategory, keywords, username);
 		return new ResponseEntity<FilterDTO>(filters, HttpStatus.OK);
 	}
 	// Experiment end
@@ -139,93 +129,10 @@ public class ProductController {
 		}
 	}
 
-	/*
-	 * @DeleteMapping("/id/{id}")
-	 * 
-	 * @PreAuthorize("hasRole('ADMIN')") public ResponseEntity<Product>
-	 * deleteProduct(@PathVariable("id") Long id, Principal principal) {
-	 * 
-	 * boolean isAuthorized =
-	 * authorizationService.isAuthenticatedByPrincipal(principal,
-	 * principal.getName()); if (!isAuthorized) return new
-	 * ResponseEntity(HttpStatus.UNAUTHORIZED); try { Product toDelete =
-	 * productService.deleteProduct(id); return new
-	 * ResponseEntity<Product>(toDelete, HttpStatus.OK); } catch
-	 * (ProductNotFoundException e) { return new ResponseEntity(e.getMessage(),
-	 * HttpStatus.NOT_FOUND); } }
-	 */
-
-	@Deprecated
-	@GetMapping("/filter")
-	public ResponseEntity<Page<Product>> getProductsByFilter(@PageableDefault(size = MAXITEM) Pageable pageable,
-			@RequestParam(value = "brand", required = false) List<String> brands,
-			@RequestParam(value = "origin", required = false) List<String> origins,
-			@RequestParam(value = "category", required = false) String category,
-			@RequestParam(value = "subcategory", required = false) String subCategory) {
-		Page<Product> list = productService.getProductsByFilters(brands, category, subCategory, origins, pageable);
-		return new ResponseEntity<Page<Product>>(list, HttpStatus.OK);
-	}
-
-	@Deprecated
-	@GetMapping("/search")
-	public ResponseEntity<Page<Product>> getProductsBySearch(
-			@PageableDefault(size = MAXITEM, sort = "lastModified") Pageable pageable,
-			@RequestParam(value = "keywords", required = false) List<String> keywords,
-			@RequestParam(value = "brand", required = false) List<String> brands,
-			@RequestParam(value = "origin", required = false) List<String> origins) {
-		Page<Product> list = productService.getProductsBySearch(keywords, pageable, brands, origins);
-		return new ResponseEntity<Page<Product>>(list, HttpStatus.OK);
-	}
-
-	@Deprecated
-	@GetMapping("/favorite/username/{username}")
-	@PreAuthorize("hasRole('ADMIN') or #username ==  authentication.name")
-	public ResponseEntity<Page<Product>> getProductsByFavorite(@PageableDefault(size = MAXITEM) Pageable pageable,
-			@RequestParam(value = "brand", required = false) List<String> brands,
-			@RequestParam(value = "origin", required = false) List<String> origins,
-			@PathVariable("username") String username) {
-		boolean userExist = userService.userExistsByUsername(username);
-		if (!userExist)
-			return ResponseEntity.notFound().build();
-
-		Page<Product> list = productService.getProductsByFavorite(username, pageable, brands, origins);
-		return new ResponseEntity<Page<Product>>(list, HttpStatus.OK);
-	}
-
 	@GetMapping("/category")
 	public ResponseEntity<List<CategoryListDTO>> getCategoryList() {
 		List<CategoryListDTO> categoryList = productService.getCategoryList();
 		return new ResponseEntity<List<CategoryListDTO>>(categoryList, HttpStatus.OK);
-	}
-
-	@Deprecated
-	@GetMapping("/filters")
-	public ResponseEntity<FilterDTO> getFilterByCategory(
-			@RequestParam(value = "category", required = false) List<String> category,
-			@RequestParam(value = "subcategory", required = false) List<String> subCategory) {
-		FilterDTO filters = productService.getFiltersByCategory(category, subCategory);
-		return new ResponseEntity<FilterDTO>(filters, HttpStatus.OK);
-	}
-
-	@Deprecated
-	@GetMapping("/searchfilters")
-	public ResponseEntity<FilterDTO> getFilterBySearch(
-			@RequestParam(value = "keywords", required = false) List<String> keywords) {
-		FilterDTO filters = productService.getFiltersBySearch(keywords);
-		return new ResponseEntity<FilterDTO>(filters, HttpStatus.OK);
-	}
-
-	@Deprecated
-	@GetMapping("/favoritefilters/username/{username}")
-	@PreAuthorize("hasRole('ADMIN') or #username ==  authentication.name")
-	public ResponseEntity<FilterDTO> getFilterByFavorite(@PathVariable("username") String username) {
-
-		boolean userExist = userService.userExistsByUsername(username);
-		if (!userExist)
-			return ResponseEntity.notFound().build();
-
-		FilterDTO filters = productService.getFiltersByFavorite(username);
-		return new ResponseEntity<FilterDTO>(filters, HttpStatus.OK);
 	}
 
 	@DeleteMapping("/products")

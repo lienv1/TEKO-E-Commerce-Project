@@ -36,11 +36,7 @@ public class ProductService {
 		return productRepo.findAll();
 	}
 
-	public Page<Product> getProducts(Pageable pageable) {
-		return productRepo.findAllActiveProducts(pageable);
-	}
-
-	public Page<Product> getProducts2(Pageable pageable, List<String> origins, List<String> brands, String category, String subCategory, List<String> keywords, String username) {
+	public Page<Product> getProducts(Pageable pageable, List<String> origins, List<String> brands, String category, String subCategory, List<String> keywords, String username) {
 		Specification<Product> specification = Specification.where(null);
 		specification = specification.and(ProductSpecifications.isNotDeleted());
 		if (origins != null && !origins.isEmpty()) {
@@ -64,7 +60,7 @@ public class ProductService {
 		return productRepo.findAll(specification,pageable);
 	}
 	
-	public FilterDTO getFilterDTO2(String category, String subCategory, List<String> keywords, String username){
+	public FilterDTO getFilterDTO(String category, String subCategory, List<String> keywords, String username){
 		Specification<Product> specification = Specification.where(null);
 		specification = specification.and(ProductSpecifications.isNotDeleted());
 		if (category != null && !category.isEmpty()) {
@@ -106,51 +102,6 @@ public class ProductService {
 		return productRepo.save(product);
 	}
 
-	@Deprecated
-	public Page<Product> getProductsByFilters(List<String> brands, String category, String subCategory,
-			List<String> origins, Pageable page) {
-
-		Specification<Product> specification = Specification.where(null);
-
-		if (brands != null && !brands.isEmpty()) {
-			specification = specification.and(ProductSpecifications.hasBrand(brands));
-		}
-		if (category != null && !category.isEmpty()) {
-			specification = specification.and(ProductSpecifications.hasCategory(category));
-		}
-		if (subCategory != null && !subCategory.isEmpty()) {
-			specification = specification.and(ProductSpecifications.hasSubCategory(subCategory));
-		}
-		if (origins != null && !origins.isEmpty()) {
-			specification = specification.and(ProductSpecifications.hasOrigin(origins));
-		}
-		specification = specification.and(ProductSpecifications.isNotDeleted());
-
-		return productRepo.findAll(specification, page);
-	}
-
-	@Deprecated
-	public Page<Product> getProductsBySearch(List<String> keywords, Pageable page, List<String> brands, List<String> origins ) {
-		Specification<Product> specification = Specification.where(null);
-		if (keywords != null && !keywords.isEmpty()) {
-			specification = specification.and(ProductSpecifications.hasSearchIndex(keywords));		
-		}
-		if (brands != null && !brands.isEmpty()) {
-			specification = specification.and(ProductSpecifications.hasBrand(brands));
-		}
-		if (origins != null && !origins.isEmpty()) {
-			specification = specification.and(ProductSpecifications.hasOrigin(origins));
-		}
-		specification = specification.and(ProductSpecifications.isNotDeleted());
-		return productRepo.findAll(specification, page);
-	}
-
-	@Deprecated
-	public Page<Product> getProductsByFavorite(String username, Pageable page, List<String> brands,
-			List<String> origins) {
-		return productRepo.findFavoriteProductsByUserUsername(username, page, brands, origins);
-	}
-
 	public List<CategoryListDTO> getCategoryList() {
 		List<String[]> results = productRepo.findCategoriesAndSubcategories();
 		Map<String, Set<String>> categoryToSubCategories = new LinkedHashMap<>();
@@ -176,39 +127,6 @@ public class ProductService {
 		return categoryListDTOs;
 	}
 
-	@Deprecated
-	public FilterDTO getFiltersByCategory(List<String> category, List<String> subCategory) {
-		FilterDTO filter = new FilterDTO();
-		Set<String> brands = productRepo.findDistinctBrands(category, subCategory);
-		Set<String> origins = productRepo.findDistinctOrigins(category, subCategory);
-		filter.setBrands(brands);
-		filter.setOrigins(origins);
-		return filter;
-	}
-
-	@Deprecated
-	public FilterDTO getFiltersBySearch(List<String> keywords) {
-		FilterDTO filter = new FilterDTO();
-		Specification<Product> spec = Specification.where(null);
-		spec = spec.and(ProductSpecifications.hasSearchIndex(keywords));
-		List<Product> products = productRepo.findAll(spec);
-		Set<String> brands = new HashSet<String>(products.stream().map(element -> element.getBrand()).toList());
-		Set<String> origins = new HashSet<String>(products.stream().map(element -> element.getOrigin()).toList());
-		filter.setBrands(brands);
-		filter.setOrigins(origins);
-		return filter;
-	}
-
-	@Deprecated
-	public FilterDTO getFiltersByFavorite(String username) {
-		FilterDTO filter = new FilterDTO();
-		Set<String> brands = productRepo.findFavoriteBrands(username);
-		Set<String> origins = productRepo.findFavoriteOrigins(username);
-		filter.setBrands(brands);
-		filter.setOrigins(origins);
-		return filter;
-	}
-	
 	public void deleteAllProducts() {
 		productRepo.updateAllDeletedStatus(true);
 	}
