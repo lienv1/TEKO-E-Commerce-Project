@@ -14,6 +14,7 @@ import { ShoppingCart } from '../service/shoppingCart';
 import { CustomModalComponent } from '../modal/custom-modal/custom-modal.component';
 import { environment } from 'src/environments/environment';
 import { Filters } from '../model/filters';
+import { error } from 'console';
 
 export enum Sorter {
   productId = 'Product ID',
@@ -93,6 +94,7 @@ export class ShopComponent implements OnInit {
   }
 
   //INIT
+  //Replace InitParam()
   public initParam() {
     this.route.queryParamMap.subscribe(queryParams => {
       const searchParam = queryParams.get('search');
@@ -104,85 +106,29 @@ export class ShopComponent implements OnInit {
       const pageParam = queryParams.get('page');
       const sortParam = queryParams.get('sort');
 
-      if (pageParam && pageParam !== "1") {
-        this.page = Number.parseInt(pageParam);
-      }
-      else
-        this.page = 1;
-
+      this.page = pageParam === null ? 1 : Number.parseInt(pageParam);
       this.brandParam = brandParam === null ? "" : brandParam;
       this.originParam = originParam === null ? "" : originParam;
-
-      if (searchParam) {
-        this.searchParam = searchParam
-        this.initSearch();
-      }
-
-      else if (favoriteParam) {
-        this.favoriteParam = favoriteParam;
-        this.initFavorite();
-      }
-
-      else {
-        this.categoryParam = categoryParam === null ? "" : categoryParam;
-        this.subcategoryParam = subcategoryParam === null ? "" : subcategoryParam;
-        this.initFilteringProduct();
-      }
-
+      this.searchParam = searchParam === null ? "" : searchParam;
+      this.favoriteParam = favoriteParam === null ? "" : favoriteParam;
+      this.categoryParam = categoryParam === null ? "" : categoryParam;
+      this.subcategoryParam = subcategoryParam === null ? "" : subcategoryParam;
       this.sortBy = sortParam === null ? "" : sortParam;
+      this.initProducts();
     });
   }
 
   public initProducts() {
     let params = new HttpParams();
-    params = this.appendPageParam(params);
-    this.productService.getProducts(params).subscribe({
-      next: (response) => this.handleResponse(response),
-      error: (error: HttpErrorResponse) => this.handleError(error)
-    });
-  }
-
-  public initSearch() {
-    let params = new HttpParams();
-    params = params.append("keywords", this.searchParam);
-    params = this.appendFilterParam(params);
-    params = this.appendPageParam(params);
-    params = this.appendSortParam(params);
-    console.log(params)
-    this.productService.getProductBySearch(params).subscribe({
-      next: (response) => this.handleResponse(response),
-      error: (error: HttpErrorResponse) => this.handleError(error)
-    })
-    this.initFilterBySearch();
-  }
-
-  public initFavorite() {
-    let params = new HttpParams();
-    //params = params.append("favorite", this.favoriteParam);
-    params = this.appendFilterParam(params);
-    params = this.appendPageParam(params);
-    params = this.appendSortParam(params);
-    if (this.username) {
-      this.productService.getFavourites(this.username, params).subscribe({
-        next: (response) => this.handleResponse(response),
-        error: (error: HttpErrorResponse) => this.handleError(error)
-      });
-    }
-    else console.log("username is null")
-    this.initFilterByFavorite();
-  }
-
-  public initFilteringProduct() {
-    let params = new HttpParams();
     params = this.appendFilterParam(params);
     params = this.appendPageParam(params);
     params = this.appendSortParam(params);
     this.productService.getProductByFilter(params).subscribe({
-      next: (response) => this.handleResponse(response),
+      next: (response) => {this.handleResponse(response); this.initFilter2(params)},
       error: (error: HttpErrorResponse) => this.handleError(error)
     })
-    this.initFilterBarByCategory();
   }
+
 
   public initCategories() {
     this.productService.getCategories().subscribe({
@@ -191,37 +137,12 @@ export class ShopComponent implements OnInit {
     })
   }
 
-  public initFilterBarByCategory() {
-    let params = new HttpParams();
-
-    if (this.categoryParam)
-      params = params.append("category", this.categoryParam);
-    if (this.subcategoryParam)
-      params = params.append("subcategory", this.subcategoryParam);
-
-    this.productService.getFiltersByCategory(params).subscribe({
-      next: (response) => this.filters = response,
-      error: (error: HttpErrorResponse) => this.handleError(error)
-    })
-  }
-
-  public initFilterBySearch() {
-    let params = new HttpParams();
-    params = params.append('keywords', this.searchParam)
-    this.productService.getFiltersBySearch(params).subscribe({
-      next: (response) => this.filters = response,
-      error: (error: HttpErrorResponse) => this.popup("Error " + error.status, error.message, "Red")
-    })
-    return;
-  }
-
-  public initFilterByFavorite() {
-    if (this.username)
-      this.productService.getFiltersByFavorite(this.username).subscribe({
-        next: (response) => this.filters = response,
-        error: (error: HttpErrorResponse) => this.popup("Error " + error.status, error.message, "Red")
-      })
-    return;
+  //New 
+  public initFilter2(param:HttpParams){
+    this.productService.getFilters(param).subscribe({
+      next: (response) => {this.filters = response},
+      error: (error : HttpErrorResponse) => {this.handleError(error)}
+    } );
   }
 
   isLogged(): Promise<void> {
@@ -354,6 +275,10 @@ export class ShopComponent implements OnInit {
       params = params.append("brand", this.brandParam);
     if (this.originParam)
       params = params.append("origin", this.originParam);
+    if (this.favoriteParam && this.username)
+      params = params.append("favorite",this.username);
+    if (this.searchParam)
+      params = params.append("keywords",this.searchParam);
     return params
   }
 

@@ -27,28 +27,15 @@ export class ProductService {
   }
 
   public getProductByFilter(params:HttpParams):Observable<any>{
-    return this.http.get<any>(`${this.backendAPI}/product/filter`, {params:params})
-  }
-
-  public getProductBySearch(params:HttpParams):Observable<any>{
-    return this.http.get<any>(`${this.backendAPI}/product/search`, {params:params})
+    return this.http.get<any>(`${this.backendAPI}/product/products2`, {params:params})
   }
 
   //CATEGORY AND FILTER
+  public getFilters(params:HttpParams):Observable<Filters>{
+    return this.http.get<Filters>(`${this.backendAPI}/product/filters2`, {params:params});
+  }
   public getCategories(): Observable<ProductCategory[]>{
     return this.http.get<ProductCategory[]>(`${this.backendAPI}/product/category`);
-  }
-
-  public getFiltersByCategory(params:HttpParams):Observable<Filters>{
-    return this.http.get<Filters>(`${this.backendAPI}/product/filters`, {params:params});
-  }
-
-  public getFiltersBySearch(params:HttpParams):Observable<Filters>{
-    return this.http.get<Filters>(`${this.backendAPI}/product/searchfilters`, {params:params})
-  }
-
-  public getFiltersByFavorite(username:string):Observable<Filters>{
-    return this.http.get<Filters>(`${this.backendAPI}/product/favoritefilters/username/${username}`)
   }
 
   //Favourite functions
