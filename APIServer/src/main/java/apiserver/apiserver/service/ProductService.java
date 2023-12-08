@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 
 import apiserver.apiserver.dto.CategoryListDTO;
 import apiserver.apiserver.dto.FilterDTO;
+import apiserver.apiserver.dto.ProductBrandDTO;
+import apiserver.apiserver.dto.ProductOriginDTO;
 import apiserver.apiserver.exception.ProductNotFoundException;
 import apiserver.apiserver.model.Product;
 import apiserver.apiserver.repo.ProductRepo;
@@ -59,8 +61,34 @@ public class ProductService {
 		if (username != null && !username.isEmpty()) {
 			specification = specification.and(ProductSpecifications.hasFavoriteForUser(username));		
 		}
-		
 		return productRepo.findAll(specification,pageable);
+	}
+	
+	public FilterDTO getFilterDTO2(String category, String subCategory, List<String> keywords, String username){
+		Specification<Product> specification = Specification.where(null);
+		specification = specification.and(ProductSpecifications.isNotDeleted());
+		if (category != null && !category.isEmpty()) {
+			specification = specification.and(ProductSpecifications.hasCategory(category));
+		}
+		if (subCategory != null && !subCategory.isEmpty()) {
+			specification = specification.and(ProductSpecifications.hasSubCategory(subCategory));
+		}
+		if (keywords != null && !keywords.isEmpty()) {
+			specification = specification.and(ProductSpecifications.hasSearchIndex(keywords));		
+		}
+		if (username != null && !username.isEmpty()) {
+			specification = specification.and(ProductSpecifications.hasFavoriteForUser(username));		
+		}
+		
+		List<ProductBrandDTO> listOfBrands = productRepo.findBy(specification, q -> q.as(ProductBrandDTO.class).all());
+		List<ProductOriginDTO> listOfOrigins = productRepo.findBy(specification, q -> q.as(ProductOriginDTO.class).all());
+		
+		FilterDTO filter = new FilterDTO();
+		
+		filter.setBrands(new HashSet<String>(listOfBrands.stream().map(element -> element.getBrand()).toList()));
+		filter.setOrigins(new HashSet<String>(listOfOrigins.stream().map(element -> element.getOrigin()).toList()));
+		
+		return filter;
 	}
 	
 	public Product getProductById(Long id) throws ProductNotFoundException {

@@ -5,12 +5,15 @@ import java.util.Set;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
+
+import apiserver.apiserver.dto.FilterDTO;
 import apiserver.apiserver.model.Product;
 import jakarta.transaction.Transactional;
 
@@ -48,4 +51,6 @@ public interface ProductRepo extends JpaRepository<Product, Long>, JpaSpecificat
     Set<String> findFavoriteBrands(String username);
     @Query("SELECT DISTINCT p.origin FROM Product p WHERE p.deleted = false AND EXISTS (SELECT f FROM Favorite f WHERE f.product = p AND f.user.username = :username)")
     Set<String> findFavoriteOrigins(String username);
+
+    
 }

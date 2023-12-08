@@ -69,19 +69,34 @@ public class ProductController {
 			@RequestParam(value = "subcategory", required = false) String subCategory,
 			@RequestParam(value = "keywords", required = false) List<String> keywords,
 			@RequestParam(value = "favorite", required = false) String username) {
-		
-		//Manual handling of authorization
+
+		// Manual handling of authorization
 		if (username != null) {
 			Principal principal = SecurityContextHolder.getContext().getAuthentication();
-			
-			if (!authorizationService.isAuthenticatedByPrincipal(principal, username)){
+			if (!authorizationService.isAuthenticatedByPrincipal(principal, username))
 				return new ResponseEntity(HttpStatus.UNAUTHORIZED);
-			}
 		}
 
 		Page<Product> list = productService.getProducts2(pageable, origins, brands, category, subCategory, keywords,
 				username);
 		return new ResponseEntity<Page<Product>>(list, HttpStatus.OK);
+	}
+
+	@GetMapping("/filters2")
+	public ResponseEntity<FilterDTO> getFilters(
+			@RequestParam(value = "category", required = false) String category,
+			@RequestParam(value = "subcategory", required = false) String subCategory,
+			@RequestParam(value = "keywords", required = false) List<String> keywords,
+			@RequestParam(value = "favorite", required = false) String username) {
+		
+		if (username != null) {
+			Principal principal = SecurityContextHolder.getContext().getAuthentication();
+			if (!authorizationService.isAuthenticatedByPrincipal(principal, username))
+				return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+		}
+
+		FilterDTO filters = productService.getFilterDTO2(category, subCategory, keywords, username);
+		return new ResponseEntity<FilterDTO>(filters, HttpStatus.OK);
 	}
 	// Experiment end
 
