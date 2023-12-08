@@ -155,6 +155,7 @@ public class ProductController {
 	 * HttpStatus.NOT_FOUND); } }
 	 */
 
+	@Deprecated
 	@GetMapping("/filter")
 	public ResponseEntity<Page<Product>> getProductsByFilter(@PageableDefault(size = MAXITEM) Pageable pageable,
 			@RequestParam(value = "brand", required = false) List<String> brands,
@@ -165,6 +166,7 @@ public class ProductController {
 		return new ResponseEntity<Page<Product>>(list, HttpStatus.OK);
 	}
 
+	@Deprecated
 	@GetMapping("/search")
 	public ResponseEntity<Page<Product>> getProductsBySearch(
 			@PageableDefault(size = MAXITEM, sort = "lastModified") Pageable pageable,
@@ -175,6 +177,7 @@ public class ProductController {
 		return new ResponseEntity<Page<Product>>(list, HttpStatus.OK);
 	}
 
+	@Deprecated
 	@GetMapping("/favorite/username/{username}")
 	@PreAuthorize("hasRole('ADMIN') or #username ==  authentication.name")
 	public ResponseEntity<Page<Product>> getProductsByFavorite(@PageableDefault(size = MAXITEM) Pageable pageable,
@@ -195,6 +198,7 @@ public class ProductController {
 		return new ResponseEntity<List<CategoryListDTO>>(categoryList, HttpStatus.OK);
 	}
 
+	@Deprecated
 	@GetMapping("/filters")
 	public ResponseEntity<FilterDTO> getFilterByCategory(
 			@RequestParam(value = "category", required = false) List<String> category,
@@ -203,6 +207,7 @@ public class ProductController {
 		return new ResponseEntity<FilterDTO>(filters, HttpStatus.OK);
 	}
 
+	@Deprecated
 	@GetMapping("/searchfilters")
 	public ResponseEntity<FilterDTO> getFilterBySearch(
 			@RequestParam(value = "keywords", required = false) List<String> keywords) {
@@ -210,6 +215,7 @@ public class ProductController {
 		return new ResponseEntity<FilterDTO>(filters, HttpStatus.OK);
 	}
 
+	@Deprecated
 	@GetMapping("/favoritefilters/username/{username}")
 	@PreAuthorize("hasRole('ADMIN') or #username ==  authentication.name")
 	public ResponseEntity<FilterDTO> getFilterByFavorite(@PathVariable("username") String username) {

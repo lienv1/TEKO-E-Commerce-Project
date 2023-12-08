@@ -106,13 +106,7 @@ public class ProductService {
 		return productRepo.save(product);
 	}
 
-	/*public Product deleteProduct(Long id) throws ProductNotFoundException {
-		boolean isPresent = productRepo.existsById(id);
-		if (!isPresent)
-			throw new ProductNotFoundException("");
-		return productRepo.updateDeletedStatus(id, true);
-	}*/
-
+	@Deprecated
 	public Page<Product> getProductsByFilters(List<String> brands, String category, String subCategory,
 			List<String> origins, Pageable page) {
 
@@ -135,6 +129,7 @@ public class ProductService {
 		return productRepo.findAll(specification, page);
 	}
 
+	@Deprecated
 	public Page<Product> getProductsBySearch(List<String> keywords, Pageable page, List<String> brands, List<String> origins ) {
 		Specification<Product> specification = Specification.where(null);
 		if (keywords != null && !keywords.isEmpty()) {
@@ -150,6 +145,7 @@ public class ProductService {
 		return productRepo.findAll(specification, page);
 	}
 
+	@Deprecated
 	public Page<Product> getProductsByFavorite(String username, Pageable page, List<String> brands,
 			List<String> origins) {
 		return productRepo.findFavoriteProductsByUserUsername(username, page, brands, origins);
@@ -180,6 +176,7 @@ public class ProductService {
 		return categoryListDTOs;
 	}
 
+	@Deprecated
 	public FilterDTO getFiltersByCategory(List<String> category, List<String> subCategory) {
 		FilterDTO filter = new FilterDTO();
 		Set<String> brands = productRepo.findDistinctBrands(category, subCategory);
@@ -189,6 +186,7 @@ public class ProductService {
 		return filter;
 	}
 
+	@Deprecated
 	public FilterDTO getFiltersBySearch(List<String> keywords) {
 		FilterDTO filter = new FilterDTO();
 		Specification<Product> spec = Specification.where(null);
@@ -201,6 +199,7 @@ public class ProductService {
 		return filter;
 	}
 
+	@Deprecated
 	public FilterDTO getFiltersByFavorite(String username) {
 		FilterDTO filter = new FilterDTO();
 		Set<String> brands = productRepo.findFavoriteBrands(username);
