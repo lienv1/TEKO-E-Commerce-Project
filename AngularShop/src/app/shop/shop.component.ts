@@ -124,7 +124,7 @@ export class ShopComponent implements OnInit {
     params = this.appendPageParam(params);
     params = this.appendSortParam(params);
     this.productService.getProductByFilter(params).subscribe({
-      next: (response) => {this.handleResponse(response); this.initFilter2(params)},
+      next: (response) => {this.handleResponse(response); this.initFilter(params)},
       error: (error: HttpErrorResponse) => this.handleError(error)
     })
   }
@@ -138,7 +138,7 @@ export class ShopComponent implements OnInit {
   }
 
   //New 
-  public initFilter2(param:HttpParams){
+  public initFilter(param:HttpParams){
     this.productService.getFilters(param).subscribe({
       next: (response) => {this.filters = response},
       error: (error : HttpErrorResponse) => {this.handleError(error)}

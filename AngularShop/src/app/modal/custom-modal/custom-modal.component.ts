@@ -12,6 +12,7 @@ export class CustomModalComponent implements OnInit {
   public title !: string;
   public message !: string;
   public colorTitle :string = "black";
+  public waitMessage : boolean = false;
 
   constructor() { }
 

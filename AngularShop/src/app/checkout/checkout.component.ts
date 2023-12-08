@@ -4,7 +4,7 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
 import { UntypedFormGroup, UntypedFormBuilder, UntypedFormControl, Validators, FormControl, FormGroup } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateService } from '@ngx-translate/core';
 import { KeycloakService } from 'keycloak-angular';
 import { KeycloakProfile } from 'keycloak-js';
@@ -262,7 +262,6 @@ export class CheckoutComponent {
       this.enableSubmit();
       return;
     }
-
     //To resolve conflicts in case of duplicates
     this.cart.mergeItems();
 
@@ -290,6 +289,9 @@ export class CheckoutComponent {
       return;
     }
 
+    
+    this.popupWait();
+
     const deliveryDate = this.addressForm.value.deliveryDateInput;
     const user = this.getUserfromForm();
     const order: Order = {
@@ -303,8 +305,8 @@ export class CheckoutComponent {
     let currentLang = this.translateService.currentLang.toUpperCase();
 
     this.orderService.postOrder(order,this.username,currentLang).subscribe({
-      next: (response) => {this.processingCompletedOrder()},
-      error: (error:HttpErrorResponse) => {alert(error.message)}
+      next: (response) => {this.processingCompletedOrder(); this.modalService.dismissAll();},
+      error: (error:HttpErrorResponse) => {this.modalService.dismissAll();  this.popupModal(error.message, "Error", "red")}
     })
   }
 
@@ -328,8 +330,23 @@ export class CheckoutComponent {
     this.openModal(modal, false)
   }
 
-  public openModal(modal: any, autoclose: boolean) {
-    let modalRef = this.modalService.open(modal.myModal);
+  public popupWait(){
+    let modal = this.customeModalComponent;
+    modal.waitMessage = true;
+    modal.title = this.translateService.instant('PLEASE WAIT')
+
+    //Make modal not closeable
+    let ngbModalOptions: NgbModalOptions = {
+      backdrop : 'static',
+      keyboard : false
+    };
+    this.openModal(modal,false, ngbModalOptions);
+  }
+
+  public openModal(modal: any, autoclose: boolean,ngbModalOptions ?: NgbModalOptions ) {
+
+    let modalRef = ngbModalOptions ? this.modalService.open(modal.myModal,ngbModalOptions) : this.modalService.open(modal.myModal);
+    
     if (autoclose) {
       setTimeout(() => {
         modalRef.dismiss();

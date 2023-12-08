@@ -8,7 +8,7 @@ public class Product {
 	private String productName;
 	private String description;
 	private String brand;
-	private Integer weight;
+	private String weight;
 	private String category;
 	private String subCategory;
 	private Integer pack;
@@ -42,7 +42,7 @@ public class Product {
 		return brand;
 	}
 
-	public Integer getWeight() {
+	public String getWeight() {
 		return weight;
 	}
 
@@ -110,7 +110,7 @@ public class Product {
 		this.brand = brand;
 	}
 
-	public void setWeight(Integer weight) {
+	public void setWeight(String weight) {
 		this.weight = weight;
 	}
 

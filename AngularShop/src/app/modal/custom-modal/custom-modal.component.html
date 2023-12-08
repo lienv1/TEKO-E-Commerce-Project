@@ -1,13 +1,28 @@
 <ng-template #myModal let-modal>
-    <div class="modal-header">
-        <h5 class="modal-title"  [style.color]=colorTitle><strong> {{title}} </strong></h5>
-        <button type="button" (click)="modal.dismiss()" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+    <div *ngIf="!waitMessage">
+        <div class="modal-header">
+            <h5 class="modal-title"  [style.color]=colorTitle><strong> {{title}} </strong></h5>
+            <button type="button" (click)="modal.dismiss()" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <p>{{message}}</p>
+        </div>
+        <div class="modal-footer">
+            <button *ngFor="let functionModel of functionModels" type="button" class="btn btn-secondary" (click)="functionModel.foo(); modal.dismiss()" >{{functionModel.buttonText}}</button>
+            <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">{{"CLOSE" | translate}}</button>
+        </div>
     </div>
-    <div class="modal-body">
-        <p>{{message}}</p>
+
+    <div *ngIf="waitMessage">
+        <div class="modal-header">
+            <h5 class="modal-title"  [style.color]=colorTitle><strong> {{title}} </strong></h5>
+        </div>
+        <div class="modal-body d-flex justify-content-center">
+            <div class="spinner-grow text-dark" role="status">
+                <span class="sr-only"></span>
+              </div>
+        </div>
     </div>
-    <div class="modal-footer">
-        <button *ngFor="let functionModel of functionModels" type="button" class="btn btn-secondary" (click)="functionModel.foo(); modal.dismiss()" >{{functionModel.buttonText}}</button>
-        <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">{{"CLOSE" | translate}}</button>
-    </div>
+
   </ng-template>
