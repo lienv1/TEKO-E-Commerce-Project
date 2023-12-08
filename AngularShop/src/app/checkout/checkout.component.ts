@@ -343,10 +343,9 @@ export class CheckoutComponent {
     this.openModal(modal,false, ngbModalOptions);
   }
 
-  public openModal(modal: any, autoclose: boolean,ngbModalOptions ?: NgbModalOptions ) {
+  public openModal(modal: any, autoclose: boolean, ngbModalOptions ?: NgbModalOptions ) {
 
-    let modalRef = ngbModalOptions ? this.modalService.open(modal.myModal,ngbModalOptions) : this.modalService.open(modal.myModal);
-    
+    let modalRef = ngbModalOptions ? this.modalService.open(modal.myModal,ngbModalOptions) : this.modalService.open(modal.myModal);  
     if (autoclose) {
       setTimeout(() => {
         modalRef.dismiss();

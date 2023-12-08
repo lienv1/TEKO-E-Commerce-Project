@@ -12,6 +12,8 @@ export class CustomModalComponent implements OnInit {
   public title !: string;
   public message !: string;
   public colorTitle :string = "black";
+
+  //If this is true, 'message' is not required
   public waitMessage : boolean = false;
 
   constructor() { }
