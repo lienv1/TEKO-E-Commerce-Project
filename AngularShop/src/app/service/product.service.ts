@@ -27,12 +27,12 @@ export class ProductService {
   }
 
   public getProductByFilter(params:HttpParams):Observable<any>{
-    return this.http.get<any>(`${this.backendAPI}/product/products2`, {params:params})
+    return this.http.get<any>(`${this.backendAPI}/product/products`, {params:params})
   }
 
   //CATEGORY AND FILTER
   public getFilters(params:HttpParams):Observable<Filters>{
-    return this.http.get<Filters>(`${this.backendAPI}/product/filters2`, {params:params});
+    return this.http.get<Filters>(`${this.backendAPI}/product/filters`, {params:params});
   }
   public getCategories(): Observable<ProductCategory[]>{
     return this.http.get<ProductCategory[]>(`${this.backendAPI}/product/category`);

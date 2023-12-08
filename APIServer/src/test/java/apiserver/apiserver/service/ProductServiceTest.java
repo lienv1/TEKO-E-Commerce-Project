@@ -94,14 +94,5 @@ class ProductServiceTest {
 	    assertEquals(newPrice, updatedProduct.getPrice());
 	}
 	
-	@Deprecated
-	@Test
-	void getProductByFilterTest() {
-//		Product filter = new Product();
-//		filter.setBrand(product.getProductName());
-//		when(productRepo.findAll(any(Specification.class))).thenReturn(productList);
-//		List<Product> products = productService.getProductsByFilter(filter);
-//		assertEquals(1, products.size());
-	}
 
 }
