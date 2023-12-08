@@ -20,6 +20,7 @@ import apiserver.apiserver.exception.OrderNotFoundException;
 import apiserver.apiserver.model.Order;
 import apiserver.apiserver.security.AuthorizationService;
 import apiserver.apiserver.service.EmailService;
+import apiserver.apiserver.service.ERPService;
 import apiserver.apiserver.service.OrderService;
 import apiserver.apiserver.service.UserService;
 
@@ -39,11 +40,15 @@ public class OrderController {
 	@Autowired
 	private EmailService emailService;
 	
-	public OrderController(OrderService orderService, AuthorizationService authorizationService, UserService userService, EmailService emailService) {
+	@Autowired
+	private ERPService erpService;
+	
+	public OrderController(OrderService orderService, AuthorizationService authorizationService, UserService userService, EmailService emailService, ERPService erpService) {
 		this.orderService = orderService;
 		this.authorizationService = authorizationService;
 		this.userService = userService;
 		this.emailService = emailService;
+		this.erpService = erpService;
 	}
 
 	@GetMapping("/id/{id}")
@@ -100,9 +105,11 @@ public class OrderController {
 		try {
 			System.out.println("Trying to add order");
 			Order addedOrder = orderService.addOrder(order);
-			System.out.println("Sending email...");
-			boolean emailSuccess = emailService.sendingOrderConfirmation(addedOrder,language);
-			System.out.println("Success: " + emailSuccess);
+//			System.out.println("Sending email...");
+//			boolean emailSuccess = emailService.sendingOrderConfirmation(addedOrder,language);
+//			System.out.println("Email Success: " + emailSuccess);
+			boolean erpSuccess = erpService.sendOrderToERPServer(addedOrder);
+			System.out.println("ERP success " + erpSuccess);
 			
 			return new ResponseEntity<Order>(addedOrder, HttpStatus.OK);
 		} catch (DataIntegrityViolationException e) {

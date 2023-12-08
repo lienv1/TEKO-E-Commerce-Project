@@ -42,6 +42,7 @@ import apiserver.apiserver.model.OrderDetail;
 import apiserver.apiserver.model.Product;
 import apiserver.apiserver.model.User;
 import apiserver.apiserver.security.AuthorizationService;
+import apiserver.apiserver.service.ERPService;
 import apiserver.apiserver.service.EmailService;
 import apiserver.apiserver.service.OrderService;
 import apiserver.apiserver.service.UserService;
@@ -60,6 +61,9 @@ class OrderControllerTest {
 	
 	@MockBean
 	private EmailService emailservice;
+	
+	@MockBean
+	private ERPService erpService;
 	
 	@Autowired
 	private MockMvc mockMvc;

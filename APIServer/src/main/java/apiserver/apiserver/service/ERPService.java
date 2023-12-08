@@ -10,38 +10,36 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import apiserver.apiserver.model.Order;
-import apiserver.apiserver.security.ApiKeyGenerator;
 
 @Service
-public class EmailService {
+public class ERPService {
 
 	private String host;
 
 	@Autowired
 	private ConfigurationService configurationService;
-	
-	public EmailService(ConfigurationService configurationService, @Value("${custom.property.host}") String host,
-			@Value("${custom.property.presharedkey}") String preSharedKey) {
+
+	public ERPService(ConfigurationService configurationService, @Value("${custom.property.host}") String host) {
 		this.configurationService = configurationService;
 		this.host = "http://" + host;
 	}
 
-	public boolean sendingOrderConfirmation(Order order, String language) {
-
+	public boolean sendOrderToERPServer(Order order) {
 		RestTemplate restTemplate = new RestTemplate();
-
-		String url = host + ":8081/email/send/confirmation";
-
+		
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		headers.set("X-API-KEY", configurationService.getApiKey());
-		headers.set("lang", language == null ? "EN" : language);
+
+		String url = host + ":8082/ftpservice/sendorder";
+		
 		ResponseEntity<String> response = restTemplate.postForEntity(url, new HttpEntity<>(order,headers), String.class);
 		if (response.getStatusCode().is2xxSuccessful()) {
 //			String responseBody = response.getBody();
 			return true;
 		} else
 			return false;
+	
 	}
 
 }
