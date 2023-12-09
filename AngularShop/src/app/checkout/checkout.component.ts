@@ -1,7 +1,7 @@
 import { CurrencyPipe } from '@angular/common';
 import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { UntypedFormGroup, UntypedFormBuilder, UntypedFormControl, Validators, FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { NgbModal, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
@@ -19,6 +19,7 @@ import { OrderDetail } from '../model/orderDetail';
 import { Address } from '../model/address';
 import { OrderService } from '../service/order.service';
 import { error } from 'console';
+import { ExtendedModalService } from '../service/extendedModalService';
 
 @Component({
   selector: 'app-checkout',
@@ -37,7 +38,6 @@ export class CheckoutComponent {
   private username !: string;
   private userId !: number;
 
-
   //FORM
   isSameAddress: boolean = false;
   addressForm !: FormGroup;
@@ -48,6 +48,9 @@ export class CheckoutComponent {
   public users: User[] = [];
   @ViewChild('customerSelect', { static: false }) customerSelectElement!: ElementRef;
   //ADMIN variable end
+
+  //Popup
+  private extendedModalService:ExtendedModalService
 
   constructor(
     private title: Title,
@@ -60,7 +63,7 @@ export class CheckoutComponent {
     private modalService: NgbModal,
     private router: Router,
     private currencyPipe: CurrencyPipe,
-  ) {
+  ) { this.extendedModalService = new ExtendedModalService(modalService);
   }
 
   ngOnInit(): void {
@@ -145,7 +148,10 @@ export class CheckoutComponent {
   public loadUser(username:string) {
     this.userService.getUserdata(username).subscribe({
       next: (response) => {this.fillFormBackend(response); if(response.userId) this.userId = response.userId},
-      error: (error) => {if(error.status === 404) this.redirectToProfilEdit(); else this.popupModal(error.message, "Error " + error.status, "Red");}
+      error: (error) => {if(error.status === 404) this.redirectToProfilEdit(); 
+        else 
+        this.extendedModalService.popup(this.customeModalComponent,"Error " + error.status,error.message,"red")
+      }
     })
   }
 
@@ -245,20 +251,23 @@ export class CheckoutComponent {
     this.disableSubmit();
 
     if (this.addressForm.invalid) {
-      this.popupModal("FORM NOT VALID","WARNING","red");
+      let title = this.translateService.instant("WARNING");
+      this.extendedModalService.popup(this.customeModalComponent,title,"FORM NOT VALID", "red");
       this.enableSubmit();
       return;
     }
 
     if (this.addressForm.value.deliveryDateInput == null || this.addressForm.value.deliveryDateInput <= new Date()) {
-      this.popupModal("DELIVERY DATE MISSING OR INVALID", "WARNING", "red");
+      let title = this.translateService.instant("WARNING");
+      this.extendedModalService.popup(this.customeModalComponent, title,"DELIVERY DATE MISSING OR INVALID", "red");
       this.enableSubmit();
       return
     }
 
     if (this.username == null || this.username == "")
     {
-      this.popupModal("Username is empty!","WARNING","red");
+      let title = this.translateService.instant("WARNING");
+      this.extendedModalService.popup(this.customeModalComponent,title,"Username is empty!", "red");
       this.enableSubmit();
       return;
     }
@@ -268,7 +277,7 @@ export class CheckoutComponent {
     if (this.getTotal() < 300) {
       let message = this.translateService.instant("MINIMUM ORDER MESSAGE");
       let title = this.translateService.instant("WARNING");
-      this.popupModal(message, title, "red");
+      this.extendedModalService.popup(this.customeModalComponent,title, message, "red")
       this.enableSubmit();
       return;
     }
@@ -284,13 +293,18 @@ export class CheckoutComponent {
     })
 
     if (orderedProducts.length < 1) {
-      this.popupModal("No items", "Error", "red");
+      this.extendedModalService.popup(this.customeModalComponent,"WARNING","No items", "red");
       this.enableSubmit();
       return;
     }
 
-    
-    this.popupWait();
+    //Make modal not closeable
+    let title = this.translateService.instant('PLEASE WAIT')
+    let ngbModalOptions: NgbModalOptions = {
+      backdrop : 'static',
+      keyboard : false
+    };
+    this.extendedModalService.popup(this.customeModalComponent,title,"wait","inherit",false,ngbModalOptions,true)
 
     const deliveryDate = this.addressForm.value.deliveryDateInput;
     const user = this.getUserfromForm();
@@ -306,7 +320,10 @@ export class CheckoutComponent {
 
     this.orderService.postOrder(order,this.username,currentLang).subscribe({
       next: (response) => {this.processingCompletedOrder(); this.modalService.dismissAll();},
-      error: (error:HttpErrorResponse) => {this.modalService.dismissAll();  this.popupModal(error.message, "Error", "red")}
+      error: (error:HttpErrorResponse) => {this.modalService.dismissAll();  
+        let title = this.translateService.instant("WARNING");
+        this.extendedModalService.popup(this.customeModalComponent,title,error.message, "red");
+      }
     })
   }
 
@@ -322,43 +339,20 @@ export class CheckoutComponent {
   //Submit section end
 
   //modal section
-  public popupModal(message: string, title: string, color: string) {
-    let modal = this.customeModalComponent;
-    modal.message = message;
-    modal.title = title;
-    modal.colorTitle = color;
-    this.openModal(modal, false)
-  }
-
-  public popupWait(){
-    let modal = this.customeModalComponent;
-    modal.waitMessage = true;
-    modal.title = this.translateService.instant('PLEASE WAIT')
-
-    //Make modal not closeable
-    let ngbModalOptions: NgbModalOptions = {
-      backdrop : 'static',
-      keyboard : false
-    };
-    this.openModal(modal,false, ngbModalOptions);
-  }
-
-  public openModal(modal: any, autoclose: boolean, ngbModalOptions ?: NgbModalOptions ) {
-
-    let modalRef = ngbModalOptions ? this.modalService.open(modal.myModal,ngbModalOptions) : this.modalService.open(modal.myModal);  
-    if (autoclose) {
-      setTimeout(() => {
-        modalRef.dismiss();
-      }, 1000);
-    }
-  }
   public redirectToProfilEdit(){
     this.router.navigateByUrl("/profile/edit");
-    let modal = this.customeModalComponent;
-    modal.message = this.translateService.instant('COMPLETE PROFILE');
-    modal.title = this.translateService.instant('PROFILE UNFINISHED');
-    modal.colorTitle = "black";
-    this.openModal(modal,false);
+    let message = this.translateService.instant('COMPLETE PROFILE');
+    let title = this.translateService.instant('PROFILE UNFINISHED');
+    let colorTitle = "black";
+    this.extendedModalService.popup(this.customeModalComponent,title,message,colorTitle)
+  }
+  processingCompletedOrder() {
+    let message = this.translateService.instant("ORDER CONFIRMATION MESSAGE");
+    let title = this.translateService.instant("ORDER CONFIRMED");
+    this.extendedModalService.popup(this.customeModalComponent,title,message,"black")
+    this.enableSubmit();
+    this.cart.clearCart();
+    this.router.navigateByUrl("/confirmation")
   }
   //modal section ends
 
@@ -375,7 +369,7 @@ export class CheckoutComponent {
 
   public getUsers(keyword: string) {
     if (keyword == null || keyword.length < 3) {
-      this.popupModal("Please type at least 3 characters", "WARNING", "red");
+      this.extendedModalService.popup(this.customeModalComponent,"WARNING","Please type at least 3 characters", "red");
       return;
     }
     this.users = [];
@@ -423,16 +417,6 @@ export class CheckoutComponent {
 
   public getTranslation(str:string){
     return this.translateService.instant(str)
-  }
-
-  processingCompletedOrder() {
-    let modal = this.customeModalComponent;
-    modal.message = this.translateService.instant("ORDER CONFIRMATION MESSAGE");
-    modal.title = this.translateService.instant("ORDER CONFIRMED");
-    this.openModal(modal, false);
-    this.enableSubmit();
-    this.cart.clearCart();
-    this.router.navigateByUrl("/confirmation")
   }
 
   public formatPrice(priceNumber: number): string {

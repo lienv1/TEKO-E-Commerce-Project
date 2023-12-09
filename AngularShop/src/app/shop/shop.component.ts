@@ -14,7 +14,7 @@ import { ShoppingCart } from '../service/shoppingCart';
 import { CustomModalComponent } from '../modal/custom-modal/custom-modal.component';
 import { environment } from 'src/environments/environment';
 import { Filters } from '../model/filters';
-import { error } from 'console';
+import { ExtendedModalService } from '../service/extendedModalService';
 
 export enum Sorter {
   productId = 'Product ID',
@@ -70,6 +70,9 @@ export class ShopComponent implements OnInit {
   //Images
   fallbackImageLoaded = false; //Prevent infinite loop
 
+  //Popup
+  private extendedModalService:ExtendedModalService;
+
   constructor(
     private title: Title,
     private route: ActivatedRoute,
@@ -78,7 +81,11 @@ export class ShopComponent implements OnInit {
     private productService: ProductService,
     private shoppingCart: ShoppingCart,
     private keycloakService: KeycloakService,
-    private modalService: NgbModal) {this.title.setTitle(this.translate.instant('SHOP'));}
+    private modalService: NgbModal
+    ) {
+      this.title.setTitle(this.translate.instant('SHOP'));
+      this.extendedModalService = new ExtendedModalService(modalService);
+    }
 
   ngOnInit(): void {
     this.isLogged().then(() =>
@@ -291,7 +298,7 @@ export class ShopComponent implements OnInit {
       this.redirectToProfilEdit();
       return;
     }
-    this.popup("ERROR", error.message, "red");
+    this.extendedModalService.popup(this.customModalComponent,"ERROR",error.message,"red",false)
   }
 
   //SEARCH SECTION
@@ -441,24 +448,29 @@ export class ShopComponent implements OnInit {
         foo: replaceFunction
       }
       //Modal setting
+      
       const message: string = cartItem.product.productId + " " + cartItem.product.productName + " - " + this.translate.instant("ITEM EXISTS");
       const title: string = this.translate.instant("WARNING");
       const color: string = "red";
-      let modal = this.customModalComponent;
-      modal.title = title;
-      modal.message = message;
-      modal.colorTitle = color;
-      modal.functionModels = [replaceModel, increaseModel];
-      this.openModal(modal, false);
+
+      this.customModalComponent.functionModels = [replaceModel, increaseModel]
+      this.extendedModalService.popup(
+        this.customModalComponent,
+        title,
+        message,
+        color,
+        false
+        );
       return;
     }
-
     this.shoppingCart.addItem(cartItem)
-    let modal = this.customModalComponent;
-    modal.message = product.productId + " " + product.productName + ": " + quantity;
-    modal.title = this.translate.instant("ITEM ADDED SUCCESS");
-    modal.colorTitle = "inherit"
-    this.openModal(modal, true);
+    this.extendedModalService.popup(
+      this.customModalComponent,
+      this.translate.instant("ITEM ADDED SUCCESS"),
+      product.productId + " " + product.productName + ": " + quantity,
+      "inherit",
+      false
+      );
     return;
   }
 
@@ -491,31 +503,20 @@ export class ShopComponent implements OnInit {
   //CART SECTION END
 
   //POPUP SECTION
-  public popup(title: string, message: string, color: string) {
-    let modal = this.customModalComponent;
-    modal.message = message;
-    modal.title = title;
-    modal.colorTitle = color;
-    this.openModal(modal, false);
-  }
-
   public redirectToProfilEdit() {
     this.router.navigateByUrl("/profile/edit");
-    let modal = this.customModalComponent;
-    modal.message = "Please setup your profile first";
-    modal.title = "Profile unfinished";
-    modal.colorTitle = "black";
-    this.openModal(modal, false);
+    let message = "Please setup your profile first";
+    let title = "Profile unfinished";
+    let color = "black";
+    this.extendedModalService.popup(
+      this.customModalComponent,
+      title,
+      message,
+      color,
+      false
+      );
   }
 
-  public openModal(modal: any, autoclose: boolean) {
-    let modalRef = this.modalService.open(modal.myModal);
-    if (autoclose) {
-      setTimeout(() => {
-        modalRef.dismiss();
-      }, 3000);
-    }
-  }
   //POPUP SECTION END
 
   //THEME SECTION

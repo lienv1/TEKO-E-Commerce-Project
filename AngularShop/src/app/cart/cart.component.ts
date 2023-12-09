@@ -10,6 +10,7 @@ import { Product } from '../model/product';
 import { ShoppingCart } from '../service/shoppingCart';
 import { CustomModalComponent } from '../modal/custom-modal/custom-modal.component';
 import { environment } from 'src/environments/environment';
+import { ExtendedModalService } from '../service/extendedModalService';
 
 @Component({
   selector: 'app-cart',
@@ -30,6 +31,8 @@ export class CartComponent {
 
   public selectedProduct !: Product
 
+  private extendedModalService : ExtendedModalService
+
   constructor(
     private title:Title, 
     private shoppingCart:ShoppingCart,
@@ -37,7 +40,9 @@ export class CartComponent {
     private translate:TranslateService,
     private modalService: NgbModal,
     private keycloakService : KeycloakService
-    ) {this.title.setTitle(this.translate.instant('CART')); }
+    ) {
+      this.title.setTitle(this.translate.instant('CART')); 
+      this.extendedModalService = new ExtendedModalService(modalService) }
 
   ngOnInit(): void {
     this.initCartItems();

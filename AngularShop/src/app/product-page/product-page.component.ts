@@ -13,6 +13,7 @@ import { ProductService } from '../service/product.service';
 import { ShoppingCart } from '../service/shoppingCart';
 import { CustomModalComponent } from '../modal/custom-modal/custom-modal.component';
 import { environment } from 'src/environments/environment';
+import { ExtendedModalService } from '../service/extendedModalService';
 
 @Component({
   selector: 'app-product-page',
@@ -35,7 +36,10 @@ export class ProductPageComponent {
   @ViewChild("quantityOption") quantityOption !: ElementRef<HTMLSelectElement>
   @ViewChild("quantityInput") quantityInput !: ElementRef<HTMLInputElement>
 
-  @ViewChild("CustomModalComponent") customModalComponent !: CustomModalComponent
+  //Popup
+  @ViewChild("CustomModalComponent") customModalComponent !: CustomModalComponent;
+
+  private extendedModalService:ExtendedModalService;
 
   constructor(
     private title: Title,
@@ -46,8 +50,8 @@ export class ProductPageComponent {
     private keycloakService: KeycloakService,
     private shoppingCart: ShoppingCart,
     private modalService: NgbModal,
-    private currencyPipe: CurrencyPipe
-  ) { }
+    private currencyPipe: CurrencyPipe,
+  ) {this.extendedModalService = new ExtendedModalService(modalService)}
 
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
@@ -56,10 +60,6 @@ export class ProductPageComponent {
     });
     this.getProduct();
     this.isLoggedInAndLoadUser();
-  }
-
-  ngAfterViewInit() {
-
   }
 
   scroll(el: HTMLElement) {
@@ -115,7 +115,8 @@ export class ProductPageComponent {
         this.favourite = response
       },
       error: (error: HttpErrorResponse) => {
-        if (error.status !== 404) this.popup("ERROR " + error.status, error.message, "red")
+        if (error.status !== 404) 
+          this.extendedModalService.popup(this.customModalComponent,"ERROR " + error.status,error.message, "red", false )
       }
     })
   }
@@ -151,8 +152,8 @@ export class ProductPageComponent {
   }
 
   handleError(error: HttpErrorResponse) {
-    if (error.status !== 404) this.popup("ERROR " + error.status, error.message, "red")
-    else { this.router.navigateByUrl("/profile/edit"); this.popup("Profile unfinished", "Please setup your profile first", "black") }
+    if (error.status !== 404)   this.extendedModalService.popup(this.customModalComponent,"ERROR " + error.status,error.message, "red", false );
+    else { this.router.navigateByUrl("/profile/edit"); this.extendedModalService.popup(this.customModalComponent,"Profile unfinished","Please setup your profile first", "black", false ) }
   }
 
   //API SECTION END
@@ -203,12 +204,8 @@ export class ProductPageComponent {
       const message: string = cartItem.product.productId + " " + cartItem.product.productName + " - " + this.translateService.instant("ITEM EXISTS");
       const title: string = this.translateService.instant("WARNING");
       const color: string = "red";
-      let modal = this.customModalComponent;
-      modal.title = title;
-      modal.message = message;
-      modal.colorTitle = color;
-      modal.functionModels = [replaceModel, increaseModel];
-      this.openModal(modal, false);
+      this.customModalComponent.functionModels = [replaceModel, increaseModel];
+      this.extendedModalService.popup(this.customModalComponent,title,message,color,false);
       return;
     }
 
@@ -246,25 +243,6 @@ export class ProductPageComponent {
   }
 
   //CART SECTION END
-
-  //MODAL SECTION
-  public openModal(modal: any, autoclose: boolean) {
-    let modalRef = this.modalService.open(modal.myModal);
-    if (autoclose) {
-      setTimeout(() => {
-        modalRef.dismiss();
-      }, 3000);
-    }
-  }
-
-  public popup(title: string, message: string, color: string) {
-    let modal = this.customModalComponent;
-    modal.message = message;
-    modal.title = title;
-    modal.colorTitle = color;
-    this.openModal(modal, false);
-  }
-  //MODAL SECTION END
 
   public hasCarton(): boolean {
     return this.product?.pack !== 1
