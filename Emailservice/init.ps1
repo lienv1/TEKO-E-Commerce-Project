@@ -10,4 +10,4 @@ docker build -t emailservice-image .
 # Get the local IPv4 address
 $localIP = (Get-NetIPAddress | Where-Object { $_.AddressFamily -eq 'IPv4' -and $_.PrefixOrigin -eq 'Dhcp' }).IPAddress
 
-docker run --name emailservice-container -d -e HOSTNAME="$localIP" -p 8081:8081 emailservice-image
+docker run --name emailservice-container -d -e HOSTNAME="$localIP" -e SERVICE_HTTPS_ENABLED=false -p 8081:8081 emailservice-image

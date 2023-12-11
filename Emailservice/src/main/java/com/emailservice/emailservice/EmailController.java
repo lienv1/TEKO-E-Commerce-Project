@@ -22,18 +22,15 @@ import jakarta.servlet.http.HttpServletRequest;
 @RequestMapping("/email")
 public class EmailController {
 	
-	private String preSharedKey;
-	
 	@Autowired
 	private EmailService emailService;
 	
 	@Autowired
 	private SecurityService securityService;
 	
-	public EmailController(EmailService emailService, SecurityService securityService, @Value("${custom.property.presharedkey}") String preSharedKey) {
+	public EmailController(EmailService emailService, SecurityService securityService) {
 		this.emailService = emailService;
 		this.securityService = securityService;
-		this.preSharedKey = preSharedKey;
 	}
 
 	@PostMapping("/send/confirmation")

@@ -16,9 +16,9 @@ public class SecurityService {
 	private String preSharedKey;
 	private String host;
 	
-	public SecurityService(@Value("${custom.property.presharedkey}") String preSharedKey, @Value("${custom.property.host}") String host) {
+	public SecurityService(@Value("${custom.property.presharedkey}") String preSharedKey, @Value("${custom.property.host}") String host, @Value("${custom.property.service.https.enabled}") boolean httpsEnabled ) {
 		this.preSharedKey = preSharedKey;
-		this.host = "http://"+ host;
+		this.host = (httpsEnabled==true? "https://" : "http://") + host;
 		setupAPIKey();
 	}
 
