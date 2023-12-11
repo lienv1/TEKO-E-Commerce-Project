@@ -21,9 +21,10 @@ public class EmailService {
 	private ConfigurationService configurationService;
 	
 	public EmailService(ConfigurationService configurationService, @Value("${custom.property.host}") String host,
-			@Value("${custom.property.presharedkey}") String preSharedKey) {
+			  @Value("${custom.property.service.https.enabled}") boolean httpsEnabled) {
 		this.configurationService = configurationService;
-		this.host = "http://" + host;
+		this.host = httpsEnabled==true? "https://" + host : "http://" + host;
+		System.out.println("email service "+this.host);
 	}
 
 	public boolean sendingOrderConfirmation(Order order, String language) {

@@ -19,9 +19,10 @@ public class ERPService {
 	@Autowired
 	private ConfigurationService configurationService;
 
-	public ERPService(ConfigurationService configurationService, @Value("${custom.property.host}") String host) {
+	public ERPService(ConfigurationService configurationService, @Value("${custom.property.host}") String host, @Value("${custom.property.service.https.enabled}") boolean httpsEnabled  ) {
 		this.configurationService = configurationService;
-		this.host = "http://" + host;
+		this.host = httpsEnabled==true? "https://" + host : "http://" + host;
+		System.out.println("ERP service "+this.host);
 	}
 
 	public boolean sendOrderToERPServer(Order order) {
