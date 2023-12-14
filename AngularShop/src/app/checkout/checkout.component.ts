@@ -167,14 +167,12 @@ export class CheckoutComponent {
      // Set value for the nested billing address form group controls
      this.addressForm.get('billingAddress.billingStreetInput')?.setValue(user.billingAddress.street);
      this.addressForm.get('billingAddress.billingCityInput')?.setValue(user.billingAddress.city);
-     this.addressForm.get('billingAddress.billingStateInput')?.setValue(user.billingAddress.state);
      this.addressForm.get('billingAddress.billingZipInput')?.setValue(user.billingAddress.postalCode);
      this.addressForm.get('billingAddress.billingCountryInput')?.setValue(user.billingAddress.country);
  
      // Set value for the nested delivery address form group controls
      this.addressForm.get('deliveryAddress.deliveryStreetInput')?.setValue(user.deliveryAddress.street);
      this.addressForm.get('deliveryAddress.deliveryCityInput')?.setValue(user.deliveryAddress.city);
-     this.addressForm.get('deliveryAddress.deliveryStateInput')?.setValue(user.deliveryAddress.state);
      this.addressForm.get('deliveryAddress.deliveryZipInput')?.setValue(user.deliveryAddress.postalCode);
      this.addressForm.get('deliveryAddress.deliveryCountryInput')?.setValue(user.deliveryAddress.country);
 
@@ -191,14 +189,12 @@ export class CheckoutComponent {
     const phone = this.addressForm.value.phoneInput;
     const billingStreet = this.addressForm.value.billingAddress.billingStreetInput;
     const billingCity = this.addressForm.value.billingAddress.billingCityInput;
-    const billingState = this.addressForm.value.billingAddress.billingStateInput;
     const billingZip = this.addressForm.value.billingAddress.billingZipInput;
     const billingCountry = this.addressForm.value.billingAddress.billingCountryInput;
 
     const billingAddress: Address = {
       street: billingStreet,
       city: billingCity,
-      state: billingState,
       postalCode: billingZip,
       country: billingCountry
     };
@@ -208,13 +204,11 @@ export class CheckoutComponent {
     if (!this.isSameAddress) {
       const deliveryStreet = this.addressForm.value.deliveryAddress.deliveryStreetInput;
       const deliveryCity = this.addressForm.value.deliveryAddress.deliveryCityInput;
-      const deliveryState = this.addressForm.value.deliveryAddress.deliveryStateInput;
       const deliveryZip = this.addressForm.value.deliveryAddress.deliveryZipInput;
       const deliveryCountry = this.addressForm.value.deliveryAddress.deliveryCountryInput;
       deliveryAddress = {
         street: deliveryStreet,
         city: deliveryCity,
-        state: deliveryState,
         postalCode: deliveryZip,
         country: deliveryCountry
       };
