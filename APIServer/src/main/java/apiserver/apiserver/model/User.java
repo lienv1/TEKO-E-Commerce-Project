@@ -1,13 +1,13 @@
 package apiserver.apiserver.model;
 
-import jakarta.persistence.CascadeType;
+import jakarta.persistence.AttributeOverride;
+import jakarta.persistence.AttributeOverrides;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
 
 @Entity
 public class User {
@@ -23,12 +23,23 @@ public class User {
 	private String phone;
 	private String email;
 
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "delivery_address_id")
+	@Embedded
+	@AttributeOverrides({
+	    @AttributeOverride(name="street", column=@Column(name="delivery_street")),
+	    @AttributeOverride(name="city", column=@Column(name="delivery_city")),
+	    @AttributeOverride(name="state", column=@Column(name="delivery_state")),
+	    @AttributeOverride(name="postalCode", column=@Column(name="delivery_postalCode")),
+	    @AttributeOverride(name="country", column=@Column(name="delivery_country"))
+	})
 	private Address deliveryAddress;
-
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "billing_address_id")
+	@Embedded
+	@AttributeOverrides({
+	    @AttributeOverride(name="street", column=@Column(name="billing_street")),
+	    @AttributeOverride(name="city", column=@Column(name="billing_city")),
+	    @AttributeOverride(name="state", column=@Column(name="billing_state")),
+	    @AttributeOverride(name="postalCode", column=@Column(name="billing_postalCode")),
+	    @AttributeOverride(name="country", column=@Column(name="billing_country"))
+	})
 	private Address billingAddress;
 
 	@Column(unique = true, nullable = false)
@@ -88,7 +99,6 @@ public class User {
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
-
 	public Address getDeliveryAddress() {
 		return deliveryAddress;
 	}

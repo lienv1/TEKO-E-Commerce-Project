@@ -48,9 +48,16 @@ public class UserController {
 	
 	@GetMapping("/all/username")
 	@PreAuthorize(value= "hasRole('ADMIN')")
-	public ResponseEntity<List<User>> getAllUsernames() {
-		List<User> list = userService.getAllUser();
-		return new ResponseEntity<List<User>>(list, HttpStatus.OK);
+	public ResponseEntity<Set<String>> getAllUsernames() {
+		Set<String> list = userService.getAllUsername();
+		return new ResponseEntity<Set<String>>(list, HttpStatus.OK);
+	}
+	
+	@GetMapping("/all/erpid")
+	@PreAuthorize(value= "hasRole('ADMIN')")
+	public ResponseEntity<Set<String>> getAllErpId() {
+		Set<String> list = userService.getAllErpId();
+		return new ResponseEntity<Set<String>>(list, HttpStatus.OK);
 	}
 	
 	

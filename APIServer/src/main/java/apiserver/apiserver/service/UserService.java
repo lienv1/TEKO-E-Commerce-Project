@@ -25,13 +25,17 @@ public class UserService {
 	public List<User> getAllUser() {
 		return userRepo.findAll();
 	}
-	
+
 	public Set<String> getAllUsername() {
 		return userRepo.findAllUsernames();
 	}
 
+	public Set<String> getAllErpId() {
+		return userRepo.findAllErpId();
+	}
+
 	public User addUser(User user) throws DataIntegrityViolationException {
-			return userRepo.save(user);
+		return userRepo.save(user);
 	}
 
 	public User getUserByID(Long id) throws UserNotFoundException {
@@ -41,14 +45,13 @@ public class UserService {
 	public User getUserByUsername(String username) throws UserNotFoundException {
 		return userRepo.findByUsername(username).orElseThrow(() -> new UserNotFoundException("User not found"));
 	}
-	
-	public Set<User> getUsersByKeyword(String keyword){
+
+	public Set<User> getUsersByKeyword(String keyword) {
 		return userRepo.findByUsernameContainingIgnoreCase(keyword);
 	}
 
 	public User editUserByUsername(User newUser, String username) throws UserNotFoundException {
-		User oldUser = userRepo.findByUsername(username)
-				.orElseThrow(() -> new UserNotFoundException("User not found"));
+		User oldUser = userRepo.findByUsername(username).orElseThrow(() -> new UserNotFoundException("User not found"));
 		User updatedUser = editUser(newUser, oldUser);
 		return updatedUser;
 	}
@@ -60,16 +63,11 @@ public class UserService {
 	}
 
 	public User editUser(User newUser, User oldUser) {
-		try {
-			Address billingAddress = newUser.getBillingAddress();
-			billingAddress.setAddressId(oldUser.getBillingAddress().getAddressId());
-			Address deliveryAddress = newUser.getDeliveryAddress();
-			deliveryAddress.setAddressId(oldUser.getDeliveryAddress().getAddressId());
-			oldUser.setBillingAddress(billingAddress);
-			oldUser.setDeliveryAddress(deliveryAddress);
-		} catch (NullPointerException e) {
-			System.out.println("The user has not provided an address yet");
-		}
+
+		Address billingAddress = newUser.getBillingAddress();
+		Address deliveryAddress = newUser.getDeliveryAddress();
+		if (billingAddress != null) oldUser.setBillingAddress(billingAddress);
+		if (deliveryAddress != null) oldUser.setDeliveryAddress(deliveryAddress);
 
 		oldUser.setEmail(newUser.getEmail());
 		oldUser.setLastname(newUser.getLastname());
@@ -79,17 +77,17 @@ public class UserService {
 	}
 
 	public User deleteUserByUsername(String username) throws UserNotFoundException {
-		User user = userRepo.findByUsername(username).orElseThrow( () -> new UserNotFoundException("User not found") );
+		User user = userRepo.findByUsername(username).orElseThrow(() -> new UserNotFoundException("User not found"));
 		user.setDeleted(true);
 		return userRepo.save(user);
 	}
-	
+
 	public boolean userExistsByUsername(String username) {
 		return userRepo.existsByUsername(username);
 	}
-	
+
 	public boolean userExistByUserId(long userid) {
 		return userRepo.existsById(userid);
 	}
-	
+
 }

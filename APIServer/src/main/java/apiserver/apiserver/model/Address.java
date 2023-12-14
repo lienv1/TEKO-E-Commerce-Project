@@ -1,15 +1,9 @@
 package apiserver.apiserver.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.Embeddable;
 
-@Entity
+@Embeddable 
 public class Address {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long addressId;
     private String street;
     private String city;
     private String state;
@@ -19,15 +13,7 @@ public class Address {
 	public Address() {
 	
 	}
-
-	public Long getAddressId() {
-		return addressId;
-	}
-
-	public void setAddressId(Long id) {
-		this.addressId = id;
-	}
-
+	
 	public String getStreet() {
 		return street;
 	}
@@ -67,13 +53,6 @@ public class Address {
 	public void setCountry(String country) {
 		this.country = country;
 	}
-
-	@Override
-	public String toString() {
-		return "Address [addressId=" + addressId + ", street=" + street + ", city=" + city + ", state=" + state
-				+ ", postalCode=" + postalCode + ", country=" + country + "]";
-	}
-	
-    
+  
 
 }
