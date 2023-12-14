@@ -25,6 +25,10 @@ public class UserService {
 	public List<User> getAllUser() {
 		return userRepo.findAll();
 	}
+	
+	public Set<String> getAllUsername() {
+		return userRepo.findAllUsernames();
+	}
 
 	public User addUser(User user) throws DataIntegrityViolationException {
 			return userRepo.save(user);
