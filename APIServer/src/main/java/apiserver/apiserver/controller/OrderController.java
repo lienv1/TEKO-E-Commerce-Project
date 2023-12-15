@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import apiserver.apiserver.exception.OrderNotFoundException;
+import apiserver.apiserver.exception.UserNotFoundException;
 import apiserver.apiserver.model.Order;
+import apiserver.apiserver.model.User;
 import apiserver.apiserver.security.AuthorizationService;
 import apiserver.apiserver.service.EmailService;
 import apiserver.apiserver.service.ERPService;
@@ -103,7 +105,6 @@ public class OrderController {
 		if (!userExist) return ResponseEntity.notFound().build();		
 		
 		try {
-			System.out.println("Trying to add order");
 			Order addedOrder = orderService.addOrder(order);
 //			System.out.println("Sending email...");
 //			boolean emailSuccess = emailService.sendingOrderConfirmation(addedOrder,language);
@@ -125,16 +126,14 @@ public class OrderController {
 			@RequestBody Order order, 
 			Principal principal) {	
 		
-		boolean userExist = userService.userExistsByErpId(erpId);
-		if (!userExist) return ResponseEntity.notFound().build();		
-		
 		try {
-			System.out.println("Trying to add order");
+			User user = userService.getUserByErpId(erpId);
+			order.setUser(user);
 			Order addedOrder = orderService.addOrder(order);	
 			return new ResponseEntity<Order>(addedOrder, HttpStatus.OK);
-		} catch (DataIntegrityViolationException e) {
-			return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
-		}
+		} 
+		catch (DataIntegrityViolationException e) {return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);} 
+		catch (UserNotFoundException e) {return new ResponseEntity("User doesn't exist", HttpStatus.NOT_FOUND);}
 	}
 
 }

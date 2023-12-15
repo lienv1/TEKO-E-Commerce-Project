@@ -49,6 +49,10 @@ public class UserService {
 	public Set<User> getUsersByKeyword(String keyword) {
 		return userRepo.findByUsernameContainingIgnoreCase(keyword);
 	}
+	
+	public User getUserByErpId(long erpId) throws UserNotFoundException {
+		return userRepo.findByErpId(erpId).orElseThrow( () -> new UserNotFoundException("User not found"));
+	}
 
 	public User editUserByUsername(User newUser, String username) throws UserNotFoundException {
 		User oldUser = userRepo.findByUsername(username).orElseThrow(() -> new UserNotFoundException("User not found"));
@@ -90,8 +94,6 @@ public class UserService {
 		return userRepo.existsById(userid);
 	}
 	
-	public boolean userExistsByErpId(long erpId) {
-		return userRepo.existsByErpId(erpId);
-	}
+	
 
 }
