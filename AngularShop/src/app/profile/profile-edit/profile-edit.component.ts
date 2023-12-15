@@ -46,7 +46,6 @@ export class ProfileEditComponent implements OnInit {
     this.billingAddress = new FormGroup({
       billingStreetInput: new FormControl(''),
       billingCityInput: new FormControl(''),
-      billingStateInput: new FormControl(''),
       billingZipInput: new FormControl(''),
       billingCountryInput: new FormControl('')
     });
@@ -54,7 +53,6 @@ export class ProfileEditComponent implements OnInit {
     this.deliveryAddress = new FormGroup({
       deliveryStreetInput: new FormControl(''),
       deliveryCityInput: new FormControl(''),
-      deliveryStateInput: new FormControl(''),
       deliveryZipInput: new FormControl(''),
       deliveryCountryInput: new FormControl('')
     });
@@ -195,6 +193,7 @@ export class ProfileEditComponent implements OnInit {
       billingAddress: billingAddress,
       username: this.username
     }
+
     this.updateUser(user);
   }
 

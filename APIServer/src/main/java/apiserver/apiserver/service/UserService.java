@@ -89,5 +89,9 @@ public class UserService {
 	public boolean userExistByUserId(long userid) {
 		return userRepo.existsById(userid);
 	}
+	
+	public boolean userExistsByErpId(long erpId) {
+		return userRepo.existsByErpId(erpId);
+	}
 
 }

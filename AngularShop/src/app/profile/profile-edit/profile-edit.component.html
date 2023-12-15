@@ -10,7 +10,7 @@
             <h3>{{'PROFILE INFORMATION' | translate}}</h3>
           </div>
           <div class="card-body">
-            <form [formGroup]="addressForm" (ngSubmit)="updateProfil()">
+            <form ngNativeValidate [formGroup]="addressForm" (ngSubmit)="updateProfil()">
 
               <!-- Personal Information -->
               <h4>{{'PERSONAL INFORMATION'| translate}}</h4>

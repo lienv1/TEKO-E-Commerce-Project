@@ -26,7 +26,7 @@
 
     <div class="row mt-5">
         <div class="col-md-8">
-            <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
+            <form [formGroup]="addressForm" (ngSubmit)="onSubmit()" ngNativeValidate>
 
                 <!-- Personal Information -->
                 <h4>{{'PERSONAL INFORMATION' | translate}}</h4>

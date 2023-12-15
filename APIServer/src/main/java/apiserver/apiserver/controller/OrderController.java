@@ -116,5 +116,25 @@ public class OrderController {
 			return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
 		}
 	}
+	
+	//This method allows setting orderid manually, thus allowing migration from another project
+	@PostMapping("/erp/{erp}")
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<Order> addOrderAdmin(
+			@PathVariable("erp") long erpId, 
+			@RequestBody Order order, 
+			Principal principal) {	
+		
+		boolean userExist = userService.userExistsByErpId(erpId);
+		if (!userExist) return ResponseEntity.notFound().build();		
+		
+		try {
+			System.out.println("Trying to add order");
+			Order addedOrder = orderService.addOrder(order);	
+			return new ResponseEntity<Order>(addedOrder, HttpStatus.OK);
+		} catch (DataIntegrityViolationException e) {
+			return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
+		}
+	}
 
 }

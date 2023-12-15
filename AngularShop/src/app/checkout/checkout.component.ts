@@ -83,7 +83,6 @@ export class CheckoutComponent {
     this.billingAddress = new FormGroup({
       billingStreetInput: new FormControl(''),
       billingCityInput: new FormControl(''),
-      billingStateInput: new FormControl(''),
       billingZipInput: new FormControl(''),
       billingCountryInput: new FormControl('')
     });
@@ -91,7 +90,6 @@ export class CheckoutComponent {
     this.deliveryAddress = new FormGroup({
       deliveryStreetInput: new FormControl(''),
       deliveryCityInput: new FormControl(''),
-      deliveryStateInput: new FormControl(''),
       deliveryZipInput: new FormControl(''),
       deliveryCountryInput: new FormControl('')
     });
