@@ -25,6 +25,7 @@ import apiserver.apiserver.service.EmailService;
 import apiserver.apiserver.service.ERPService;
 import apiserver.apiserver.service.OrderService;
 import apiserver.apiserver.service.UserService;
+import jakarta.persistence.EntityNotFoundException;
 
 @RestController
 @RequestMapping("/order")
@@ -126,6 +127,7 @@ public class OrderController {
 			@RequestBody Order order, 
 			Principal principal) {	
 		System.out.println("Searching for " + erpId);
+		System.out.println(order.getOrderId());
 		try {
 			User user = userService.getUserByErpId(erpId);
 			order.setUser(user);
@@ -134,6 +136,8 @@ public class OrderController {
 		} 
 		catch (DataIntegrityViolationException e) {e.printStackTrace(); return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);} 
 		catch (UserNotFoundException e) {return new ResponseEntity("User doesn't exist", HttpStatus.NOT_FOUND);}
+		catch (EntityNotFoundException e) {return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);}
+		catch (Exception e) {return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);}
 	}
 
 }

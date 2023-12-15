@@ -13,6 +13,7 @@ import apiserver.apiserver.model.OrderDetail;
 import apiserver.apiserver.model.User;
 import apiserver.apiserver.repo.OrderRepo;
 import apiserver.apiserver.repo.UserRepo;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -34,7 +35,7 @@ public class OrderService {
 	}
 
 	@Transactional
-	public Order addOrder(Order order) throws DataIntegrityViolationException {
+	public Order addOrder(Order order) throws DataIntegrityViolationException, EntityNotFoundException {
 		try {
 			User user = userRepo.saveAndFlush(order.getUser());
 			order.setUser(user);
@@ -44,6 +45,9 @@ public class OrderService {
 			return orderRepo.save(order);
 		} catch (DataIntegrityViolationException e) {
 			throw new DataIntegrityViolationException(e.getMessage());
+		}
+		catch (EntityNotFoundException e) {
+			throw new EntityNotFoundException(e.getMessage());
 		}
 	}
 
