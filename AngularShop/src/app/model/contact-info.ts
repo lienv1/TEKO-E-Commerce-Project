@@ -3,7 +3,7 @@ export const contactInfo = {
     street: "Schwarzenburgstrasse 320",
     zipCity: "3098 Köniz",
     country: "Schweiz",
-    phoneNumber: "0041 31 971 38 71",
+    phoneNumber: "+41 31 971 38 71",
     email: "info@achau.ch",
   };
   
