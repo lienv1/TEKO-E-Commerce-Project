@@ -50,7 +50,7 @@ public class UserService {
 		return userRepo.findByUsernameContainingIgnoreCase(keyword);
 	}
 	
-	public User getUserByErpId(long erpId) throws UserNotFoundException {
+	public User getUserByErpId(Long erpId) throws UserNotFoundException {
 		return userRepo.findByErpId(erpId).orElseThrow( () -> new UserNotFoundException("User not found"));
 	}
 

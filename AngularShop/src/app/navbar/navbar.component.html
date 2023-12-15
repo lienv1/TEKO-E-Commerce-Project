@@ -54,7 +54,7 @@ l4 205 36 105 c20 58 99 238 176 400 192 403 262 584 326 835 85 336 100 603
                         {{"RESTAURANT" | translate}}</a>
                 </li>-->
                 <li class="nav-item">
-                    <a class="nav-link" [routerLinkActive]="['active']" routerLink="/shop"><i class="bi bi-shop"></i>
+                    <a class="nav-link" [routerLinkActive]="['active']" [routerLink]="['/shop']" [queryParams]="{ sort: 'lastModified,desc' }"><i class="bi bi-shop"></i>
                         {{'SHOP' |
                         translate}}</a>
                 </li>

@@ -18,7 +18,7 @@ public interface UserRepo extends JpaRepository<User, Long> {
 
 	boolean existsByUsername(String username);
 	
-	Optional<User> findByErpId(long erpId);
+	Optional<User> findByErpId(Long erpId);
 
 	@Query("SELECT u.username FROM User u")
 	Set<String> findAllUsernames();

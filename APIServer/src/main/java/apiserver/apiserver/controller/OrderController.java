@@ -122,17 +122,17 @@ public class OrderController {
 	@PostMapping("/erp/{erp}")
 	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<Order> addOrderAdmin(
-			@PathVariable("erp") long erpId, 
+			@PathVariable("erp") Long erpId, 
 			@RequestBody Order order, 
 			Principal principal) {	
-		
+		System.out.println("Searching for " + erpId);
 		try {
 			User user = userService.getUserByErpId(erpId);
 			order.setUser(user);
 			Order addedOrder = orderService.addOrder(order);	
 			return new ResponseEntity<Order>(addedOrder, HttpStatus.OK);
 		} 
-		catch (DataIntegrityViolationException e) {return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);} 
+		catch (DataIntegrityViolationException e) {e.printStackTrace(); return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);} 
 		catch (UserNotFoundException e) {return new ResponseEntity("User doesn't exist", HttpStatus.NOT_FOUND);}
 	}
 
