@@ -61,13 +61,13 @@ public class UserService {
 		    Specification<User> combinedSpec = Specification.where(null);
 		    for (String keyword : keywords) {
 		        combinedSpec = combinedSpec
-		        		.and(UserSpecification.userIdContains(keyword))
-		        		.and(UserSpecification.usernameContains(keyword))
-		                .and(UserSpecification.erpIdContains(keyword))
-		                .and(UserSpecification.firstnameContains(keyword))
-		                .and(UserSpecification.lastnameContains(keyword))
-		                .and(UserSpecification.emailContains(keyword))
-		                .and(UserSpecification.phoneContains(keyword))
+		        		.or(UserSpecification.userIdContains(keyword))
+		        		.or(UserSpecification.usernameContains(keyword))
+		                .or(UserSpecification.erpIdContains(keyword))
+		                .or(UserSpecification.firstnameContains(keyword))
+		                .or(UserSpecification.lastnameContains(keyword))
+		                .or(UserSpecification.emailContains(keyword))
+		                .or(UserSpecification.phoneContains(keyword))
 		                ;
 		    }
 		    return new HashSet<>(userRepo.findAll(combinedSpec));
