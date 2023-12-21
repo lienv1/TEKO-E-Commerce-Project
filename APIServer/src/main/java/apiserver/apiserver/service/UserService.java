@@ -55,7 +55,7 @@ public class UserService {
 
 	public Set<User> getUsersByKeywords(List<String> keywords) {
 		 if (keywords == null || keywords.isEmpty()) {
-		        return new HashSet<>(userRepo.findAll());
+		        return new HashSet<>();
 		    }
 
 		    Specification<User> combinedSpec = Specification.where(null);
