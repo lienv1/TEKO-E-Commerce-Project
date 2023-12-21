@@ -10,7 +10,7 @@ public class UserSpecification {
 
 	 public static Specification<User> userIdContains(String keyword) {
 	        return (root, query, criteriaBuilder) -> {
-	            if (keyword == null || keyword.isEmpty() || isNumeric(keyword)) {
+	            if (keyword == null || keyword.isEmpty() || !isNumeric(keyword)) {
 	                return criteriaBuilder.conjunction();
 	            }
 	            return criteriaBuilder.like(criteriaBuilder.lower(root.get("userId")), "%" + keyword.toLowerCase() + "%");
@@ -28,7 +28,7 @@ public class UserSpecification {
 
 	    public static Specification<User> erpIdContains(String keyword) {
 	        return (root, query, criteriaBuilder) -> {
-	            if (keyword == null || keyword.isEmpty() || isNumeric(keyword)) {
+	            if (keyword == null || keyword.isEmpty() || !isNumeric(keyword)) {
 	                return criteriaBuilder.conjunction();
 	            }
 	            return criteriaBuilder.like(criteriaBuilder.lower(root.get("erpId")), "%" + keyword.toLowerCase() + "%");
