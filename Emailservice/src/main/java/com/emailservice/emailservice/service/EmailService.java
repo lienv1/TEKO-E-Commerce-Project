@@ -79,7 +79,7 @@ public class EmailService {
 			}
 
 			htmlText += "<br> "+translator.getCompany()+": " + user.getCompany() + "<br> "+translator.getName()+": " + user.getLastname() + " "
-					+ user.getFirstname() + "<br> "+translator.getStreet()+": " + user.getDeliveryAddress().getStreet()+ "<br> "+translator.getState()+": " + user.getDeliveryAddress().getPostalCode() + " " + user.getDeliveryAddress().getState()
+					+ user.getFirstname() + "<br> "+translator.getStreet()+": " + user.getDeliveryAddress().getStreet()+ "<br> "+translator.getState()+": " + user.getDeliveryAddress().getPostalCode() + " " + user.getDeliveryAddress().getCity()
 					+ "<br> "+translator.getPhone()+":" + user.getPhone() + "<br> "+translator.getEmail()+": " + user.getEmail() + "<br> "+translator.getComment()+": "
 					+ order.getComment() + "<br> "+translator.getDeliveryDate()+": " + new SimpleDateFormat("yyyy-MM-dd").format(order.getOrderDate());
 			
