@@ -54,23 +54,8 @@ public class UserService {
 	}
 
 	public Set<User> getUsersByKeywords(List<String> keywords) {
-		 if (keywords == null || keywords.isEmpty()) {
-		        return new HashSet<>();
-		    }
-
-		    Specification<User> combinedSpec = Specification.where(null);
-		    for (String keyword : keywords) {
-		        combinedSpec = combinedSpec
-		        		.or(UserSpecification.userIdContains(keyword))
-		        		.or(UserSpecification.usernameContains(keyword))
-		                .or(UserSpecification.erpIdContains(keyword))
-		                .or(UserSpecification.firstnameContains(keyword))
-		                .or(UserSpecification.lastnameContains(keyword))
-		                .or(UserSpecification.emailContains(keyword))
-		                .or(UserSpecification.phoneContains(keyword))
-		                ;
-		    }
-		    return new HashSet<>(userRepo.findAll(combinedSpec));
+	    UserSpecification spec = new UserSpecification(keywords);
+	    return new HashSet<>(userRepo.findAll(spec));
 	}
 
 	public User getUserByErpId(Long erpId) throws UserNotFoundException {

@@ -64,9 +64,10 @@ public class UserController {
 	@GetMapping("/search")
 	@PreAuthorize(value= "hasRole('ADMIN')")
 	public ResponseEntity<Set<User>> getAllUsersByKeyword(@RequestParam(value = "keyword", required = false) List<String> keywords) {
+		
+		for (String keyword : keywords) {System.out.println(keyword);};
 		Set<User> list = userService.getUsersByKeywords(keywords);
-		System.out.println("Searching for ");
-		for (String keyword : keywords) {System.out.println("string: " + keyword);}
+		
 		return new ResponseEntity<Set<User>>(list, HttpStatus.OK);
 	}
 	
