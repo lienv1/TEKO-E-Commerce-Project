@@ -63,8 +63,8 @@ public class UserController {
 	
 	@GetMapping("/search")
 	@PreAuthorize(value= "hasRole('ADMIN')")
-	public ResponseEntity<Set<User>> getAllUsersByKeyword(@RequestParam(value = "keyword", required = false) String keyword) {
-		Set<User> list = userService.getUsersByKeyword(keyword);
+	public ResponseEntity<Set<User>> getAllUsersByKeyword(@RequestParam(value = "keyword", required = false) List<String> keyword) {
+		Set<User> list = userService.getUsersByKeywords(keyword);
 		return new ResponseEntity<Set<User>>(list, HttpStatus.OK);
 	}
 	
