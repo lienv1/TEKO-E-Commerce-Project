@@ -1,16 +1,19 @@
 package apiserver.apiserver.service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import apiserver.apiserver.exception.UserNotFoundException;
 import apiserver.apiserver.model.Address;
 import apiserver.apiserver.model.User;
 import apiserver.apiserver.repo.UserRepo;
+import apiserver.apiserver.specification.UserSpecification;
 
 @Service
 public class UserService {
@@ -49,9 +52,29 @@ public class UserService {
 	public Set<User> getUsersByKeyword(String keyword) {
 		return userRepo.findByUsernameContainingIgnoreCase(keyword);
 	}
-	
+
+	public Set<User> getUsersByKeywords(List<String> keywords) {
+		 if (keywords == null || keywords.isEmpty()) {
+		        return new HashSet<>(userRepo.findAll());
+		    }
+
+		    Specification<User> combinedSpec = Specification.where(null);
+		    for (String keyword : keywords) {
+		        combinedSpec = combinedSpec
+		        		.and(UserSpecification.userIdContains(keyword))
+		        		.and(UserSpecification.usernameContains(keyword))
+		                .and(UserSpecification.erpIdContains(keyword))
+		                .and(UserSpecification.firstnameContains(keyword))
+		                .and(UserSpecification.lastnameContains(keyword))
+		                .and(UserSpecification.emailContains(keyword))
+		                .and(UserSpecification.phoneContains(keyword))
+		                ;
+		    }
+		    return new HashSet<>(userRepo.findAll(combinedSpec));
+	}
+
 	public User getUserByErpId(Long erpId) throws UserNotFoundException {
-		return userRepo.findByErpId(erpId).orElseThrow( () -> new UserNotFoundException("User not found"));
+		return userRepo.findByErpId(erpId).orElseThrow(() -> new UserNotFoundException("User not found"));
 	}
 
 	public User editUserByUsername(User newUser, String username) throws UserNotFoundException {
@@ -70,8 +93,10 @@ public class UserService {
 
 		Address billingAddress = newUser.getBillingAddress();
 		Address deliveryAddress = newUser.getDeliveryAddress();
-		if (billingAddress != null) oldUser.setBillingAddress(billingAddress);
-		if (deliveryAddress != null) oldUser.setDeliveryAddress(deliveryAddress);
+		if (billingAddress != null)
+			oldUser.setBillingAddress(billingAddress);
+		if (deliveryAddress != null)
+			oldUser.setDeliveryAddress(deliveryAddress);
 
 		oldUser.setEmail(newUser.getEmail());
 		oldUser.setLastname(newUser.getLastname());
@@ -93,7 +118,5 @@ public class UserService {
 	public boolean userExistByUserId(long userid) {
 		return userRepo.existsById(userid);
 	}
-	
-	
 
 }

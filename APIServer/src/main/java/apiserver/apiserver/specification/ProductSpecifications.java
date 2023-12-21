@@ -7,7 +7,6 @@ import org.springframework.data.jpa.domain.Specification;
 
 import apiserver.apiserver.model.Favorite;
 import apiserver.apiserver.model.Product;
-import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import jakarta.persistence.criteria.Subquery;
