@@ -99,7 +99,6 @@ export class AdminPageComponent implements OnInit {
       this.popupModal("Please type at least 3 characters","WARNING","red");
       return;
     }
-    keyword = keyword.replace('/\s+/g', '¿')
     this.userService.getUsersByKeyword(keyword).subscribe (
       (response) => {
         this.users = response;
