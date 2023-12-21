@@ -298,7 +298,7 @@ export class ShopComponent implements OnInit {
       this.redirectToProfilEdit();
       return;
     }
-    this.extendedModalService.popup(this.customModalComponent,"ERROR",error.message,"red",false)
+    this.extendedModalService.popup(this.customModalComponent,"ERROR",error.message,"red", [], false)
   }
 
   //SEARCH SECTION
@@ -453,12 +453,12 @@ export class ShopComponent implements OnInit {
       const title: string = this.translate.instant("WARNING");
       const color: string = "red";
 
-      this.customModalComponent.functionModels = [replaceModel, increaseModel]
       this.extendedModalService.popup(
         this.customModalComponent,
         title,
         message,
         color,
+        [replaceModel, increaseModel],
         false
         );
       return;
@@ -468,8 +468,7 @@ export class ShopComponent implements OnInit {
       this.customModalComponent,
       this.translate.instant("ITEM ADDED SUCCESS"),
       product.productId + " " + product.productName + ": " + quantity,
-      "inherit",
-      false
+      "inherit"
       );
     return;
   }
@@ -512,8 +511,7 @@ export class ShopComponent implements OnInit {
       this.customModalComponent,
       title,
       message,
-      color,
-      false
+      color
       );
   }
 

@@ -107,11 +107,11 @@ public class OrderController {
 		
 		try {
 			Order addedOrder = orderService.addOrder(order);
-//			System.out.println("Sending email...");
-//			boolean emailSuccess = emailService.sendingOrderConfirmation(addedOrder,language);
-//			System.out.println("Email Success: " + emailSuccess);
-//			boolean erpSuccess = erpService.sendOrderToERPServer(addedOrder);
-//			System.out.println("ERP success " + erpSuccess);
+			System.out.println("Sending email...");
+			boolean emailSuccess = emailService.sendingOrderConfirmation(addedOrder,language);
+			System.out.println("Email Success: " + emailSuccess);
+			boolean erpSuccess = erpService.sendOrderToERPServer(addedOrder);
+			System.out.println("ERP success " + erpSuccess);
 			
 			return new ResponseEntity<Order>(addedOrder, HttpStatus.OK);
 		} catch (DataIntegrityViolationException e) {

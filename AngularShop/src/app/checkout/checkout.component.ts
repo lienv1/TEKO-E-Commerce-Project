@@ -296,7 +296,7 @@ export class CheckoutComponent {
       backdrop : 'static',
       keyboard : false
     };
-    this.extendedModalService.popup(this.customeModalComponent,title,"wait","inherit",false,ngbModalOptions,true)
+    this.extendedModalService.popup(this.customeModalComponent,title,"wait","inherit",[], false,ngbModalOptions,true)
 
     const deliveryDate = this.addressForm.value.deliveryDateInput;
     const user = this.getUserfromForm();

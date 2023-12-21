@@ -116,7 +116,7 @@ export class ProductPageComponent {
       },
       error: (error: HttpErrorResponse) => {
         if (error.status !== 404) 
-          this.extendedModalService.popup(this.customModalComponent,"ERROR " + error.status,error.message, "red", false )
+          this.extendedModalService.popup(this.customModalComponent,"ERROR " + error.status,error.message, "red")
       }
     })
   }
@@ -152,8 +152,8 @@ export class ProductPageComponent {
   }
 
   handleError(error: HttpErrorResponse) {
-    if (error.status !== 404)   this.extendedModalService.popup(this.customModalComponent,"ERROR " + error.status,error.message, "red", false );
-    else { this.router.navigateByUrl("/profile/edit"); this.extendedModalService.popup(this.customModalComponent,"Profile unfinished","Please setup your profile first", "black", false ) }
+    if (error.status !== 404)   this.extendedModalService.popup(this.customModalComponent,"ERROR " + error.status,error.message, "red");
+    else { this.router.navigateByUrl("/profile/edit"); this.extendedModalService.popup(this.customModalComponent,"Profile unfinished","Please setup your profile first", "black")}
   }
 
   //API SECTION END
@@ -204,8 +204,7 @@ export class ProductPageComponent {
       const message: string = cartItem.product.productId + " " + cartItem.product.productName + " - " + this.translateService.instant("ITEM EXISTS");
       const title: string = this.translateService.instant("WARNING");
       const color: string = "red";
-      this.customModalComponent.functionModels = [replaceModel, increaseModel];
-      this.extendedModalService.popup(this.customModalComponent,title,message,color,false);
+      this.extendedModalService.popup(this.customModalComponent,title,message,color,[replaceModel, increaseModel],false);
       return;
     }
 
