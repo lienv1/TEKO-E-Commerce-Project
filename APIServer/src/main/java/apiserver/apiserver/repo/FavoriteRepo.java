@@ -21,7 +21,7 @@ public interface FavoriteRepo extends JpaRepository<Favorite, Long>{
 	@Modifying
 	@Transactional
 	@Query(
-	    value = "INSERT INTO favorite (product_id, user_id) SELECT :productId, u.user_id FROM User u WHERE u.username = :username", 
+	    value = "INSERT INTO favorite (product_id, user_id) SELECT :productId, u.user_id FROM user u WHERE u.username = :username", 
 	    nativeQuery = true
 	)
 	void addFavoriteByUsernameAndProductId(@Param("username") String username, @Param("productId") Long productId);
