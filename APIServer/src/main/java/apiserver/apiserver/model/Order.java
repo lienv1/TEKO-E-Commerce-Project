@@ -25,7 +25,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class Order {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY) //Comment out if order needs to be saved manually
+//	@GeneratedValue(strategy = GenerationType.IDENTITY) //Comment out if order needs to be saved manually
 	private Long orderId;
 
 	@ManyToOne(fetch = FetchType.EAGER, optional = false, cascade = CascadeType.PERSIST)
