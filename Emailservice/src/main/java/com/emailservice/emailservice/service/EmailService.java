@@ -59,6 +59,7 @@ public class EmailService {
 		this.mailSender = mailSender;
 		this.translator = translator;
 		this.companyProperties = companyProperties;
+		System.out.println(this.mailUsername);
 	}
 
 	public boolean sendConfirmation(Order order, String language) {
