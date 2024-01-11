@@ -44,8 +44,10 @@ public class PriceCategoryController {
 			return ResponseEntity.badRequest().build();
 		}
 		
+		System.out.println(list.size());
+		
 		List<PriceCategory> addedList = priceService.addListOfPriceCategory(list);
-		return new ResponseEntity<List<PriceCategory>>(list, HttpStatus.OK);
+		return new ResponseEntity<List<PriceCategory>>(addedList, HttpStatus.OK);
 	}
 
 	@DeleteMapping("/delete/all")
