@@ -16,14 +16,16 @@ import apiserver.apiserver.security.ApiKeyGenerator;
 public class EmailService {
 
 	private String host;
+	private String presharedKey;
 
 	@Autowired
 	private ConfigurationService configurationService;
 	
 	public EmailService(ConfigurationService configurationService, @Value("${custom.property.host}") String host,
-			  @Value("${custom.property.service.https.enabled}") boolean httpsEnabled) {
+			  @Value("${custom.property.service.https.enabled}") boolean httpsEnabled, @Value("${custom.property.presharedkey}") String preSharedKey) {
 		this.configurationService = configurationService;
 		this.host = (httpsEnabled==true? "https://" : "http://") + host;
+		this.presharedKey = preSharedKey;
 	}
 
 	public boolean sendingOrderConfirmation(Order order, String language) {
@@ -34,7 +36,8 @@ public class EmailService {
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
-		headers.set("X-API-KEY", configurationService.getApiKey());
+//		headers.set("X-API-KEY", configurationService.getApiKey());
+		headers.set("Authorization", presharedKey);
 		headers.set("lang", language == null ? "EN" : language);
 		ResponseEntity<String> response = restTemplate.postForEntity(url, new HttpEntity<>(order,headers), String.class);
 		if (response.getStatusCode().is2xxSuccessful()) {

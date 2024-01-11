@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import apiserver.apiserver.service.ConfigurationService;
 import jakarta.servlet.http.HttpServletRequest;
 
+@Deprecated
 @RestController
 @RequestMapping("/config")
 public class ConfigurationController {

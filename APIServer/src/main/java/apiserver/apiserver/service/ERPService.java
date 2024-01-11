@@ -15,31 +15,39 @@ import apiserver.apiserver.model.Order;
 public class ERPService {
 
 	private String host;
+	private String presharedKey;
 
 	@Autowired
 	private ConfigurationService configurationService;
 
-	public ERPService(ConfigurationService configurationService, @Value("${custom.property.host}") String host, @Value("${custom.property.service.https.enabled}") boolean httpsEnabled  ) {
+	public ERPService(
+			ConfigurationService configurationService, 
+			@Value("${custom.property.host}") String host,
+			@Value("${custom.property.service.https.enabled}") 
+			boolean httpsEnabled,
+			@Value("${custom.property.presharedkey}") String preSharedKey) {
 		this.configurationService = configurationService;
-		this.host = (httpsEnabled==true? "https://" : "http://") + host;
+		this.host = (httpsEnabled == true ? "https://" : "http://") + host;
+		this.presharedKey = preSharedKey;
 	}
 
 	public boolean sendOrderToERPServer(Order order) {
 		RestTemplate restTemplate = new RestTemplate();
-		
+
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
-		headers.set("X-API-KEY", configurationService.getApiKey());
-
+//		headers.set("X-API-KEY", configurationService.getApiKey());
+		headers.set("Authorization", presharedKey);
 		String url = host + ":8082/ftpservice/sendorder";
-		
-		ResponseEntity<String> response = restTemplate.postForEntity(url, new HttpEntity<>(order,headers), String.class);
+
+		ResponseEntity<String> response = restTemplate.postForEntity(url, new HttpEntity<>(order, headers),
+				String.class);
 		if (response.getStatusCode().is2xxSuccessful()) {
 //			String responseBody = response.getBody();
 			return true;
 		} else
 			return false;
-	
+
 	}
 
 }

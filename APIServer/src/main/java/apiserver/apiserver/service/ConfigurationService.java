@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import apiserver.apiserver.security.ApiKeyGenerator;
 
+@Deprecated
 @Service
 public class ConfigurationService {
 	

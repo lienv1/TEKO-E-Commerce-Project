@@ -5,6 +5,7 @@ import java.util.Base64;
 
 import org.springframework.stereotype.Service;
 
+@Deprecated
 @Service
 public class ApiKeyGenerator {
 

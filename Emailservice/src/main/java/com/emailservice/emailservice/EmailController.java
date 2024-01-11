@@ -28,18 +28,24 @@ public class EmailController {
 	@Autowired
 	private SecurityService securityService;
 	
-	public EmailController(EmailService emailService, SecurityService securityService) {
+	private String preSharedKey;
+	
+	public EmailController(EmailService emailService, SecurityService securityService, @Value("${custom.property.presharedkey}") String preSharedKey) {
 		this.emailService = emailService;
 		this.securityService = securityService;
+		this.preSharedKey = preSharedKey;
 	}
 
 	@PostMapping("/send/confirmation")
 	public ResponseEntity<?> sendEmail(HttpServletRequest request, @RequestBody Order order) {
-		String apikey = request.getHeader("X-API-KEY");
 		String language = request.getHeader("lang");
 		
+		/*String apikey = request.getHeader("X-API-KEY");
 		if (!securityService.apikeyIsValid(apikey)) 
-			return new ResponseEntity<String>("Invalid Api Key", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<String>("Invalid Api Key", HttpStatus.BAD_REQUEST);*/
+		String preSharedKey = request.getHeader("Authorization");
+		if (!preSharedKey.equals(this.preSharedKey))
+			return new ResponseEntity<String>("Invalid Pre Shared Key", HttpStatus.BAD_REQUEST);
 		this.emailService.sendConfirmation(order,language);
 		return ResponseEntity.ok().build();
 	}
