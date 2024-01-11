@@ -5,7 +5,7 @@ FROM openjdk:17-alpine
 WORKDIR /app
 
 # Copy the backend code to the container
-COPY target/PriceService-0.0.1-SNAPSHOT.jar /app/priceservice-server.jar
+COPY target/PriceService-0.0.1-SNAPSHOT.jar /app/priceservice.jar
 
 # Build the backend application
 # RUN ./gradlew build

@@ -10,4 +10,4 @@ docker build -t priceservice-image .
 # Get the local IPv4 address
 $localIP = (Get-NetIPAddress | Where-Object { $_.AddressFamily -eq 'IPv4' -and $_.PrefixOrigin -eq 'Dhcp' }).IPAddress
 
-docker run --name priceservice-container -d -e HOSTNAME="$localIP" -e SERVICE_HTTPS_ENABLED=false -p 8083:8083 priceservice-image
+docker run --name priceservice-container -d -e HOSTNAME="$localIP" -e SERVICE_HTTPS_ENABLED=false -p 8083:8080 priceservice-image
