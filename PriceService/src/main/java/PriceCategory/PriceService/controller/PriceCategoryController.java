@@ -34,11 +34,16 @@ public class PriceCategoryController {
 	}
 
 	@PostMapping("/add/list")
-	public ResponseEntity<List<PriceCategory>> addPriceCategory(HttpServletRequest request, List<PriceCategory> list) {
+	public ResponseEntity<List<PriceCategory>> addPriceCategory(HttpServletRequest request, @RequestBody List<PriceCategory> list) {
 		String preSharedKey = request.getHeader("Authorization");
 		if (!securityService.validateKey(preSharedKey))
 			return new ResponseEntity(HttpStatus.UNAUTHORIZED);
 
+		if (list == null || list.isEmpty()) {
+			System.out.println("List is empty");
+			return ResponseEntity.badRequest().build();
+		}
+		
 		List<PriceCategory> addedList = priceService.addListOfPriceCategory(list);
 		return new ResponseEntity<List<PriceCategory>>(list, HttpStatus.OK);
 	}
