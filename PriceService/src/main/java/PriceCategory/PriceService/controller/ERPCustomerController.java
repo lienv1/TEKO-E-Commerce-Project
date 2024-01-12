@@ -32,7 +32,7 @@ public class ERPCustomerController {
 	}
 
 	@PostMapping("/add/list")
-	public ResponseEntity<List<ERPCustomer>> addErpCustomer(HttpServletRequest request,@RequestBody List<ERPCustomer> list) {
+	public ResponseEntity<List<ERPCustomer>> addErpCustomer(HttpServletRequest request, @RequestBody List<ERPCustomer> list) {
 		String preSharedKey = request.getHeader("Authorization");
 		if (!securityService.validateKey(preSharedKey))
 			return new ResponseEntity(HttpStatus.UNAUTHORIZED);
@@ -53,4 +53,5 @@ public class ERPCustomerController {
 		else
 			return new ResponseEntity<Boolean>(success,HttpStatus.BAD_REQUEST);
 	}
+
 }

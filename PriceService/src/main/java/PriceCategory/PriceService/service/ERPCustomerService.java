@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import PriceCategory.PriceService.exception.ERPCustomerNotFoundException;
 import PriceCategory.PriceService.model.ERPCustomer;
 import PriceCategory.PriceService.repository.ERPCustomerRepo;
 
@@ -20,6 +21,10 @@ public class ERPCustomerService {
 
 	public ERPCustomer addERPCustomer(ERPCustomer customer) {
 		return customerRepo.save(customer);
+	}
+	
+	public ERPCustomer getERPCustomer(Long erpId) {
+		return customerRepo.findById(erpId).orElseThrow( () -> new ERPCustomerNotFoundException("Customer doesn't exist"));
 	}
 
 	public List<ERPCustomer> addListOfERPCustomer(List<ERPCustomer> customers) {
