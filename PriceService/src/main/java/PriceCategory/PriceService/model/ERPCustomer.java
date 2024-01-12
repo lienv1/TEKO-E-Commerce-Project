@@ -11,7 +11,6 @@ public class ERPCustomer {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(nullable = false, columnDefinition = "BIGINT default 0")
 	private Long id;
 	private Integer subcategory;
 	private Integer category;
