@@ -13,7 +13,7 @@ public class PriceCategory {
 	private long id;
 	
 	private String product;
-	private Integer prodcutType;
+	private Integer productType;
 	private Integer customer;
 	private Integer customerType;
 	private Double value;
@@ -35,8 +35,8 @@ public class PriceCategory {
 		return product;
 	}
 
-	public Integer getProdcutType() {
-		return prodcutType;
+	public Integer getProductType() {
+		return productType;
 	}
 
 	public Integer getCustomer() {
@@ -79,8 +79,8 @@ public class PriceCategory {
 		this.product = product;
 	}
 
-	public void setProdcutType(Integer prodcutType) {
-		this.prodcutType = prodcutType;
+	public void setProductType(Integer productType) {
+		this.productType = productType;
 	}
 
 	public void setCustomer(Integer customer) {
@@ -114,6 +114,7 @@ public class PriceCategory {
 	public void setPriority(Integer priority) {
 		this.priority = priority;
 	}
-		
+
+	
 
 }
