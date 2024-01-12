@@ -1,5 +1,6 @@
 package PriceCategory.PriceService.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -10,6 +11,7 @@ public class ERPCustomer {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(nullable = false, columnDefinition = "BIGINT default 0")
 	private Long id;
 	private Integer subcategory;
 	private Integer category;
