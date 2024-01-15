@@ -89,9 +89,10 @@ public class UserService {
 		return userRepo.save(oldUser);
 	}
 
-	public User editUserAsAdmin(User user) throws UserNotFoundException {
-		boolean userExist = userRepo.existsByUsername(user.getUsername());
-		if (!userExist) throw new UserNotFoundException("User doesn't exist");
+	public User editUserAsAdmin(User user, String username) throws UserNotFoundException {
+		User oldUser = userRepo.findByUsername(username).orElseThrow(() -> new UserNotFoundException("User not found"));
+		user.setUsername(username);
+		user.setUserId(oldUser.getUserId());
 		return userRepo.save(user);
 	}
 	
