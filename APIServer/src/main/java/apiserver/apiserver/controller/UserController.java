@@ -96,6 +96,11 @@ public class UserController {
 				System.out.println("Denied by authorization service");
 				return new ResponseEntity("Denied by authorization service",HttpStatus.UNAUTHORIZED);
 			}
+			
+			boolean userAlreadyExist = userService.userExistsByUsername(username);
+			if (userAlreadyExist)
+				return new ResponseEntity("User already exist",HttpStatus.CONFLICT);
+			
 			User addedUser = userService.addUser(user);
 			return new ResponseEntity<User>(addedUser,HttpStatus.OK);
 		} catch (DataIntegrityViolationException e) {

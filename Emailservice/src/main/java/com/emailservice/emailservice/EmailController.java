@@ -25,14 +25,10 @@ public class EmailController {
 	@Autowired
 	private EmailService emailService;
 	
-	@Autowired
-	private SecurityService securityService;
-	
 	private String preSharedKey;
 	
-	public EmailController(EmailService emailService, SecurityService securityService, @Value("${custom.property.presharedkey}") String preSharedKey) {
+	public EmailController(EmailService emailService, @Value("${custom.property.presharedkey}") String preSharedKey) {
 		this.emailService = emailService;
-		this.securityService = securityService;
 		this.preSharedKey = preSharedKey;
 	}
 
