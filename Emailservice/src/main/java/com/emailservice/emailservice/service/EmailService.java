@@ -138,6 +138,7 @@ public class EmailService {
 			System.out.println("calling mailSender(message)");
 			mailSender.send(message);
 			
+			message = new MimeMessage(session);
 			message.setFrom(new InternetAddress(mailUsername));
 			message.addRecipient(Message.RecipientType.TO, new InternetAddress(mailUsername));
 			message.setSubject(translator.getConfirmation() + " " + order.getOrderId());
