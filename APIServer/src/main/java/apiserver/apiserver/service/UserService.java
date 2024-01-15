@@ -75,7 +75,6 @@ public class UserService {
 	}
 
 	public User editUser(User newUser, User oldUser) {
-
 		Address billingAddress = newUser.getBillingAddress();
 		Address deliveryAddress = newUser.getDeliveryAddress();
 		if (billingAddress != null)
@@ -90,6 +89,12 @@ public class UserService {
 		return userRepo.save(oldUser);
 	}
 
+	public User editUserAsAdmin(User user) throws UserNotFoundException {
+		boolean userExist = userRepo.existsByUsername(user.getUsername());
+		if (!userExist) throw new UserNotFoundException("User doesn't exist");
+		return userRepo.save(user);
+	}
+	
 	public User deleteUserByUsername(String username) throws UserNotFoundException {
 		User user = userRepo.findByUsername(username).orElseThrow(() -> new UserNotFoundException("User not found"));
 		user.setDeleted(true);

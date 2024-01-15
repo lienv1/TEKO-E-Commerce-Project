@@ -1,4 +1,4 @@
-package apiserver.apiserver.controller;
+	package apiserver.apiserver.controller;
 
 import java.security.Principal;
 import java.util.List;
@@ -119,6 +119,18 @@ public class UserController {
 			User editedUser = userService.editUserByUsername(updatedUser, username);
 			return new ResponseEntity<User>(editedUser, HttpStatus.OK);
 		} catch (UserNotFoundException e) {
+			System.out.println(e.getMessage());
+		}
+		return ResponseEntity.notFound().build();
+	}
+	
+	@PreAuthorize(value = "hasRole('ADMIN')")
+	@PutMapping("/update/admin/username/{username}")
+	public ResponseEntity<User> editUserAsAdmin(@PathVariable("username") String username, Principal principal, @RequestBody User updatedUser) {
+		try {
+			User editedUser = userService.addUser(updatedUser);
+			return new ResponseEntity<User>(editedUser, HttpStatus.OK);
+		} catch (Exception e) {
 			System.out.println(e.getMessage());
 		}
 		return ResponseEntity.notFound().build();
