@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import apiserver.apiserver.model.Order;
-import apiserver.apiserver.security.ApiKeyGenerator;
 
 @Service
 public class EmailService {
@@ -18,12 +17,9 @@ public class EmailService {
 	private String host;
 	private String presharedKey;
 
-	@Autowired
-	private ConfigurationService configurationService;
 	
-	public EmailService(ConfigurationService configurationService, @Value("${custom.property.host}") String host,
+	public EmailService( @Value("${custom.property.host}") String host,
 			  @Value("${custom.property.service.https.enabled}") boolean httpsEnabled, @Value("${custom.property.presharedkey}") String preSharedKey) {
-		this.configurationService = configurationService;
 		this.host = (httpsEnabled==true? "https://" : "http://") + host;
 		this.presharedKey = preSharedKey;
 	}

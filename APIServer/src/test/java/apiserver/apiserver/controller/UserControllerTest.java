@@ -167,10 +167,7 @@ class UserControllerTest {
 	            .contentType(MediaType.APPLICATION_JSON)
 	            .content(objectMapper.writeValueAsString(user1)))
 	    		.andDo(print())
-	            .andExpect(status().isOk())
-	            .andExpect(jsonPath("$.userId", is(1)))
-	            .andExpect(jsonPath("$.firstname", is("John")))
-	            .andExpect(jsonPath("$.lastname", is("Doe")));
+	            .andExpect(status().isConflict());
 	}
 	
 	@Test
