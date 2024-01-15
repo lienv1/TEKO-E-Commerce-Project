@@ -1,6 +1,8 @@
 export const environment = {
-  production: true,
-  backendAPI: "http://localhost:8080",
-  fileServerAPI:"http://localhost:3000",
-  keycloakAPI:"http://localhost:8180",
+  production: false,
+  backendAPI: "https://achau-server.com/api",
+  fileServerAPI:"https://achau-server.com/files",
+  keycloakAPI:"https://achau-server.com/auth",
+  keycloakRealm : "E-Commerce",
+  keycloakClient : "E-Commerce-Client"
 };

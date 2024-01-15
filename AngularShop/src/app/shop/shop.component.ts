@@ -19,7 +19,7 @@ import { ExtendedModalService } from '../service/extendedModalService';
 export enum Sorter {
   productId = 'Product ID',
   productName = 'Product Name',
-  price = 'Price',
+  /*price = 'Price',*/
   lastModified = 'Date'
 }
 

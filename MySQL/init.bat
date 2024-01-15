@@ -1,5 +1,5 @@
-docker mysql-container stop
-docker rm mysql-container
+call docker mysql-container stop
+call docker rm mysql-container
 
 @echo off
 call docker run --name mysql-container -d -e MYSQL_ROOT_PASSWORD=my-secret-pw -e MYSQL_DATABASE=Apiserver -v "%cd%/mysql-data:/var/lib/mysql" -p 3306:3306 mysql:8.1.0

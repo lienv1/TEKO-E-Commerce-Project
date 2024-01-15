@@ -365,7 +365,8 @@ export class CheckoutComponent {
       return;
     }
     this.users = [];
-
+    const regex = /\s+/g;
+    keyword = keyword.replace(regex, '¿');
     this.userService.getUsersByKeyword(keyword).subscribe(
       (response) => {
         this.users = response;

@@ -2,7 +2,7 @@
 FROM nginx
 
 # Copy your custom NGINX configuration to the container
-COPY conf/nginx.conf /etc/nginx/templates/nginx.conf.template
+COPY conf/nginx.conf /etc/nginx/nginx.conf
 # Copy your SSL certificate and key files to the container
 COPY ssl/fullchain.pem /etc/nginx/ssl/
 COPY ssl/privkey.pem /etc/nginx/ssl/
