@@ -128,7 +128,7 @@ public class UserController {
 	@PutMapping("/update/admin/username/{username}")
 	public ResponseEntity<User> editUserAsAdmin(@PathVariable("username") String username, Principal principal, @RequestBody User updatedUser) {
 		try {
-			User editedUser = userService.editUserAsAdmin(updatedUser);
+			User editedUser = userService.editUserAsAdmin(updatedUser, username);
 			return new ResponseEntity<User>(editedUser, HttpStatus.OK);
 		} catch (UserNotFoundException e) {
 			System.out.println(e.getMessage());
