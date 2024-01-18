@@ -38,7 +38,7 @@ public class PriceService {
 //			String responseBody = response.getBody();
 			return response.getBody();
 		} else
-			return 0.0;
+			return null;
 	}
 
 }
