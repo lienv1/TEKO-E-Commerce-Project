@@ -30,7 +30,7 @@ public class PriceService {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		headers.set("Authorization", presharedKey);
-		String url = host + ":8083/"+ erpId;
+		String url = host + ":8083/pricecategory/customer/"+ erpId;
 		
 		ResponseEntity<Double> response = restTemplate.postForEntity(url, new HttpEntity<>(product, headers),
 				Double.class);
