@@ -10,7 +10,7 @@ import jakarta.persistence.Id;
 public class ERPCustomer {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+//	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private Integer subcategory;
 	private Integer category;
