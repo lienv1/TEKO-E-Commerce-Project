@@ -7,6 +7,7 @@ public class Product {
 	private String category;
 	private String subCategory;
 	private Double price;
+	private Boolean discount;
 	
 	public Product() {}
 
@@ -41,7 +42,15 @@ public class Product {
 	public void setPrice(Double price) {
 		this.price = price;
 	}
-	
+
+	public Boolean getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(Boolean discount) {
+		this.discount = discount;
+	}
+
 	
 
 }
