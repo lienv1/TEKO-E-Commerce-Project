@@ -33,20 +33,17 @@ public class PriceCategoryService {
 		Long erpId = customer.getId();
 		Integer customerGroup = customer.getSubcategory();
 		Integer customerCategory = customer.getCategory();
+		
+		List<PriceCategory> optionalPCs = priceRepo.findPriceCategories(productid, category, subcategory, erpId, customerGroup, customerCategory);
+		PriceCategory priceCategory = optionalPCs.get(0);
 
-		List<PriceCategory> pcs = priceRepo.findPriceCategories(productid, category, subcategory, erpId, customerGroup,
-				customerCategory);
-
-		Optional<PriceCategory> highestPriorityPc = pcs.stream().filter(pc -> pc.getPriority() != null)
-				.max(Comparator.comparingInt(PriceCategory::getPriority));
-		if (highestPriorityPc.isPresent()) {
-			PriceCategory result = highestPriorityPc.get();
-			if (result.getPercent())
-				price = price - (price / 100 * result.getValue());
-			else
-				price = result.getValue();
+		if (priceCategory != null) {
+			boolean hasPercent = priceCategory.getPercent();
+			if (hasPercent)
+				price = price - (price / 100 * priceCategory.getValue());
+			else price = priceCategory.getValue();
 		}
-
+			
 		return price;
 	}
 
