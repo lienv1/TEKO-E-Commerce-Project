@@ -138,10 +138,17 @@ public class EmailService {
 			System.out.println("calling mailSender(message)");
 			mailSender.send(message);
 			
+			String mailSubjectName = "5000";
+			if (user.getCompany() != null && user.getErpId() != null) 
+				mailSubjectName = user.getCompany();
+			else if (user.getFirstname() != null) 
+				mailSubjectName = user.getFirstname();
+			
+			
 			message = new MimeMessage(session);
 			message.setFrom(new InternetAddress(mailUsername));
 			message.addRecipient(Message.RecipientType.TO, new InternetAddress(mailUsername));
-			message.setSubject(translator.getConfirmation() + " " + order.getOrderId());
+			message.setSubject(mailSubjectName + " - "+translator.getConfirmation() + " " + order.getOrderId());
 			message.setContent(multipart, "UTF-8");
 			mailSender.send(message);
 

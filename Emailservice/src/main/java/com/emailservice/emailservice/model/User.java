@@ -4,7 +4,8 @@ package com.emailservice.emailservice.model;
 public class User {
 
 	private Long userId;
-
+	
+	private Long erpId;
 	private String company;
 	private String firstname;
 	private String lastname;
@@ -81,4 +82,14 @@ public class User {
 		this.billingAddress = billingAddress;
 	}
 
+	public Long getErpId() {
+		return erpId;
+	}
+
+	public void setErpId(Long erpId) {
+		this.erpId = erpId;
+	}
+
+	
+	
 }
