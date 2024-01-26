@@ -141,7 +141,7 @@ public class EmailService {
 			String mailSubjectName = "5000";
 			if (user.getCompany() != null && user.getErpId() != null) 
 				mailSubjectName = user.getCompany();
-			else if (user.getFirstname() != null) 
+			else if (user.getFirstname() != null && user.getErpId() != null) 
 				mailSubjectName = user.getFirstname();
 			
 			
