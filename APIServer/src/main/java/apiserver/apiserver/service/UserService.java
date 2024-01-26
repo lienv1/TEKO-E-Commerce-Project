@@ -81,7 +81,7 @@ public class UserService {
 			oldUser.setBillingAddress(billingAddress);
 		if (deliveryAddress != null)
 			oldUser.setDeliveryAddress(deliveryAddress);
-
+		
 		oldUser.setEmail(newUser.getEmail());
 		oldUser.setLastname(newUser.getLastname());
 		oldUser.setFirstname(newUser.getFirstname());
