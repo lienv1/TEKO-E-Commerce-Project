@@ -107,6 +107,7 @@ public class OrderController {
 		
 		try {
 			Order addedOrder = orderService.addOrder(order);
+			System.out.println("Erp id is " + addedOrder.getUser().getErpId());
 			System.out.println("Sending email...");
 			boolean emailSuccess = emailService.sendingOrderConfirmation(addedOrder,language);
 			System.out.println("Email Success: " + emailSuccess);
