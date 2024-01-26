@@ -30,6 +30,7 @@ public class Product {
 	private Double tax;
 	private Date lastModified;
 	private boolean deleted;
+	private String collection;
 
 	public Product() {
 	}
@@ -178,6 +179,15 @@ public class Product {
 		this.deleted = deleted;
 	}
 
+	public String getCollection() {
+		return collection;
+	}
+
+	public void setCollection(String collection) {
+		this.collection = collection;
+	}
+
+	
 
 	
 }

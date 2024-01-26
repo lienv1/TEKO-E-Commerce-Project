@@ -72,8 +72,8 @@ public class PriceCategoryController {
 			return new ResponseEntity<Boolean>(success, HttpStatus.BAD_REQUEST);
 	}
 
-	@PostMapping("/customer/{erpid}")
-	public ResponseEntity<Double> getPrice(HttpServletRequest request, @PathVariable("erpid") Long erpId, @RequestBody(required = true) Product product)  {
+	@PostMapping("/quantity/{quantity}/customer/{erpid}")
+	public ResponseEntity<Double> getPrice(HttpServletRequest request,@PathVariable("quantity") int quantity, @PathVariable("erpid") Long erpId, @RequestBody(required = true) Product product)  {
 		String preSharedKey = request.getHeader("Authorization");
 		if (!securityService.validateKey(preSharedKey))
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -88,7 +88,7 @@ public class PriceCategoryController {
 			return ResponseEntity.notFound().build();
 		}
 		
-		price = priceService.getPrice(product, erpcustomer);
+		price = priceService.getPrice(product, erpcustomer,quantity);
 		
 		return new ResponseEntity<Double>(price,HttpStatus.OK);
 	}

@@ -22,19 +22,28 @@ public class PriceCategoryService {
 		this.priceRepo = priceRepo;
 	}
 
-	public Double getPrice(Product product, ERPCustomer customer) {
+	public Double getPrice(Product product, ERPCustomer customer, double quantity) {
 
 		Double price = product.getPrice();
 
 		String productid = product.getProductId().toString();
 		String category = product.getCategory();
 		String subcategory = product.getSubCategory();
+		String collection = product.getCollection();
 
 		Long erpId = customer.getId();
 		Integer customerGroup = customer.getSubcategory();
 		Integer customerCategory = customer.getCategory();
 		
-		List<PriceCategory> optionalPCs = priceRepo.findPriceCategories(productid, category, subcategory, erpId, customerGroup, customerCategory);
+		List<PriceCategory> optionalPCs = priceRepo.findPriceCategories(productid, 
+				category, 
+				subcategory, 
+				erpId, 
+				customerGroup, 
+				customerCategory,
+				quantity,
+				collection
+				);
 		PriceCategory priceCategory = optionalPCs.get(0);
 
 		if (priceCategory != null) {

@@ -24,13 +24,13 @@ public class PriceService {
 		this.presharedKey = preSharedKey;
 	}
 	
-	public Double getPrice(Long erpId, Product product) {
+	public Double getPrice(Long erpId, Product product, int quantity) {
 		RestTemplate restTemplate = new RestTemplate();
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		headers.set("Authorization", presharedKey);
-		String url = host + ":8083/pricecategory/customer/"+ erpId;
+		String url = host + ":8083/pricecategory/quantity/"+quantity+"/customer/"+ erpId;
 		
 		ResponseEntity<Double> response = restTemplate.postForEntity(url, new HttpEntity<>(product, headers),
 				Double.class);

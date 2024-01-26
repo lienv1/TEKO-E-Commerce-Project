@@ -54,8 +54,8 @@ public class UserService {
 	}
 
 	public Set<User> getUsersByKeywords(List<String> keywords) {
-	    UserSpecification spec = new UserSpecification(keywords);
-	    return new HashSet<>(userRepo.findAll(spec));
+		UserSpecification spec = new UserSpecification(keywords);
+		return new HashSet<>(userRepo.findAll(spec));
 	}
 
 	public User getUserByErpId(Long erpId) throws UserNotFoundException {
@@ -93,9 +93,14 @@ public class UserService {
 		User oldUser = userRepo.findByUsername(username).orElseThrow(() -> new UserNotFoundException("User not found"));
 		user.setUsername(username);
 		user.setUserId(oldUser.getUserId());
-		return userRepo.save(user);
+		try {
+			return userRepo.save(user);
+		} catch (DataIntegrityViolationException e) {
+			throw new DataIntegrityViolationException("Duplicate entry");
+		}
+
 	}
-	
+
 	public User deleteUserByUsername(String username) throws UserNotFoundException {
 		User user = userRepo.findByUsername(username).orElseThrow(() -> new UserNotFoundException("User not found"));
 		user.setDeleted(true);
