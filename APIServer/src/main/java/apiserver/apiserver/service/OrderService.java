@@ -1,5 +1,7 @@
 package apiserver.apiserver.service;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -37,7 +39,15 @@ public class OrderService {
 	@Transactional
 	public Order addOrder(Order order) throws DataIntegrityViolationException, EntityNotFoundException {
 		try {
-			User user = userRepo.saveAndFlush(order.getUser());
+			User user = order.getUser();
+			//Check if user exist in database
+			Optional<User> oldUser = userRepo.findByUsername(user.getUsername());
+			if (oldUser.isPresent()) {
+				Long erpId = oldUser.get().getErpId();
+				if (erpId != null)
+					user.setErpId(erpId);
+			}
+			user = userRepo.saveAndFlush(order.getUser());
 			order.setUser(user);
 			for (OrderDetail orderDetail: order.getOrderDetails()) {
 				orderDetail.setOrder(order);
