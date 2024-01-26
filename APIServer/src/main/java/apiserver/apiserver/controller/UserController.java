@@ -1,4 +1,4 @@
-	package apiserver.apiserver.controller;
+package apiserver.apiserver.controller;
 
 import java.security.Principal;
 import java.util.List;
@@ -30,47 +30,50 @@ public class UserController {
 
 	@Autowired
 	private UserService userService;
-	
+
 	@Autowired
 	private AuthorizationService authorizationService;
 
-	public UserController(UserService userService,AuthorizationService authorizationService) {
+	public UserController(UserService userService, AuthorizationService authorizationService) {
 		this.userService = userService;
 		this.authorizationService = authorizationService;
 	}
 
 	@GetMapping("/all")
-	@PreAuthorize(value= "hasRole('ADMIN')")
+	@PreAuthorize(value = "hasRole('ADMIN')")
 	public ResponseEntity<List<User>> getAllUser() {
 		List<User> list = userService.getAllUser();
 		return new ResponseEntity<List<User>>(list, HttpStatus.OK);
 	}
-	
+
 	@GetMapping("/all/username")
-	@PreAuthorize(value= "hasRole('ADMIN')")
+	@PreAuthorize(value = "hasRole('ADMIN')")
 	public ResponseEntity<Set<String>> getAllUsernames() {
 		Set<String> list = userService.getAllUsername();
 		return new ResponseEntity<Set<String>>(list, HttpStatus.OK);
 	}
-	
+
 	@GetMapping("/all/erpid")
-	@PreAuthorize(value= "hasRole('ADMIN')")
+	@PreAuthorize(value = "hasRole('ADMIN')")
 	public ResponseEntity<Set<String>> getAllErpId() {
 		Set<String> list = userService.getAllErpId();
 		return new ResponseEntity<Set<String>>(list, HttpStatus.OK);
 	}
-	
-	
+
 	@GetMapping("/search")
-	@PreAuthorize(value= "hasRole('ADMIN')")
-	public ResponseEntity<Set<User>> getAllUsersByKeyword(@RequestParam(value = "keyword", required = false) List<String> keywords) {
-		
-		for (String keyword : keywords) {System.out.println(keyword);};
+	@PreAuthorize(value = "hasRole('ADMIN')")
+	public ResponseEntity<Set<User>> getAllUsersByKeyword(
+			@RequestParam(value = "keyword", required = false) List<String> keywords) {
+
+		for (String keyword : keywords) {
+			System.out.println(keyword);
+		}
+		;
 		Set<User> list = userService.getUsersByKeywords(keywords);
-		
+
 		return new ResponseEntity<Set<User>>(list, HttpStatus.OK);
 	}
-	
+
 	@GetMapping("/username/{username}")
 	@PreAuthorize(value = "hasAnyRole('ADMIN','CUSTOMER')")
 	public ResponseEntity<User> getUser(@PathVariable("username") String username, Principal principal) {
@@ -82,7 +85,7 @@ public class UserController {
 			User user = userService.getUserByUsername(username);
 			return new ResponseEntity<User>(user, HttpStatus.OK);
 		} catch (UserNotFoundException e) {
-			return new ResponseEntity("User doesn't exist",HttpStatus.NOT_FOUND);
+			return new ResponseEntity("User doesn't exist", HttpStatus.NOT_FOUND);
 		}
 	}
 
@@ -94,15 +97,15 @@ public class UserController {
 			boolean isAuthorizied = this.authorizationService.isAuthenticatedByPrincipal(principal, username);
 			if (!isAuthorizied) {
 				System.out.println("Denied by authorization service");
-				return new ResponseEntity("Denied by authorization service",HttpStatus.UNAUTHORIZED);
+				return new ResponseEntity("Denied by authorization service", HttpStatus.UNAUTHORIZED);
 			}
-			
+
 			boolean userAlreadyExist = userService.userExistsByUsername(username);
 			if (userAlreadyExist)
-				return new ResponseEntity("User already exist",HttpStatus.CONFLICT);
-			
+				return new ResponseEntity("User already exist", HttpStatus.CONFLICT);
+
 			User addedUser = userService.addUser(user);
-			return new ResponseEntity<User>(addedUser,HttpStatus.OK);
+			return new ResponseEntity<User>(addedUser, HttpStatus.OK);
 		} catch (DataIntegrityViolationException e) {
 			return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
@@ -110,10 +113,11 @@ public class UserController {
 
 	@PreAuthorize(value = "hasAnyRole('ADMIN','CUSTOMER')")
 	@PutMapping("/update/username/{username}")
-	public ResponseEntity<User> editUser(@PathVariable("username") String username, Principal principal, @RequestBody User updatedUser) {
-		try {	
+	public ResponseEntity<User> editUser(@PathVariable("username") String username, Principal principal,
+			@RequestBody User updatedUser) {
+		try {
 			boolean isAuthorizized = authorizationService.isAuthenticatedByPrincipal(principal, username);
-			
+
 			if (!isAuthorizized)
 				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 			User editedUser = userService.editUserByUsername(updatedUser, username);
@@ -123,22 +127,27 @@ public class UserController {
 		}
 		return ResponseEntity.notFound().build();
 	}
-	
+
 	@PreAuthorize(value = "hasRole('ADMIN')")
 	@PutMapping("/update/admin/username/{username}")
-	public ResponseEntity<User> editUserAsAdmin(@PathVariable("username") String username, Principal principal, @RequestBody User updatedUser) {
+	public ResponseEntity<User> editUserAsAdmin(@PathVariable("username") String username, Principal principal,
+			@RequestBody User updatedUser) {
 		try {
 			User editedUser = userService.editUserAsAdmin(updatedUser, username);
 			return new ResponseEntity<User>(editedUser, HttpStatus.OK);
 		} catch (UserNotFoundException e) {
-			System.out.println(e.getMessage());
+			return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+		} catch (DataIntegrityViolationException e) {
+			return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
 		}
-		return ResponseEntity.notFound().build();
+		catch (Exception e) {
+			return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	@PreAuthorize(value = "hasAnyRole('ADMIN','CUSTOMER')")
 	@DeleteMapping("/delete/username/{username}")
-	public ResponseEntity<User> deleteUser(@PathVariable("username") String username, Principal principal){
+	public ResponseEntity<User> deleteUser(@PathVariable("username") String username, Principal principal) {
 		try {
 			boolean isAuthorizized = authorizationService.isAuthenticatedByPrincipal(principal, username);
 			if (!isAuthorizized)

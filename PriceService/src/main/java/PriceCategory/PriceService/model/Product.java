@@ -8,6 +8,7 @@ public class Product {
 	private String subCategory;
 	private Double price;
 	private Boolean discount;
+	private String collection;
 	
 	public Product() {}
 
@@ -51,6 +52,15 @@ public class Product {
 		this.discount = discount;
 	}
 
+	public String getCollection() {
+		return collection;
+	}
+
+	public void setCollection(String collection) {
+		this.collection = collection;
+	}
+
+	
 	
 
 }

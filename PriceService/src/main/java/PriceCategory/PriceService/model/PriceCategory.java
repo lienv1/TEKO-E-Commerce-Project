@@ -19,7 +19,7 @@ public class PriceCategory {
 	private Double value;
 	private Boolean percent;
 	private Boolean discount;
-	private Integer quantity;
+	private Double quantity;
 	private String priceTyp;
 	private Integer priority;
 	
@@ -59,7 +59,7 @@ public class PriceCategory {
 		return discount;
 	}
 
-	public Integer getQuantity() {
+	public Double getQuantity() {
 		return quantity;
 	}
 
@@ -103,7 +103,7 @@ public class PriceCategory {
 		this.discount = discount;
 	}
 
-	public void setQuantity(Integer quantity) {
+	public void setQuantity(Double quantity) {
 		this.quantity = quantity;
 	}
 
@@ -114,7 +114,6 @@ public class PriceCategory {
 	public void setPriority(Integer priority) {
 		this.priority = priority;
 	}
-
 	
 
 }

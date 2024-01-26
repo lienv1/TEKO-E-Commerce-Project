@@ -23,9 +23,9 @@ public class PriceController {
 		this.priceService = priceService;
 	}
 	
-	@PostMapping("/erp/{erpId}")
-	public ResponseEntity<Double> getPriceByErpId(@RequestBody Product product, @PathVariable("erpId") Long erpId){
-		Double price = priceService.getPrice(erpId, product);
+	@PostMapping("/quantity/{quantity}/erp/{erpId}")
+	public ResponseEntity<Double> getPriceByErpId(@RequestBody Product product, @PathVariable("erpId") Long erpId, @PathVariable("quantity") int quantity){
+		Double price = priceService.getPrice(erpId, product,quantity);
 		if (price == null)
 			return ResponseEntity.notFound().build();
 		return new ResponseEntity<Double>(price,HttpStatus.OK);
