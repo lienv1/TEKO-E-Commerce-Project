@@ -143,7 +143,7 @@ public class EmailService {
 				mailSubjectName = user.getCompany();
 			else if (user.getFirstname() != null && user.getErpId() != null) 
 				mailSubjectName = user.getFirstname();
-			
+			System.out.println("erp id is "+user.getErpId());
 			
 			message = new MimeMessage(session);
 			message.setFrom(new InternetAddress(mailUsername));
