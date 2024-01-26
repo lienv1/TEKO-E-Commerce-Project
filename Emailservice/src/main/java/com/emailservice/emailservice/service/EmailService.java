@@ -139,12 +139,11 @@ public class EmailService {
 			mailSender.send(message);
 			
 			String mailSubjectName = "5000";
-			if (user.getCompany() != null) {
+			if (user.getCompany() != null && user.getErpId() != null) 
 				mailSubjectName = user.getCompany();
-			}
-			else if (user.getFirstname() != null) {
+			else if (user.getFirstname() != null) 
 				mailSubjectName = user.getFirstname();
-			}
+			
 			
 			message = new MimeMessage(session);
 			message.setFrom(new InternetAddress(mailUsername));
