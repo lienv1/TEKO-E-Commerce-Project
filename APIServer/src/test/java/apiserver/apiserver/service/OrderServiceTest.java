@@ -80,16 +80,17 @@ class OrderServiceTest {
 		order.setOrderId(100000l);
 	}
 	
+
 	@Test
-	@Deprecated
 	void addOrder() throws Exception {
-//		when(orderRepo.save(order)).thenReturn(order);
-//		Order addedOrder = orderService.addOrder(order);
-//		assertNotNull(addedOrder.getOrderId());
-//		assertEquals(order.getOrderId(), addedOrder.getOrderId());
+		when(orderRepo.save(order)).thenReturn(order);
+		when(userRepo.saveAndFlush(any(User.class))).thenReturn(user);
+		Order addedOrder = orderService.addOrder(order);
+		assertNotNull(addedOrder.getOrderId());
+		assertEquals(order.getOrderId(), addedOrder.getOrderId());
 	}
 	
-	@Test
+
 	@Deprecated
 	void addOrderFail() throws Exception{
 //	    User nonExistentUser = new User();
@@ -110,7 +111,7 @@ class OrderServiceTest {
 		assertEquals(order.getOrderId(), retrievedOrder.getOrderId());
 	}
 	
-	@Test
+
 	@Deprecated
 	void getAllOrdersByUsername() {
 //		List<Order> addedOrders = new ArrayList<Order>();
@@ -121,7 +122,7 @@ class OrderServiceTest {
 //		assertEquals(product.getProductId(), orderList.get(0).getOrderDetails().iterator().next().getProduct().getProductId());
 	}
 	
-	@Test 
+
 	@Deprecated
 	void getAllOrdersByUsernameFail(){
 //		String nonExistent = "non-existent";

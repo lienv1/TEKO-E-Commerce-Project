@@ -26,6 +26,7 @@ public class UserSpecification implements Specification<User> {
 	            for (String keyword : keywords) {
 	                List<Predicate> keywordPredicates = new ArrayList<>();
 	                // Add predicates for string fields
+	                keywordPredicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("company")), "%" + keyword.toLowerCase() + "%"));
 	                keywordPredicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("username")), "%" + keyword.toLowerCase() + "%"));
 	                keywordPredicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("firstname")), "%" + keyword.toLowerCase() + "%"));
 	                keywordPredicates.add(criteriaBuilder.like(criteriaBuilder.lower(root.get("lastname")), "%" + keyword.toLowerCase() + "%"));
