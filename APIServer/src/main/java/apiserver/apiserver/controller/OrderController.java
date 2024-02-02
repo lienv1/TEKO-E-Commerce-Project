@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import apiserver.apiserver.exception.MaxOrderException;
 import apiserver.apiserver.exception.OrderNotFoundException;
 import apiserver.apiserver.exception.UserNotFoundException;
 import apiserver.apiserver.model.Order;
@@ -116,6 +117,10 @@ public class OrderController {
 			return new ResponseEntity<Order>(addedOrder, HttpStatus.OK);
 		} catch (DataIntegrityViolationException e) {
 			return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
+		} catch (EntityNotFoundException e) {
+			return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
+		} catch (MaxOrderException e) {
+			return new ResponseEntity(e.getMessage(), HttpStatus.TOO_MANY_REQUESTS);
 		}
 	}
 	
@@ -139,5 +144,12 @@ public class OrderController {
 		catch (EntityNotFoundException e) {return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);}
 		catch (Exception e) {return new ResponseEntity(e.getMessage(), HttpStatus.BAD_REQUEST);}
 	}
+	
+//	For Debugging
+//	@GetMapping("/count/{userid}")
+//	public ResponseEntity<Long> countOrder(@PathVariable("userid") Long userid){
+//		long counted = orderService.countOrder(userid);
+//		return new ResponseEntity<Long>(counted,HttpStatus.OK);
+//	}
 
 }
