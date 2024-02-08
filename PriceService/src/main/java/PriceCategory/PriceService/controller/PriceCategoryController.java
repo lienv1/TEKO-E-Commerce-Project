@@ -1,5 +1,6 @@
 package PriceCategory.PriceService.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 import PriceCategory.PriceService.exception.ERPCustomerNotFoundException;
 import PriceCategory.PriceService.model.ERPCustomer;
 import PriceCategory.PriceService.model.PriceCategory;
+import PriceCategory.PriceService.model.PriceCategoryDTO;
 import PriceCategory.PriceService.model.Product;
+import PriceCategory.PriceService.model.ProductDTO;
 import PriceCategory.PriceService.service.ERPCustomerService;
 import PriceCategory.PriceService.service.PriceCategoryService;
 import PriceCategory.PriceService.service.SecurityService;
@@ -91,6 +94,34 @@ public class PriceCategoryController {
 		price = priceService.getPrice(product, erpcustomer,quantity);
 		
 		return new ResponseEntity<Double>(price,HttpStatus.OK);
+	}
+	
+	@PostMapping("/customer/{erpid}")
+	public ResponseEntity<List<PriceCategoryDTO>> getPrices(HttpServletRequest request, @PathVariable("erpid") Long erpId, @RequestBody(required = true) List<ProductDTO> products)  {
+		String preSharedKey = request.getHeader("Authorization");
+		if (!securityService.validateKey(preSharedKey))
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+		
+		ERPCustomer erpcustomer;
+		
+		try {
+			erpcustomer = erpCustomerService.getERPCustomer(erpId);
+		} catch (ERPCustomerNotFoundException e) {
+			e.printStackTrace();
+			return ResponseEntity.notFound().build();
+		}
+		
+		ArrayList<PriceCategoryDTO> list = new ArrayList<PriceCategoryDTO>();
+		
+		for (ProductDTO product : products) {
+			PriceCategoryDTO priceCategoryDTO = new PriceCategoryDTO();
+			double price = priceService.getPrice(product.getProduct(), erpcustomer,product.getQuantity());
+			priceCategoryDTO.setPrice(price);
+			priceCategoryDTO.setProductId(product.getProduct().getProductId());
+			list.add(priceCategoryDTO);
+		}
+		
+		return new ResponseEntity<List<PriceCategoryDTO>>(list,HttpStatus.OK);
 	}
 
 }

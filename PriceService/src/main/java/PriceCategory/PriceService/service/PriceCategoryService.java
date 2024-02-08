@@ -1,8 +1,6 @@
 package PriceCategory.PriceService.service;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -55,6 +53,44 @@ public class PriceCategoryService {
 			
 		return price;
 	}
+	
+	//For GraphQL
+	public Double calculatePrice(
+			String productId,
+			String productCategory,
+			String productSubCategory,
+			Double price,
+			Boolean discount,
+			String collection,
+			Double quantity,
+			Long erpId,
+			Integer customerSubcategory,
+			Integer customerCategory
+			) {	
+		
+		List<PriceCategory> optionalPCs = priceRepo.findPriceCategories(
+				productId, 
+				productCategory, 
+				productSubCategory, 
+				erpId, 
+				customerSubcategory, 
+				customerCategory,
+				quantity,
+				collection
+				);
+		PriceCategory priceCategory = optionalPCs.get(0);
+
+		if (priceCategory != null) {
+			boolean hasPercent = priceCategory.getPercent();
+			if (hasPercent)
+				price = price - (price / 100 * priceCategory.getValue());
+			else price = priceCategory.getValue();
+		}
+			
+		return price;
+		
+	}
+
 
 	public List<PriceCategory> addListOfPriceCategory(List<PriceCategory> pcs) {
 		return priceRepo.saveAll(pcs);
