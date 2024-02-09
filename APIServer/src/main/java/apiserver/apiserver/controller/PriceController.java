@@ -48,7 +48,6 @@ public class PriceController {
 			return new ResponseEntity<List<PriceCategoryDTO>>(prices, HttpStatus.OK);
 		} catch (HttpClientErrorException e) {
 			return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);
-
 		}
 	}
 
