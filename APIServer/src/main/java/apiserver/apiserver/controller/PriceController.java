@@ -36,7 +36,7 @@ public class PriceController {
 	}
 	
 	@PostMapping("/erp/{erpId}")
-	public ResponseEntity<List<PriceCategoryDTO>> getPricesByErpId(@RequestBody List<ProductDTO> products, @PathVariable("erpId") Long erpId, @PathVariable("quantity") int quantity){
+	public ResponseEntity<List<PriceCategoryDTO>> getPricesByErpId(@RequestBody(required = true) List<ProductDTO> products, @PathVariable("erpId") Long erpId){
 		List<PriceCategoryDTO> prices = priceService.getPrices(erpId, products);
 		if (prices == null || prices.isEmpty())
 			return ResponseEntity.notFound().build();
