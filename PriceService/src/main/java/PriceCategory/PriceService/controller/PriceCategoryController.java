@@ -107,7 +107,7 @@ public class PriceCategoryController {
 		try {
 			erpcustomer = erpCustomerService.getERPCustomer(erpId);
 		} catch (ERPCustomerNotFoundException e) {
-			e.printStackTrace();
+			System.out.println("Customer doesn't exist");
 			return ResponseEntity.notFound().build();
 		}
 		
