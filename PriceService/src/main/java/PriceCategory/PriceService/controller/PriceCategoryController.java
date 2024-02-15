@@ -87,8 +87,10 @@ public class PriceCategoryController {
 		try {
 			erpcustomer = erpCustomerService.getERPCustomer(erpId);
 		} catch (ERPCustomerNotFoundException e) {
-			e.printStackTrace();
-			return ResponseEntity.notFound().build();
+			erpcustomer = new ERPCustomer();
+			erpcustomer.setId(erpId);
+			erpcustomer.setCategory(0);
+			erpcustomer.setSubcategory(0);
 		}
 		
 		price = priceService.getPrice(product, erpcustomer,quantity);
@@ -107,8 +109,10 @@ public class PriceCategoryController {
 		try {
 			erpcustomer = erpCustomerService.getERPCustomer(erpId);
 		} catch (ERPCustomerNotFoundException e) {
-			System.out.println("Customer doesn't exist");
-			return ResponseEntity.notFound().build();
+			erpcustomer = new ERPCustomer();
+			erpcustomer.setId(erpId);
+			erpcustomer.setCategory(0);
+			erpcustomer.setSubcategory(0);
 		}
 		
 		ArrayList<PriceCategoryDTO> list = new ArrayList<PriceCategoryDTO>();

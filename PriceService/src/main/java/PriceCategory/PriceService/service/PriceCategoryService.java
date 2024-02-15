@@ -42,6 +42,10 @@ public class PriceCategoryService {
 				quantity,
 				collection
 				);
+		
+		if (optionalPCs.isEmpty()) {
+			return price;
+		}
 		PriceCategory priceCategory = optionalPCs.get(0);
 
 		if (priceCategory != null) {
