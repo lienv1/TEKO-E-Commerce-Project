@@ -35,6 +35,10 @@ export class UserService {
     return this.http.put<User>(`${this.backendAPI}/user/update/username/${username}`, user)
   }
 
+  public updateUserAsAdmin(user:User,username:string):Observable<User>{
+    return this.http.put<User>(`${this.backendAPI}/user/update/admin/username/${username}`, user)
+  }
+
 
   getAuthenticatedHeader(){
     const keycloakInstance = this.keycloakService.getKeycloakInstance();

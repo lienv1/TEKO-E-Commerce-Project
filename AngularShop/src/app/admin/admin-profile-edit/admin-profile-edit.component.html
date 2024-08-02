@@ -1,0 +1,129 @@
+<!--Popup section-->
+<app-custom-modal #CustomModalComponent> </app-custom-modal>
+<!--Popup section ends-->
+
+<div class="container mt-5">
+
+    <div class="row justify-content-center">
+        <div class="col-md-12">
+            <label for="search">{{'SEARCH CUSTOMER' | translate}}:</label>
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" #searchUser id="searchUser" (keyup.enter)="searchUsername(searchUser.value)" [placeholder]="getTranslation('SEARCH BY USERNAME')">
+                <button class="btn btn-secondary" id="searchBtn" (click)="searchUsername(searchUser.value)">{{'SEARCH' | translate}}:</button>
+            </div>
+            <label for="selectUser">Select:</label>
+            <select class="form-select mb-3" id="selectUser" #selectUser (change)="onOptionSelected()">
+                <option *ngFor="let user of users" value="{{user.username}}">{{user.username}} - {{user.company}}</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+      <div class="col-md-12">
+        <div class="card">
+          <div class="card-header bg-dark text-white">
+            <h3>{{'PROFILE INFORMATION' | translate}}</h3>
+          </div>
+          <div class="card-body">
+            <form ngNativeValidate [formGroup]="addressForm" (ngSubmit)="updateProfil()">
+
+              <!-- Personal Information -->
+              <h4>{{'PERSONAL INFORMATION'| translate}}</h4>
+            
+              <div class="mb-3">
+                <label for="companyInput" class="form-label">ERP</label>
+                <input type="text" class="form-control" id="erpInput" placeholder="ERP" formControlName="erpInput">
+              </div>
+
+              <div class="mb-3">
+                <label for="companyInput" class="form-label">{{'COMPANY' | translate}}</label>
+                <input type="text" class="form-control" id="companyInput" placeholder="Company" formControlName="companyInput">
+              </div>
+            
+              <!-- Name -->
+              <div class="mb-3">
+                <label for="firstnameInput" class="form-label">{{'FIRSTNAME' | translate}}</label>
+                <input type="text" class="form-control" id="firstnameInput" placeholder="Firstname" formControlName="firstnameInput">
+              </div>
+            
+              <div class="mb-3">
+                <label for="lastnameInput" class="form-label">{{'LASTNAME' | translate}}</label>
+                <input type="text" class="form-control" id="lastnameInput" placeholder="Lastname" formControlName="lastnameInput">
+              </div>
+            
+              <!-- Email -->
+              <div class="mb-3">
+                <label for="emailInput" class="form-label">{{'EMAIL ADDRESS' | translate}}</label>
+                <input type="email" class="form-control" id="emailInput" placeholder="name@example.com" formControlName="emailInput" required>
+              </div>
+            
+              <!-- Phone -->
+              <div class="mb-3">
+                <label for="phoneInput" class="form-label">{{'PHONE' | translate}}</label>
+                <input type="tel" class="form-control" id="phoneInput" placeholder="+1234567890" formControlName="phoneInput" required>
+              </div>
+            
+              <hr class="my-4">
+        
+              <!-- Billing Address -->
+              <h4>{{'BILLING ADDRESS' | translate}}</h4>
+              <div formGroupName="billingAddress">
+                <div class="mb-3">
+                  <label for="billingStreetInput" class="form-label">{{'STREET' | translate}}</label>
+                  <input type="text" class="form-control" id="billingStreetInput" placeholder="1234 Main St" formControlName="billingStreetInput" required>
+                </div>
+                <div class="mb-3">
+                  <label for="billingZipInput" class="form-label">{{'ZIP CODE' | translate}}</label>
+                  <input type="text" class="form-control" id="billingZipInput" formControlName="billingZipInput" required>
+                </div>
+                <div class="mb-3">
+                  <label for="billingCityInput" class="form-label">{{'CITY' | translate}}</label>
+                  <input type="text" class="form-control" id="billingCityInput" formControlName="billingCityInput" required>
+                </div>
+                <div class="mb-3">
+                  <label for="billingCountryInput" class="form-label">{{'COUNTRY'|translate}}</label>
+                  <input type="text" class="form-control" id="billingCountryInput" formControlName="billingCountryInput" required>
+                </div>
+              </div>
+            
+              <hr class="my-4">
+            
+              <!-- Delivery Address -->
+              <h4>{{'DELIVERY ADDRESS' | translate}}</h4>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="sameAddressCheck" (change)="toggleInput($event)">
+                <label class="form-check-label" for="sameAddressCheck">
+                  {{'SAME AS BILLING ADDRESS' | translate}}
+                </label>
+              </div>
+
+              <div formGroupName="deliveryAddress">
+                <div class="mb-3">
+                  <label for="deliveryStreetInput" class="form-label">{{'STREET' | translate}}</label>
+                  <input type="text" class="form-control" id="deliveryStreetInput" placeholder="1234 Main St" formControlName="deliveryStreetInput">
+                </div>
+                <div class="mb-3">
+                  <label for="deliveryZipInput" class="form-label">{{'ZIP CODE' | translate}}</label>
+                  <input type="text" class="form-control" id="deliveryZipInput" formControlName="deliveryZipInput">
+                </div>
+                <div class="mb-3">
+                  <label for="deliveryCityInput" class="form-label">{{'CITY' | translate}}</label>
+                  <input type="text" class="form-control" id="deliveryCityInput" formControlName="deliveryCityInput">
+                </div>
+                <div class="mb-3">
+                  <label for="deliveryCountryInput" class="form-label">{{'COUNTRY'|translate}}</label>
+                  <input type="text" class="form-control" id="deliveryCountryInput" formControlName="deliveryCountryInput">
+                </div>
+              </div>
+          
+              <!-- Submit Button -->
+              <button type="submit" class="btn btn-dark border border-light">{{'UPDATE' | translate}}</button>
+            
+            </form>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  

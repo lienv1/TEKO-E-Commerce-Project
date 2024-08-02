@@ -1,28 +1,28 @@
 import { DatePipe } from '@angular/common';
 import { HttpErrorResponse, HttpParams } from '@angular/common/http';
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateService } from '@ngx-translate/core';
 import { KeycloakService } from 'keycloak-angular';
+import { CustomModalComponent } from 'src/app/modal/custom-modal/custom-modal.component';
+import { CartItem } from 'src/app/model/cartItem';
+import { FunctionModel } from 'src/app/model/functionModel';
+import { Order } from 'src/app/model/order';
+import { OrderDetail } from 'src/app/model/orderDetail';
+import { User } from 'src/app/model/user';
+import { OrderService } from 'src/app/service/order.service';
+import { ShoppingCart } from 'src/app/service/shoppingCart';
+import { UserService } from 'src/app/service/user.service';
 import { environment } from 'src/environments/environment';
-import { CartItem } from '../model/cartItem';
-import { Order } from '../model/order';
-import { User } from '../model/user';
-import { ShoppingCart } from '../service/shoppingCart';
-import { CustomModalComponent } from '../modal/custom-modal/custom-modal.component';
-import { UserService } from '../service/user.service';
-import { FunctionModel } from '../model/functionModel';
-import { OrderDetail } from '../model/orderDetail';
-import { OrderService } from '../service/order.service';
 
 @Component({
-  selector: 'app-admin-page',
-  templateUrl: './admin-page.component.html',
-  styleUrls: ['./admin-page.component.scss']
+  selector: 'app-admin-order-history',
+  templateUrl: './admin-order-history.component.html',
+  styleUrls: ['./admin-order-history.component.scss']
 })
-export class AdminPageComponent implements OnInit {
+export class AdminOrderHistoryComponent {
 
   @ViewChild("CustomModalComponent") customModalComponent !: CustomModalComponent
   @ViewChild('selectUser') selectUserElement !: ElementRef<HTMLSelectElement>
@@ -55,9 +55,10 @@ export class AdminPageComponent implements OnInit {
     private modalService: NgbModal,
     private translateService: TranslateService,
     private route: ActivatedRoute
-  ) { this.title.setTitle(translateService.instant('ADMIN MENU')) }
+  ) { }
 
   ngOnInit(): void {
+    this.title.setTitle('History (Admin)')
     //this.loadUserOrders();
     this.initParam();
   }
@@ -79,7 +80,6 @@ export class AdminPageComponent implements OnInit {
       this.loadUserOrders();
     });
   }
-
 
   setUserIdParam(userid?: number) {
     if (userid)
@@ -194,6 +194,11 @@ export class AdminPageComponent implements OnInit {
         product: product,
         quantity: quantity
       }
+      if (cartItem.product.deleted)
+        continue;
+      if (!cartItem.product.stock || cartItem.product.stock < 1)
+        continue;
+      
       this.cart.addItem(cartItem);
     }
     this.router.navigateByUrl("/cart");

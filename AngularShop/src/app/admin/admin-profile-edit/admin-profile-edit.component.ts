@@ -1,8 +1,8 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { Component, ElementRef, ViewChild } from '@angular/core';
+import { FormGroup, FormControl } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateService } from '@ngx-translate/core';
 import { KeycloakService } from 'keycloak-angular';
@@ -11,43 +11,39 @@ import { CustomModalComponent } from 'src/app/modal/custom-modal/custom-modal.co
 import { Address } from 'src/app/model/address';
 import { FunctionModel } from 'src/app/model/functionModel';
 import { User } from 'src/app/model/user';
-import { AuthService } from 'src/app/service/auth.service';
 import { UserService } from 'src/app/service/user.service';
 
-
 @Component({
-  selector: 'app-profile-edit',
-  templateUrl: './profile-edit.component.html',
-  styleUrls: ['./profile-edit.component.scss']
+  selector: 'app-admin-profile-edit',
+  templateUrl: './admin-profile-edit.component.html',
+  styleUrls: ['./admin-profile-edit.component.scss']
 })
-export class ProfileEditComponent implements OnInit {
+export class AdminProfileEditComponent {
 
   @ViewChild("CustomModalComponent") customModalComponent !: CustomModalComponent
+  @ViewChild('selectUser') selectUserElement !: ElementRef<HTMLSelectElement>
 
   isSameAddress: boolean = false;
   user !: User
   public addressForm !: FormGroup;
   public billingAddress !: FormGroup;
   public deliveryAddress !: FormGroup;
-  username !: string
+  
   newlyRegistered: boolean = false;
 
-  constructor(
-    private keycloakService: KeycloakService, 
-    private userService: UserService, 
-    private modalService: NgbModal, 
-    private router: Router, 
-    private title:Title, 
-    private translationService:TranslateService,
-    private authService:AuthService
-    ) {
+  users:User[] = []
+  username !: string
+
+  constructor(private route:ActivatedRoute, private keycloakService: KeycloakService, private userService: UserService, private modalService: NgbModal, private router: Router, private title:Title, private translationService:TranslateService) {
   }
 
   ngOnInit(): void {
-    this.translationService.get('PROFILE EDIT').subscribe(element => {this.title.setTitle(element)})
+    this.title.setTitle("Profile Edit (Admin)")
     this.getLoginStatus();
     this.initAddressForm();
+    this.initParam();
   }
+
   ngAfterViewInit(): void {
   }
 
@@ -68,6 +64,7 @@ export class ProfileEditComponent implements OnInit {
     });
 
     this.addressForm = new FormGroup({
+      erpInput : new FormControl(''),
       companyInput: new FormControl(''),
       firstnameInput: new FormControl(''),
       lastnameInput: new FormControl(''),
@@ -77,15 +74,23 @@ export class ProfileEditComponent implements OnInit {
       deliveryAddress: this.deliveryAddress
     });
   }
-
-  fillFormKeycloak(user: KeycloakProfile) {
-    this.addressForm.get('firstnameInput')?.setValue(user.firstName)
-    this.addressForm.get('lastnameInput')?.setValue(user.lastName)
-    this.addressForm.get('emailInput')?.setValue(user.email)
+  
+  initParam() {
+    this.route.queryParamMap.subscribe(queryParams => {
+      const usernameParam = queryParams.get('username');
+      if (!usernameParam)
+        return
+      this.username = usernameParam;
+      this.userService.getUserdata(this.username).subscribe({
+        next: (response) => {this.fillFormBackend(response)},
+        error: (error:HttpErrorResponse) => {this.popupModal(error.message,"ERROR","red")}
+      })
+    });
   }
 
   fillFormBackend(user: User) {
     // Set value for the main address form controls
+    this.addressForm.get('erpInput')?.setValue(user.erpId);
     this.addressForm.get('companyInput')?.setValue(user.company);
     this.addressForm.get('firstnameInput')?.setValue(user.firstname);
     this.addressForm.get('lastnameInput')?.setValue(user.lastname);
@@ -117,34 +122,21 @@ export class ProfileEditComponent implements OnInit {
 
   //KEYCLOAK API
   getLoginStatus() {
-    this.authService.ensureTokenIsValid().then(logged => {if (logged) this.getKeycloakUser(); else this.modalRedirectToLogin();} );
-  }
-
-  getKeycloakUser() {
-    this.keycloakService.loadUserProfile().then(
-      (user) => {
-        if (user.username)
-          this.username = user.username;
-        let fillFormKeycloak: () => void = () => this.fillFormKeycloak(user);
-        this.getBackendUser(fillFormKeycloak)
+    this.keycloakService.isLoggedIn().then(
+      (response) => {
+        if (response === false) {
+          this.modalRedirectToLogin();
+          return;
+        }
+        else{
+         
+        }
       }
     )
   }
   //KEYCLOAK API END
 
   //BACKEND API
-  getBackendUser(fillFormKeycloak: () => void) {
-    this.userService.getUserdata(this.username).subscribe({
-      next: (response: User) => {
-        this.fillFormBackend(response);
-        this.newlyRegistered = false;
-      },
-      error: (error: HttpErrorResponse) => {
-        fillFormKeycloak();
-        this.newlyRegistered = true;
-      }
-    })
-  }
 
   updateProfil() {
 
@@ -152,6 +144,7 @@ export class ProfileEditComponent implements OnInit {
       alert("INVALID Addressform")
       return;
     }
+    const erpId = this.addressForm.value.erpInput;
     const company = this.addressForm.value.companyInput;
     const firstname = this.addressForm.value.firstnameInput;
     const lastname = this.addressForm.value.lastnameInput;
@@ -187,6 +180,7 @@ export class ProfileEditComponent implements OnInit {
       deliveryAddress = billingAddress
 
     const user: User = {
+      erpId: erpId,
       firstname: firstname,
       lastname: lastname,
       company: company,
@@ -201,23 +195,10 @@ export class ProfileEditComponent implements OnInit {
   }
 
   updateUser(user: User) {
-    if (this.newlyRegistered) {
-      this.userService.registerUser(user).subscribe({
-        next: (response) => {
-          this.modalSuccess();
-          this.newlyRegistered = false;
-        },
-        error: (error: HttpErrorResponse) => {
-          this.modalFail(error.message)
-        }
-      });
-    }
-    else
-      this.userService.updateUser(user, this.username).subscribe({
+      this.userService.updateUserAsAdmin(user, this.username).subscribe({
         next: (response) => {this.modalSuccess(); this.newlyRegistered = false; },
         error: (error: HttpErrorResponse) => { this.modalFail(error.message) }
       });
-
   }
   //BACKEND API END
 
@@ -236,23 +217,14 @@ export class ProfileEditComponent implements OnInit {
     this.openModal(modal, true);
   }
 
-  public openModal(modal: any, autoclose: boolean) {
-    let modalRef = this.modalService.open(modal.myModal);
-    if (autoclose) {
-      setTimeout(() => {
-        modalRef.dismiss();
-      }, 3000);
-    }
-  }
-
   modalRedirectToLogin() {
     const redirectModal: FunctionModel = {
       buttonText: "Login",
       foo: () => this.redirectToLogin()
     }
     let modal = this.customModalComponent;
-    modal.message = this.translationService.instant("PLEASE LOGIN TEXT");
-    modal.title = this.translationService.instant("PLEASE LOGIN");
+    modal.message = "You are not logged in. Please login to continue";
+    modal.title = "Please login";
     modal.colorTitle = "red";
     modal.functionModels = [redirectModal];
     this.modalService.open(modal.myModal);
@@ -261,5 +233,81 @@ export class ProfileEditComponent implements OnInit {
     this.router.navigateByUrl("/login");
   }
   //MODAL SECTION END
+
+  public searchUsername(keyword: string) {
+    if (keyword.length < 3) {
+      this.popupModal("Please type at least 3 characters", "WARNING", "red");
+      return;
+    }
+    this.users = [];
+    const regex = /\s+/g;
+    keyword = keyword.replace(regex, '¿');
+    this.userService.getUsersByKeyword(keyword).subscribe(
+      (response) => {
+        this.users = response;
+        if (this.users.length > 0) {
+          //this.loadUserOrders(this.users[0].username) dont load here, just set the userid in parameter
+          this.setUsernameParam(this.users[0].username)
+          this.fillFormBackend(this.users[0])
+        }
+      },
+      (error: HttpErrorResponse) => {
+        this.popupModal(error.message, "Error!", "red");
+      }
+    )
+  }
+
+  getTranslation(str:string){
+
+  }
+
+  onOptionSelected() {
+    if (!this.selectUserElement)
+      return;
+    const username = this.selectUserElement.nativeElement.value;
+    if (!username)
+      return;
+    this.username = username
+    this.setUsernameParam(this.username);
+  }
+
+  setUsernameParam(username:string) {
+    if (username)
+      this.router.navigate([], {
+        queryParams: { username: username },
+        queryParamsHandling: 'merge'
+      });
+  }
+
+
+    //Popup section
+    public functionModal(message: string, title: string, foo: FunctionModel) {
+      let modal = this.customModalComponent;
+      modal.functionModels = [foo];
+      modal.message = message;
+      modal.title = title;
+      modal.colorTitle = "red";
+      this.openModal(modal, false);
+    }
+  
+    //modal section
+    public popupModal(message: string, title: string, color: string) {
+      let modal = this.customModalComponent;
+      modal.message = message;
+      modal.title = title;
+      modal.colorTitle = color;
+      this.openModal(modal, false)
+    }
+  
+    public openModal(modal: any, autoclose: boolean) {
+      let modalRef = this.modalService.open(modal.myModal);
+      if (autoclose) {
+        setTimeout(() => {
+          modalRef.dismiss();
+        }, 3000);
+      }
+    }
+    //modal section ends
+    //Popup section end
 
 }

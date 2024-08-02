@@ -1,3 +1,5 @@
+import { CartItem } from "../model/cartItem";
+
 export class ShoppingCart {
     private storageKey = 'shoppingCartItems';
     items: any[] = [];
@@ -35,7 +37,11 @@ export class ShoppingCart {
     private loadCartItemsFromStorage() {
       const savedItems = localStorage.getItem(this.storageKey);
       if (savedItems) {
-        this.items = JSON.parse(savedItems);
+        try {
+          this.items = JSON.parse(savedItems);
+        } catch (error) {
+          alert(error)
+        }
       }
     }
   
@@ -90,15 +96,26 @@ export class ShoppingCart {
       this.saveCartItemsToStorage();
     }
 
-    public getSubtotal(){
-      return this.getTotal() - this.getTotalTax();
+    public removeAllItemsWithoutQuantity(){
+      this.items = this.items.filter(product => product.quantity > 0);
+      this.items = this.items.filter(product => !isNaN(product.quantity))
+      this.saveCartItemsToStorage();
+    }
+
+    public getItemWithoutQuantity(){
+      let item = this.items.find(product => isNaN(product.quantity) || product.quantity < 1)
+      return item
+    }
+
+    public getSubtotal(hasErp ?: boolean){
+      return this.getTotal(hasErp) - this.getTotalTax(hasErp);
     }
   
-    public getTotalTax(){
+    public getTotalTax(hasErp ?: boolean){
       let sum = 0;
       for (let i = 0; i<this.items.length; i++){
         const taxPercent = this.items[i].product.tax;
-        const price = this.items[i].product.price;
+        const price = (!hasErp || (this.items[i] as CartItem).discountedPrice == null)? this.items[i].product.price : this.items[i].discountedPrice;
         let tax = price/100*taxPercent;
         tax = tax * this.items[i].quantity;
         sum += tax;
@@ -106,11 +123,11 @@ export class ShoppingCart {
       return sum
     }
   
-    public getTotal(){
+    public getTotal(hasErp ?: boolean){
       let total = 0;
       for (let i = 0; i<this.items.length;i++){
         const item = this.items[i];
-        const price = parseFloat(item.product.price) * item.quantity;
+        const price = parseFloat((!hasErp || (this.items[i] as CartItem).discountedPrice == null) ? item.product.price : item.discountedPrice) * item.quantity;
         total += price;
       }
       return total

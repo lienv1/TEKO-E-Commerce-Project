@@ -15,18 +15,19 @@ import { ShoppingCart } from './service/shoppingCart';
 import { CurrencyPipe, DatePipe } from '@angular/common';
 import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
 import { environment } from 'src/environments/environment';
-import { AuthInterceptorService } from './service/auth-interceptor.service';
 import { LoginComponent } from './login/login.component';
 import { CartComponent } from './cart/cart.component';
 import { CheckoutComponent } from './checkout/checkout.component';
 import { ProductPageComponent } from './product-page/product-page.component';
 import { ThankYouPageComponent } from './thank-you-page/thank-you-page.component';
 import { ShopComponent } from './shop/shop.component';
-import { AdminPageComponent } from './admin-page/admin-page.component';
 import { CustomModalComponent } from './modal/custom-modal/custom-modal.component';
 import { MainProfileComponent } from './profile/main-profile/main-profile.component';
 import { OrderHistoryComponent } from './profile/order-history/order-history.component';
 import { ProfileEditComponent } from './profile/profile-edit/profile-edit.component';
+import { AdminMainComponent } from './admin/admin-main/admin-main.component';
+import { AdminOrderHistoryComponent } from './admin/admin-order-history/admin-order-history.component';
+import { AdminProfileEditComponent } from './admin/admin-profile-edit/admin-profile-edit.component';
 
 
 // Factory function required during AOT compilation
@@ -63,11 +64,13 @@ function initializeKeycloak(keycloak: KeycloakService) {
     ProductPageComponent,
     ThankYouPageComponent,
     ShopComponent,
-    AdminPageComponent,
     CustomModalComponent,
     MainProfileComponent,
     ProfileEditComponent,
-    OrderHistoryComponent
+    OrderHistoryComponent,
+    AdminMainComponent,
+    AdminOrderHistoryComponent,
+    AdminProfileEditComponent
   ],
   imports: [
     KeycloakAngularModule,

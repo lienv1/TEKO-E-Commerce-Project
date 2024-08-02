@@ -10,10 +10,12 @@ export interface Product {
     origin ?: string,
     pack ?: number,
     price : number,
-    productGroup ?: string,
+    subCategory ?: string,
     productName ?: string,
     searchIndex ?: string,
     stock ?: number,
     tax ?:number,
-    weight ?: number
+    weight ?: number,
+    collection ?: string,
+    deleted ?: boolean
 }

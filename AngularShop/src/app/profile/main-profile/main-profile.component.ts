@@ -14,10 +14,10 @@ export class MainProfileComponent implements OnInit{
 
   public profilpage = environment.keycloakAPI +'/realms/'+environment.keycloakRealm+'/account/'
 
-  constructor(private title:Title, private translator:TranslateService ){title.setTitle(translator.instant('PROFILE'))}
+  constructor(private title:Title, private translate:TranslateService ){}
 
   ngOnInit(): void {
-    
+    this.translate.get('PROFILE').subscribe(element => {this.title.setTitle(element)})
   }
 
 

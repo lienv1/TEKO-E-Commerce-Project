@@ -5,6 +5,7 @@
 <!-- Product Showcase -->
 <div #container class="container my-5">
     <div *ngIf="product" class="row">
+        <div><a [href]="['/shop?category='+ encodeSpecialChars(product.category)]">{{product.category}}</a> <i class="bi bi-chevron-right"></i> <a [href]="['/shop?category='+encodeSpecialChars(product.category)+'&subcategory='+encodeSpecialChars(product.subCategory)]">{{product.subCategory}}</a></div>
         <div class="col-lg-6">
             <img src ="{{fileServer}}/images/products/{{product.productId}}.jpg"
             onerror="this.onerror=null; this.src='assets/NotFound.png'"
@@ -28,7 +29,7 @@
                     </tr>
                     <tr>
                         <th scope="row">{{'BRAND'|translate}}</th>
-                        <td>{{product.brand}}</td>
+                        <td><a [href]="['/shop?category='+product.category+'&subcategory='+product.subCategory]+'&brand='+product.brand"> {{product.brand}} </a></td>
                     </tr>
                     <tr>
                         <th scope="row">{{'WEIGHT PER UNIT'|translate}}</th>
@@ -44,7 +45,7 @@
                     </tr>
                     <!--<tr>
                         <th scope="row">{{'STOCK'|translate}}</th>
-                        <td>100 units</td>
+                        <td>{{product.stock}}</td>
                     </tr>-->
 
                     <tr>
@@ -52,9 +53,14 @@
                         <td>{{product.tax}} %</td>
                     </tr>
 
-                    <tr *ngIf="logged">
+                   <!-- <tr *ngIf="logged">
                         <th scope="row">{{'PRICE PER UNIT'|translate}}</th>
-                        <td>{{formatPrice(product.price)}}</td>
+                        <td>{{formatPrice(displayPrice())}}</td>
+                    </tr>-->
+
+                    <tr *ngIf="!product.stock || product.stock<1 || product.deleted">
+                        <th scope="row" class=text-danger>{{'NOT AVAILABLE'|translate}}</th>
+                        <td></td>
                     </tr>
                 </tbody>
             </table>
@@ -76,16 +82,16 @@
                 <button class="btn btn-secondary" (click)="addToCart()"><i class="bi bi-cart-plus"></i> {{"ADD TO CART" | translate}}</button>
             </div>
             <div class="alert alert-success" *ngIf="cartMessage">{{ cartMessage }}</div>
+            <div class="mb-3">
+                <button class="btn btn-secondary" [routerLink]="['/cart']"><i class="bi bi-cart4"></i> {{"PROCEED TO CART" | translate}} </button>
+            </div>
             <div *ngIf="logged">
                 <div *ngIf="favourite" class="mb-3">
-                    <button class="btn btn-secondary" (click)="removeFavourite()"><i class="bi bi-bookmark-dash"></i> {{"REMOVE FROM FAVOURITES" |
+                    <button class="btn btn-secondary" (click)="removeFavourite()"><i class="bi bi-bookmark-dash"></i> {{"REMOVE FROM FAVORITES" |
                         translate}}</button>
                 </div>
                 <div *ngIf="!favourite" class="mb-3">
-                    <button class="btn btn-secondary" (click)="addFavourite()"><i class="bi bi-bookmark-star-fill"></i> {{"ADD TO FAVOURITES" | translate}} </button>
-                </div>
-                <div class="mb-3">
-                    <button class="btn btn-secondary" [routerLink]="['/cart']"><i class="bi bi-cart4"></i> {{"PROCEED TO CART" | translate}} </button>
+                    <button class="btn btn-secondary" (click)="addFavourite()"><i class="bi bi-bookmark-star-fill"></i> {{"ADD TO FAVORITES" | translate}} </button>
                 </div>
             </div>
         </div>

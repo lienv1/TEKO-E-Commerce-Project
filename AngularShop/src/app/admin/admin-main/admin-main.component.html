@@ -1,0 +1,22 @@
+<!--Popup section-->
+<app-custom-modal #CustomModalComponent> </app-custom-modal>
+<!--Popup section ends-->
+
+<div class="container pt-3 pb-3">
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Menu Sidebar -->
+            <div class="col-sm-3 col-md-3 col-lg-2 d-block sidebar collapse">
+                <div class="list-group">
+                    <a class="list-group-item list-group-item-action" routerLink="/admin/history" routerLinkActive="active">{{'ORDER HISTORY' | translate}}</a>
+                    <a class="list-group-item list-group-item-action" routerLink="/admin/edit" routerLinkActive="active">{{'PROFILE EDIT' | translate}}</a>
+                </div>
+            </div>
+
+            <!-- Content Area -->
+            <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <router-outlet></router-outlet> <!-- This will load the subcomponent -->
+            </div>
+        </div>
+    </div>
+</div>

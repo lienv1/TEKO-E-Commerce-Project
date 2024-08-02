@@ -9,7 +9,7 @@
   <div class="row">
     <div class="col-lg-8">
 
-      <div *ngFor="let item of cartItems | paginate: { itemsPerPage: 5, currentPage: page }" class="card mb-4">
+      <div *ngFor="let item of cartItems | paginate: { itemsPerPage: 20, currentPage: page }" class="card mb-4">
 
         <div class="card-body">
           <div class="row align-items-center">
@@ -22,16 +22,17 @@
               <h5 class="card-title"> <a [href]="['/product/'+item.product.productId]" style="text-decoration:none; color: inherit;">{{item.product.productId}} - {{item.product.productName}}</a></h5>
               <p class="card-text text-muted">{{item.product.weight}}</p>
             </div>
-            <div class="col-md-2">
-              <p class="card-text">{{formatPrice(calculatedPrice(item.product.price,item.quantity))}} <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-tooltip="Information" [title]="getTranslation('PRICE VARIATION MESSAGE')"></i></p>
-            </div>
+            <!--<div class="col-md-2">
+              <p *ngIf="logged" class="card-text">{{formatPrice(displayPrice(item))}} <i class="bi bi-info-circle" data-bs-toggle="tooltip" data-bs-tooltip="Information" [title]="getTranslation('PRICE VARIATION MESSAGE')"></i></p>
+              <p *ngIf="logged" class="card-text small">{{"UNIT PRICE" | translate}}:  {{formatPrice(displayUnitPrice(item))}} </p>
+            </div> -->
 
             <div class="col-md-2">
-              <input #quantity type="number" class="form-control" value="{{item.quantity}}">
+              <input #quantity type="number" class="form-control" value="{{item.quantity}}" (keyup.enter)="updateCartItem(item,quantity.value)">
               <a *ngIf="hasCarton(item.product)">≈{{getCarton(item)}} {{"CARTON" | translate}} <i class="bi bi-box-fill"></i></a>
               <a *ngIf="!hasCarton(item.product)">{{"UNIT" | translate}}</a>
               <div class="mt-2">
-                <button class="btn btn-secondary" (click)="updateCartItem(item,quantity.value)"> <i class="bi bi-arrow-repeat"></i>{{"UPDATE" | translate}}</button>
+                <button class="btn btn-secondary" (click)="updateCartItem(item,quantity.value)" > <i class="bi bi-arrow-repeat"></i> {{"UPDATE" | translate}}</button>
               </div>
               <div class="mt-2">
                 <button class="btn btn-danger" (click)="popupDelete(item)"> <i class="bi bi-trash"></i> {{"REMOVE" | translate}}</button>
@@ -49,7 +50,8 @@
      
 
     </div>
-    <div *ngIf="logged" class="col-lg-4">
+
+   <!-- <div *ngIf="logged" class="col-lg-4">
       <div class="card">
         <div class="card-body">
           <h5 class="card-title">{{"CART TOTALS" | translate}}</h5>
@@ -68,7 +70,6 @@
               <div class="col-lg-8">{{"TOTAL" | translate}}  </div>
               <div class="col-lg-4">{{formatPrice(getTotal())}}*</div>
             </div>
-      
 
           <div class="mb-4" >
             {{"PRICE VARIATION MESSAGE"|translate}} {{"MINIMUM ORDER MESSAGE" | translate}}
@@ -77,6 +78,6 @@
           <a [routerLink]="['/checkout']" class="btn btn-secondary w-100">{{"PROCEED TO CHECKOUT" | translate}}</a>
         </div>
       </div>
-    </div>
+    </div>-->
   </div>
 </div>

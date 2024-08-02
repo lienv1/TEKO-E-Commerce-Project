@@ -18,8 +18,8 @@ import { CustomModalComponent } from '../modal/custom-modal/custom-modal.compone
 import { OrderDetail } from '../model/orderDetail';
 import { Address } from '../model/address';
 import { OrderService } from '../service/order.service';
-import { error } from 'console';
 import { ExtendedModalService } from '../service/extendedModalService';
+import { FunctionModel } from '../model/functionModel';
 
 @Component({
   selector: 'app-checkout',
@@ -37,6 +37,7 @@ export class CheckoutComponent {
   public minDate !: string;
   private username !: string;
   private userId !: number;
+  private erpId ?: number;
 
   //FORM
   isSameAddress: boolean = false;
@@ -64,13 +65,15 @@ export class CheckoutComponent {
     private router: Router,
     private currencyPipe: CurrencyPipe,
   ) { this.extendedModalService = new ExtendedModalService(modalService);
+    
   }
 
   ngOnInit(): void {
+    this.translateService.get('CHECKOUT').subscribe(element => {this.title.setTitle(element)})
+
     this.initAddressForm();
     //Check if it's logged in, then load profile
     this.checkAndProceedLoadingProfile()
-    this.title.setTitle("Checkout");
     this.getRole();
     this.handleDate();
   }
@@ -145,7 +148,7 @@ export class CheckoutComponent {
 
   public loadUser(username:string) {
     this.userService.getUserdata(username).subscribe({
-      next: (response) => {this.fillFormBackend(response); if(response.userId) this.userId = response.userId},
+      next: (response) => {this.fillFormBackend(response); if(response.userId) this.userId = response.userId; if(response.erpId) this.erpId = response.erpId},
       error: (error) => {if(error.status === 404) this.redirectToProfilEdit(); 
         else 
         this.extendedModalService.popup(this.customeModalComponent,"Error " + error.status,error.message,"red")
@@ -263,6 +266,22 @@ export class CheckoutComponent {
       this.enableSubmit();
       return;
     }
+
+    let potentialError : CartItem = this.cart.getItemWithoutQuantity()
+    if (potentialError != null){
+      let message = "The product "+potentialError.product.productId + " " + potentialError.product.productName + " doesn't have valid quantity";
+      let title = this.translateService.instant("WARNING");
+      let redirectFunction: () => void = () => this.redirect(potentialError.product.productId)
+      let correction : FunctionModel = {
+        buttonText: "See "+potentialError.product.productId,
+        foo: redirectFunction
+      }
+      this.extendedModalService.popup(this.customeModalComponent,title,message,"red",[correction])
+      return;
+    }
+
+    //Remove all products without quantity
+    this.cart.removeAllItemsWithoutQuantity();
     //To resolve conflicts in case of duplicates
     this.cart.mergeItems();
 
@@ -314,9 +333,17 @@ export class CheckoutComponent {
       next: (response) => {this.processingCompletedOrder(); this.modalService.dismissAll();},
       error: (error:HttpErrorResponse) => {this.modalService.dismissAll();  
         let title = this.translateService.instant("WARNING");
-        this.extendedModalService.popup(this.customeModalComponent,title,error.message, "red");
+        if (error.status == 429)
+          this.extendedModalService.popup(this.customeModalComponent,title,"Too many requests. Please try again tomorrow", "red");
+        else
+          this.extendedModalService.popup(this.customeModalComponent,title,error.message, "red");
+        this.enableSubmit();
       }
     })
+  }
+
+  redirect(productId:number){
+    this.router.navigateByUrl("/product/"+productId)
   }
 
   public disableSubmit() {
@@ -424,7 +451,9 @@ export class CheckoutComponent {
   }
 
   public getTotal() {
-    return this.cart.getSubtotal();
+    if (this.erpId)
+      return this.cart.getTotal(true);
+    return this.cart.getTotal();
   }
 
 }

@@ -71,7 +71,7 @@ export class ShopComponent implements OnInit {
   fallbackImageLoaded = false; //Prevent infinite loop
 
   //Popup
-  private extendedModalService:ExtendedModalService;
+  private extendedModalService: ExtendedModalService;
 
   constructor(
     private title: Title,
@@ -82,17 +82,22 @@ export class ShopComponent implements OnInit {
     private shoppingCart: ShoppingCart,
     private keycloakService: KeycloakService,
     private modalService: NgbModal
-    ) {
-      this.title.setTitle(this.translate.instant('SHOP'));
-      this.extendedModalService = new ExtendedModalService(modalService);
-    }
+  ) {
+    this.extendedModalService = new ExtendedModalService(modalService);
+  }
 
   ngOnInit(): void {
+
+    this.translate.get('SHOP').subscribe(element => { this.title.setTitle(element) })
     this.isLogged().then(() =>
       this.initParam()
     );
     this.initCategories();
   }
+
+  /*ngAfterViewInit(){
+    this.scroll(this.container.nativeElement)
+  }*/
 
   @HostListener('window:popstate', ['$event'])
   onPopState(event: any) {
@@ -131,7 +136,7 @@ export class ShopComponent implements OnInit {
     params = this.appendPageParam(params);
     params = this.appendSortParam(params);
     this.productService.getProductByFilter(params).subscribe({
-      next: (response) => {this.handleResponse(response); this.initFilter(params)},
+      next: (response) => { this.handleResponse(response); this.initFilter(params), this.scroll(this.productListElement.nativeElement) },
       error: (error: HttpErrorResponse) => this.handleError(error)
     })
   }
@@ -144,12 +149,11 @@ export class ShopComponent implements OnInit {
     })
   }
 
-  //New 
-  public initFilter(param:HttpParams){
+  public initFilter(param: HttpParams) {
     this.productService.getFilters(param).subscribe({
-      next: (response) => {this.filters = response},
-      error: (error : HttpErrorResponse) => {this.handleError(error)}
-    } );
+      next: (response) => { this.filters = response },
+      error: (error: HttpErrorResponse) => { this.handleError(error) }
+    });
   }
 
   isLogged(): Promise<void> {
@@ -162,7 +166,8 @@ export class ShopComponent implements OnInit {
               this.username = user.username;
             }
           )
-        else return
+        else {//this.router.navigateByUrl("/login"); no longer used, because AuthGuard has been implemented
+          return;}
       },
       () => { return }
     )
@@ -206,7 +211,7 @@ export class ShopComponent implements OnInit {
     }
     this.brandParam = Array.from(this.brandSet).join("¿");
     this.router.navigate([], {
-      queryParams: { brand: this.brandParam },
+      queryParams: { brand: this.brandParam, page: 1 },
       queryParamsHandling: 'merge'
     })
   }
@@ -219,11 +224,10 @@ export class ShopComponent implements OnInit {
     }
     this.originParam = Array.from(this.originSet).join("¿");
     this.router.navigate([], {
-      queryParams: { origin: this.originParam },
+      queryParams: { origin: this.originParam, page: 1 },
       queryParamsHandling: 'merge'
     })
   }
-
 
   removeQueryParam(paramKey: string) {
     this.router.navigate([], {
@@ -283,9 +287,9 @@ export class ShopComponent implements OnInit {
     if (this.originParam)
       params = params.append("origin", this.originParam);
     if (this.favoriteParam && this.username)
-      params = params.append("favorite",this.username);
+      params = params.append("favorite", this.username);
     if (this.searchParam)
-      params = params.append("keywords",this.searchParam);
+      params = params.append("keywords", this.searchParam);
     return params
   }
 
@@ -298,7 +302,7 @@ export class ShopComponent implements OnInit {
       this.redirectToProfilEdit();
       return;
     }
-    this.extendedModalService.popup(this.customModalComponent,"ERROR",error.message,"red", [], false)
+    this.extendedModalService.popup(this.customModalComponent, "ERROR", error.message, "red", [], false)
   }
 
   //SEARCH SECTION
@@ -310,10 +314,6 @@ export class ShopComponent implements OnInit {
       queryParams: { search: keywords.replace(" ", "¿") }
     })
     this.scroll(this.productListElement.nativeElement);
-  }
-
-  public searchIt(keywords: string) {
-
   }
 
   //FAVOURITE SECTION
@@ -419,9 +419,15 @@ export class ShopComponent implements OnInit {
 
   public addItemToCart(product: Product, quantityInput: HTMLInputElement, quantitySelector: HTMLSelectElement) {
     let quantity = parseFloat(quantityInput.value)
-    if (quantity < 1) {
+    if (isNaN(quantity) || quantity < 1) {
+      this.extendedModalService.popup(this.customModalComponent, this.translate.instant('QUANTITY REQUIRED'), this.translate.instant('QUANTITY REQUIRED TEXT'), "red");
       return
     }
+
+    /* if (product.stock != null && product.stock < quantity){
+      this.extendedModalService.popup(this.customModalComponent,this.translate.instant('STOCK LIMIT EXCEED'),this.translate.instant('STOCK LIMIT EXCEED TEXT'),"red");
+      return;
+    }*/
 
     const selector = quantitySelector.value
     if (selector === "carton") {
@@ -431,6 +437,12 @@ export class ShopComponent implements OnInit {
       product,
       quantity
     }
+
+    if (product.deleted || !product.stock || product.stock < 1) {
+      this.extendedModalService.popup(this.customModalComponent, this.translate.instant('OUT OF STOCK'), this.translate.instant('NOT AVAILABLE'), "red");
+      return;
+    }
+
     //If car already has item
     if (this.shoppingCart.findItemInCart(cartItem)) {
       //Increase function
@@ -448,7 +460,7 @@ export class ShopComponent implements OnInit {
         foo: replaceFunction
       }
       //Modal setting
-      
+
       const message: string = cartItem.product.productId + " " + cartItem.product.productName + " - " + this.translate.instant("ITEM EXISTS");
       const title: string = this.translate.instant("WARNING");
       const color: string = "red";
@@ -460,7 +472,7 @@ export class ShopComponent implements OnInit {
         color,
         [replaceModel, increaseModel],
         false
-        );
+      );
       return;
     }
     this.shoppingCart.addItem(cartItem)
@@ -469,7 +481,7 @@ export class ShopComponent implements OnInit {
       this.translate.instant("ITEM ADDED SUCCESS"),
       product.productId + " " + product.productName + ": " + quantity,
       "inherit"
-      );
+    );
     return;
   }
 
@@ -512,7 +524,7 @@ export class ShopComponent implements OnInit {
       title,
       message,
       color
-      );
+    );
   }
 
   //POPUP SECTION END

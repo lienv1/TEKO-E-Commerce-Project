@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ShoppingCart } from '../service/shoppingCart';
 import { TranslateService } from '@ngx-translate/core';
 import { KeycloakService } from 'keycloak-angular';
+import { AuthService } from '../service/auth.service';
 
 @Component({
   selector: 'app-navbar',
@@ -20,20 +21,19 @@ export class NavbarComponent {
   @ViewChild('languageSelector')
   languageSelector !: ElementRef<HTMLSelectElement>
 
-  @ViewChild('themeToggle')
-  themeToggle !: ElementRef<HTMLInputElement>
-
-  public theme: string = "light";
+  //THEME
+  @ViewChild('themeToggle') themeToggle !: ElementRef<HTMLInputElement>
 
   constructor(private cart: ShoppingCart,
     private keycloakService: KeycloakService,
     private translate: TranslateService,
-    ) {
+    private authService : AuthService,
+    private router :Router
+  ) {
     translate.addLangs(['en', 'de', 'fr', 'zh', 'vn']);
   }
 
   ngOnInit(): void {
-    
   }
 
   ngAfterViewInit(): void {
@@ -68,24 +68,24 @@ export class NavbarComponent {
   //LANGUAGE SECTION END
 
   //LOGIN SECTION
-  public isLoggedIn() {
-    this.keycloakService.isLoggedIn().then(
-      (logged) => { this.isLogged = logged; if (this.isLogged) this.getRole(); }
-    )
+  public isLoggedIn(){
+    this.authService.ensureTokenIsValid().then(logged => {
+      this.isLogged = logged; 
+      if (this.isLogged) this.getRole();
+    })
   }
 
   public getUsername() {
-
     try { return this.keycloakService.getUsername(); }
     catch (error) {
       return false;
     }
   }
+
   //LOGIN SECTION END
 
   //ADMIN SECTION
-  public getRole() {
-    let isAdmin = false;
+  getRole() {
     let roles = this.keycloakService.getUserRoles();
     for (let i = 0; i < roles.length; i++) {
       if (roles[i] === "ADMIN") {
@@ -107,29 +107,25 @@ export class NavbarComponent {
   //CART SECTION END
 
   //THEME SECTION
-  public getTheme() {
-    const theme = localStorage.getItem("Theme");
-    if (theme == null) {
-      return "light"
-    }
-    return theme
+  public getTheme(): string {
+    let theme = localStorage.getItem("Theme");
+    if (theme === null || theme === "light") { localStorage.setItem("Theme","light"); return "light"}
+    return "dark";
   }
 
   onSwitchTheme() {
-    const theme = localStorage.getItem("Theme");
-    if (theme == null || theme === "light") {
-      localStorage.setItem("Theme", "dark")
-    }
-    else {
-      localStorage.setItem("Theme", "light")
-    }
+    let theme = localStorage.getItem("Theme");
+    if (theme === null) {localStorage.setItem("Theme","light"); theme = "light";}
+
+    if (theme.toLowerCase() === "light") localStorage.setItem("Theme", "dark")
+    else localStorage.setItem("Theme", "light")
     location.reload();
   }
+
   //THEME SECTION END
 
-  getLanguage(){
+  getLanguage() {
     let lang = this.translate.currentLang;
-    console.log(lang);
   }
 
 }

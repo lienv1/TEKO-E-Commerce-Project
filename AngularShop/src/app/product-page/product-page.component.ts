@@ -14,6 +14,9 @@ import { ShoppingCart } from '../service/shoppingCart';
 import { CustomModalComponent } from '../modal/custom-modal/custom-modal.component';
 import { environment } from 'src/environments/environment';
 import { ExtendedModalService } from '../service/extendedModalService';
+import { PriceService } from '../service/price.service';
+import { UserService } from '../service/user.service';
+import { User } from '../model/user';
 
 @Component({
   selector: 'app-product-page',
@@ -24,12 +27,14 @@ export class ProductPageComponent {
 
   @ViewChild('container') container !: ElementRef<HTMLElement>
 
-  public productId?: string;
-  public product?: Product;
-  public favourite: boolean = false;
-  public logged: boolean = false
-  public cartMessage: string = "";
+  productId?: string;
+  product?: Product;
+  price?: number;
+  favourite: boolean = false;
+  logged: boolean = false
+  cartMessage: string = "";
   username?: string;
+  user?:User;
 
   public fileServer: string = environment.fileServerAPI;
 
@@ -47,6 +52,8 @@ export class ProductPageComponent {
     private router: Router,
     private translateService: TranslateService,
     private productService: ProductService,
+    private priceService:PriceService,
+    private userService:UserService,
     private keycloakService: KeycloakService,
     private shoppingCart: ShoppingCart,
     private modalService: NgbModal,
@@ -61,6 +68,12 @@ export class ProductPageComponent {
     this.getProduct();
     this.isLoggedInAndLoadUser();
   }
+
+  ngAfterViewInit(){
+    if (this.container)
+    this.scroll(this.container.nativeElement)
+  }
+
 
   scroll(el: HTMLElement) {
     el.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -100,6 +113,7 @@ export class ProductPageComponent {
       (user) => {
         this.username = user.username;
         this.isFavorite();
+        this.loadAPIUser();
       }
     )
   }
@@ -126,14 +140,13 @@ export class ProductPageComponent {
       return;
     if (this.productId == null)
       return;
-    this.productService.addFavourite(this.username, this.productId).subscribe(
-      (response) => {
-        this.favourite = true;
-      },
-      (error: HttpErrorResponse) => {
-        this.handleError(error);
-      }
-    )
+      this.productService.addFavourite(this.username,this.productId).subscribe(
+        {
+          next: response =>{this.favourite = true;},
+          error: error => {this.handleError(error)}
+        }
+      )
+
   }
 
   public removeFavourite() {
@@ -158,6 +171,33 @@ export class ProductPageComponent {
 
   //API SECTION END
 
+  //PRICE SECTION
+  loadAPIUser(){
+    console.log("Load API User");
+    if (!this.username){ console.log("No username");
+      return;}
+    this.userService.getUserdata(this.username).subscribe( {
+      next: (response) => {this.user = response; if (this.user.erpId) this.getPrice(this.user.erpId)},
+      error:(error:HttpErrorResponse) => {console.log(error.message)}  
+    })
+  }
+  
+  getPrice(erp:number){
+    if (!this.product) return;
+    this.priceService.getPrice(erp,this.product,1).subscribe ({
+      next: (response) => {this.price = response},
+      error: (error:HttpErrorResponse) => {console.log(error.message)}
+    }
+    )
+  }
+
+  displayPrice(){
+    if (this.price)
+      return this.price
+    return this.product?.price
+  }
+  //PRICE SECTION END
+
 
   //CART SECTION
   public addToCart() {
@@ -166,20 +206,23 @@ export class ProductPageComponent {
       return
     }
     let quantity = parseInt(this.quantityInput.nativeElement.value)
-    if (quantity == null) {
-      console.log("No quantity")
+    if (quantity === null || isNaN(quantity)|| quantity <1) {
+      this.extendedModalService.popup(this.customModalComponent,this.translateService.instant('QUANTITY REQUIRED'),this.translateService.instant('QUANTITY REQUIRED TEXT'),"red");
       return
     }
     let option = this.quantityOption.nativeElement.value
-    if (option == null) {
-      console.log("no option")
-      return
-    }
     if (option === "carton") {
       quantity *= (this.product.pack === undefined || this.product.pack == null) ? 1 : this.product.pack
     }
-    console.log("option is " + option + ", quantity is " + quantity);
-
+    if (this.product.deleted || !this.product.stock || this.product.stock <1){
+      this.extendedModalService.popup(this.customModalComponent,this.translateService.instant('OUT OF STOCK'),this.translateService.instant('NOT AVAILABLE'),"red");
+      return;
+    }
+    /*if (this.product.stock  <  quantity){
+      this.extendedModalService.popup(this.customModalComponent,this.translateService.instant('STOCK LIMIT EXCEED'),this.translateService.instant('STOCK LIMIT EXCEED TEXT'),"red");
+      return;
+    }*/
+    
     const cartItem: CartItem = {
       product: this.product,
       quantity: quantity
@@ -262,5 +305,12 @@ export class ProductPageComponent {
     // Return the formatted price
     return formattedPrice || '';
   }
+
+  //Tools
+  encodeSpecialChars(str ?: string): string {
+    if (str != null)
+      return encodeURIComponent(str);
+    return "";
+}
 
 }

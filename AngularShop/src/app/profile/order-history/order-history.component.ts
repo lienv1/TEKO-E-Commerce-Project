@@ -33,9 +33,19 @@ export class OrderHistoryComponent implements OnInit {
   //Customizable
   maxOrdersPerPage = 10; 
 
-  constructor( private route: ActivatedRoute, private translateService: TranslateService, private keycloakService: KeycloakService, private orderService: OrderService, private cart: ShoppingCart, private router: Router, private modalService: NgbModal, private datePipe: DatePipe, private title:Title) {title.setTitle(translateService.instant('ORDER HISTORY')) }
+  constructor( 
+    private route: ActivatedRoute, 
+    private translateService: TranslateService, 
+    private keycloakService: KeycloakService, 
+    private orderService: OrderService, 
+    private cart: ShoppingCart,
+    private router: Router,
+    private modalService: NgbModal, 
+    private datePipe: DatePipe, 
+    private title:Title) {}
 
   ngOnInit(): void {
+    this.title.setTitle(this.translateService.instant('ORDER HISTORY'))
     this.initParam();
   }
 
@@ -132,6 +142,11 @@ export class OrderHistoryComponent implements OnInit {
         product: product,
         quantity: quantity
       }
+      if (cartItem.product.deleted)
+        continue;
+      if (!cartItem.product.stock || cartItem.product.stock < 1)
+        continue;
+        
       this.cart.addItem(cartItem);
     }
     this.router.navigateByUrl("/cart");

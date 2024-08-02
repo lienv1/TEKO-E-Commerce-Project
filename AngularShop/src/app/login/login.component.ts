@@ -19,10 +19,10 @@ export class LoginComponent {
     private title:Title,
     private keycloakService: KeycloakService, 
     private translate:TranslateService,
-    private router: Router) {this.title.setTitle(this.translate.instant('LOGIN'));}
+    private router: Router) {}
 
   ngOnInit(): void {
-    
+    this.translate.get('LOGIN').subscribe(element => {this.title.setTitle(element)})
   }
 
   ngAfterViewInit(): void {

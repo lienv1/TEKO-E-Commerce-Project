@@ -28,10 +28,20 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let item of order.orderDetails">
-                                <th scope="row"><a [routerLink]="['/product/'+item.product!.productId]"> {{item.product.productId}} </a></th>
-                                <td> <a [routerLink]="['/product/'+item.product!.productId]">{{item.product.productName}}</a></td>
-                                <td> <a>{{item.quantity}}</a></td>
+                            <tr *ngFor="let item of order.orderDetails"> 
+                                <th scope="row">
+                                    <a *ngIf="!item.product.deleted" [routerLink]="['/product/'+item.product!.productId]"> {{item.product.productId}} </a>
+                                    <a *ngIf="item.product.deleted" [routerLink]="['/product/'+item.product!.productId]"> <del>{{item.product.productId}} </del></a>
+                                </th>
+                                <td> 
+                                    <a *ngIf="!item.product.deleted" [routerLink]="['/product/'+item.product!.productId]">{{item.product.productName}}</a>
+                                    <a *ngIf="item.product.deleted" [routerLink]="['/product/'+item.product!.productId]"><del>{{item.product.productName}}</del> <a class=text-danger> {{"OUT OF STOCK" | translate}}</a></a>
+                                </td>
+                                <td> 
+                                    <a *ngIf="!item.product.deleted">{{item.quantity}}</a>
+                                    <a *ngIf="item.product.deleted"><del>{{item.quantity}} </del></a>
+                                </td>
+                            
                             </tr>
                         </tbody>
                     </table>
